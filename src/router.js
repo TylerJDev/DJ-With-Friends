@@ -5,6 +5,7 @@ import Login from './views/Login.vue'
 import Store from './store.js'
 import About from './views/About.vue'
 import Callback from './views/Callback.vue'
+import Room from './views/Room.vue'
 
 Vue.use(Router)
 
@@ -15,6 +16,19 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home,
+      beforeEnter: (to, from, next) => {
+        const loggedState = Store.state.spotifyAPIData.refreshToken;
+        if (loggedState !== null) {
+          next();
+        } else {
+          next("login");
+        }
+      }
+    },
+    {
+      path: '/room/:id',
+      name: 'room',
+      component: Room,
       beforeEnter: (to, from, next) => {
         const loggedState = Store.state.spotifyAPIData.refreshToken;
         if (loggedState !== null) {

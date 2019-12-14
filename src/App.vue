@@ -25,7 +25,6 @@ export default {
   beforeCreate() {
     // Check localStorage for login state
     var authCode = localStorage.getItem('access_token');
-    this.$store.dispatch('auth');
 
     if (authCode === null) {
       console.log('No access_token found!');
@@ -41,6 +40,11 @@ export default {
         const refreshToken = this.$store.state.spotifyAPIData.refreshToken
         if (refreshToken) {
           console.log('Request new token!');
+          this.$store.dispatch('auth', {callbackURL: '/', refresh: refreshToken, callToAPI: 'callback'}).then(res => {
+            console.log('Request of new token successful')
+            this.$router.push(res.redirect); // Go to homepage
+          });
+
         } else {
           // Clear localStorage items
           localStorage.clear();
