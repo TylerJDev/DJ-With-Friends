@@ -2,26 +2,12 @@
   <div id="app">
     <div id="nav">
     </div>
-    <router-view @auth-user="authenticate"/>
+    <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  methods: {
-    authenticate: function() {
-      fetch('http://localhost:3000/login', {
-        method: 'GET'
-      }).then(res => res.text())
-      .then(res => {
-        if (res.substring(0, 68) === 'https://accounts.spotify.com/authorize?response_type=code&client_id=') {
-          window.location = res;
-        } else {
-          console.log('An error occurred! Could not validate response URL')
-        }
-      });
-    }
-  },
   beforeCreate() {
     // Check localStorage for login state
     var authCode = localStorage.getItem('access_token');

@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test": "vue-cli-service test:unit"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -31,7 +31,9 @@
     "bootstrap": "^4.3.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "jest-fetch-mock": "^2.1.2",
     "jquery": "^3.4.1",
+    "node-fetch": "^2.6.0",
     "popper.js": "^1.15.0",
     "vue-template-compiler": "^2.6.10"
   },
@@ -69,6 +71,7 @@
     "last 2 versions"
   ],
   "jest": {
+    "automock": false,
     "moduleFileExtensions": [
       "js",
       "jsx",
@@ -88,6 +91,9 @@
     },
     "snapshotSerializers": [
       "jest-serializer-vue"
+    ],
+    "setupFiles": [
+      "./setupJest.js"
     ],
     "testMatch": [
       "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
