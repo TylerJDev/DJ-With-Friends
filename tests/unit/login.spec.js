@@ -1,8 +1,18 @@
 import { shallowMount } from '@vue/test-utils';
 import Login from '@/views/Login.vue';
+import store from '@/store.js';
 
 describe('Login page for auth', () => {
-  const wrapper = shallowMount(Login);
+  const $store = {'state': {'errorOccurred': {'route': 'route'}}};
+  const $route = {'route': 'route'};
+
+  const wrapper = shallowMount(Login, {
+    mocks: {
+      $store,
+      $route,
+    }
+  });
+
   it('renders login panel', () => {
     let welcomeLoginMsg = 'Please Login';
 
@@ -13,22 +23,34 @@ describe('Login page for auth', () => {
     expect(wrapper.find('#loginBtn').isVisible()).toBe(true);
   });
 
-  it('triggering button returns response', () => {
-
-    // Ensure button calls server
-    // wrapper.find('button').trigger('click');
-
+  it('Check if fetch is success', () => {
     // Ensure server returns proper response ... {"https://accounts.spotify.com/authorize?"}
 
-    fetch.mockResponseOnce('https://accounts.spotify.com/authorize?');
+    fetch.mockResponseOnce('https://accounts.spotify.com/authorize?response_type=code&client_id=');
 
-    wrapper.vm.handleAuthenticate().then(res => {
+    return wrapper.vm.handleAuthenticate().then(res => {
       expect(res).toBe(true);
-    });
 
+      // Ensure error message has not rendered
+      expect(wrapper.find('span#error').exists()).toBeFalsy();
+    });
+  });
+
+  it('Check if fetch is failure', () => {
     // Ensure if server returns error, it's handled 
-    wrapper.vm.handleAuthenticate().then(res => {
+
+    fetch.mockResponseOnce('Nothing!');
+
+    return wrapper.vm.handleAuthenticate().then(res => {
       expect(res).toBe(false);
     });
   });
+
+  it('Check if error message is rendered', () => {
+    fetch.mockResponseOnce('Nothing!');
+
+    return wrapper.vm.handleAuthenticate().then(res => {
+      expect(wrapper.find('span#error').exists()).toBeTruthy();
+    });
+  }) 
 });

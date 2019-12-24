@@ -16,8 +16,6 @@ export default {
   },
   computed: {
     getUsers: function() {
-
-      console.log(userListStore.state.users);
       // 1. Retrieve users; store => data => users
       return userListStore.state.users;
     }

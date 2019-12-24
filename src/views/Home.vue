@@ -3,7 +3,7 @@
     <h1>Find a room!</h1>
     <h2>There are {{rooms.length}} rooms!</h2>
     <!-- <button @click="createRoom()">Create a room</button> -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#room_create_modal">Create Room</button>
+    <button type="button" id="modal_create_room" class="btn btn-primary" data-toggle="modal" data-target="#room_create_modal" v-on:click="modalActivate">Create Room</button>
     <div id="current_rooms" class="container-fluid">
       <ul>
         <li v-for="(current, index) in rooms" v-bind:key="index">
@@ -29,12 +29,13 @@ export default {
     return {
       rooms: [],
       socketConnect: io.connect('http://localhost:3000/rooms'),
-      currentLocation: window.location.href /* DEV VALUE */
+      currentLocation: window.location.href, /* DEV VALUE */
+      activeModal: false
     }
   },
   methods: {
     createRoom: function (roomData) {
-      this.socketConnect.emit('createRoom', {'id': this.$store.state.spotifyAPIData.userID, 'display_name': this.$store.state.spotifyAPIData.user, 'settings': roomData});
+      this.socketConnect.emit('createRoom', {'id': this.$store.state.spotifyAPIData.userID, 'display_name': this.$store.state.spotifyAPIData.user, 'settings': roomData, 'token': this.$store.state.spotifyAPIData.refreshToken});
 
       this.socketConnect.on('roomError', (roomError) => {
         console.log(roomError);
@@ -48,6 +49,8 @@ export default {
         this.$store.state.randID = roomData['roomID'];
         this.$router.push(`room/${roomData['roomID']}`);
       });
+    }, modalActivate: function() {
+      this.activeModal = true;
     }
   },
   mounted() {

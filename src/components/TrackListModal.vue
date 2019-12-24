@@ -52,7 +52,7 @@ export default {
             console.log(this.tracks)
           }
         } catch(TypeError) {
-          console.log('Error occurred! Your access token might\'ve expired!');
+          alert('Error occurred! Your access token might\'ve expired!');
         }
       }
     },

@@ -37,6 +37,10 @@ export default {
       this.socketConnect.on('addedQueue', (data) => {
         this.currentTrackData = data;
       });
+
+      this.socketConnect.on('removeFromQueue', (data) => {
+        this.currentTrackData.shift();
+      })
     },
     skipTrack() {
       this.socketConnect.emit('skipTrack', this.$store.state.spotifyAPIData);

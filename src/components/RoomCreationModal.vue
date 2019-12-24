@@ -1,27 +1,32 @@
 <template>
-  <div id="room_create_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div id="room_create_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-body">
-          <form>
+          <form id="room_creation_form" aria-label="Room Creation">
             <div class="form-group lg-col">
 
               <div class="input_container">
                 <label for="room-name" class="col-form-label">Room Name:</label>
-                <input type="text" class="form-control" id="room-name">
+                <input type="text" class="form-control" id="room-name" required>
               </div>
 
               <div class="input_container">
                 <label for="room-genre" class="col-form-label">Genre:</label>
-                <input type="text" class="form-control" id="room-genre">
+                <input type="text" class="form-control" id="room-genre" required>
               </div>
             </div>
 
-            <div class="form-group form-left">
+            <div class="form-group form-left lg-col">
               <div class="checkbox-group">
                 <label id="room-private" class="col-form-label">Private Room:</label>
-                <input type="checkbox" class="form-control" id="room-private_" value="Yes" aria-describedby="room-private" name="private-room">
+                <input type="checkbox" class="form-control" id="room-private_" value="Yes" aria-describedby="room-private" name="private-room" v-on:change="privateRoom">
                 <label for="room-private_yes" class="col-form-label hidden_sr">Yes</label>
+              </div>
+
+              <div class="checkbox-group">
+                <label for="password_room_"  v-bind:class="[password_protected ? 'col-form-label' : 'input_hidden']">Password (4 characters minimum)</label>
+                <input type="password" v-bind:class="[password_protected ? 'form-control' : 'input_hidden']" id="password_room_" minlength="4">
               </div>
             </div>
 
@@ -48,7 +53,7 @@
 
             <div class="form-group">
               <label for="message-text" class="col-form-label">Description:</label>
-              <textarea class="form-control" id="message-text"></textarea>
+              <textarea class="form-control" id="message-text" required></textarea>
             </div>
           </form>
         </div>
@@ -67,7 +72,13 @@ export default {
     return {
       input_types: ['room-name', 'room-genre', 'room-private_', 'user-limit_', 'message-text'],
       room_limit: false,
+      password_protected: false,
     }
+  },
+  watch: {
+    formElements: function() {
+      console.log(this.formElements);
+    },
   },
   methods: {
     handleRoomCreation: function() {
@@ -84,18 +95,47 @@ export default {
           let invalidTypes = this.input_types.filter(curr => formData.hasOwnProperty(curr) !== true);
           let invalidElems = this.$el.querySelectorAll('#' + invalidTypes.join(', #'));
 
+          console.log('Error!');
           Array.from(invalidElems, (curr) => curr.classList.add('is-invalid'));
           return false;
         }
+      } 
+
+      // If room is password protected
+      let passwordInput = this.$el.querySelector('#password_room_');
+      let passwordCheckbox = this.$el.querySelector('#room-private_').checked;
+
+      if (passwordCheckbox && passwordInput.value.length >= 4) {
+        formData.password = passwordInput.value;
+        this.$store.state.roomKeys.push({'password': passwordInput.value, 'roomName': formData['room-name']});
+      } else if (passwordCheckbox) {
+        console.log('Error! Password is invalid!');
+        passwordInput.classList.add('is-invalid');
+        return false;
       }
+
+      // Check room limit
+      if (formData['user-limit_'].length && +formData['user-limit_'] <= 0 || this.$el.querySelector('#room-limit-yes').checked === true && formData['user-limit_'] === "") {
+        this.$el.querySelector('#user-limit_').classList.add('is-invalid');
+        console.log('Error! Room limit must be greater than 0!');
+        return false;
+      }
+
+      // if (!this.$el.querySelector('#room_creation_form').querySelectorAll(':invalid').length) 
+
       this.$emit('createRoom', formData);
     }, roomLimit(e) {
       Array.from(this.$el.querySelector('#btn_container').children, (curr) => curr.classList.remove('btn-primary'));
 
       this.room_limit = e.target.value === 'Yes';
 
-      let targetCurrent = e.target.attributes['id'].value.indexOf('btn') === -1 ? document.querySelector(`#${e.target.attributes['id'].value}_btn`) : e.target;
+      let targetCurrent = e.target.attributes['id'].value.indexOf('btn') === -1 ? this.$el.querySelector(`#${e.target.attributes['id'].value}_btn`) : e.target;
       targetCurrent.classList.add('btn-primary');
+
+      // Ensure radio button is checked
+      this.$el.querySelector(`#${targetCurrent.getAttribute('id').replace('_btn', '')}`).checked = true;
+    }, privateRoom(e) {
+      this.password_protected = e.target.checked;
     }
   },
 }
@@ -149,5 +189,9 @@ export default {
 
   .input_hidden {
     visibility: hidden;
+  }
+
+  #password_room_ {
+    width: 264px;
   }
 </style>

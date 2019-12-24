@@ -8,7 +8,8 @@
 export default {
   name: 'login',
   beforeCreate() {
-    var currentURL = window.location.search;
+    // Current query string => ?code= ...
+    var currentURL = window.location.search; 
     this.$store.dispatch('auth', {urlCurrent: currentURL, callbackURL: '/', callToAPI: 'callback'}).then(res => {
       this.$router.push(res.redirect); // Go to homepage
     });

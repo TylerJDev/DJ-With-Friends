@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <span v-if="errorOccurred" id="error">An error occurred: {{errorType}} <br> Please refresh or contact support!</span>
     <h1 id="loginHeader">Please Login</h1>
     <button id="loginBtn" v-on:click="handleAuthenticate">Login!</button>
   </div>
@@ -8,6 +9,12 @@
 <script>
 export default {
   name: 'login',
+  data() {
+    return {
+      errorOccurred: false,
+      errorType: '',
+    }
+  },
   methods: {
     handleAuthenticate() {
       return fetch('http://localhost:3000/login', {
@@ -18,10 +25,23 @@ export default {
           window.location = res;
           return true;
         } else {
-          console.log('An error occurred! Could not validate response URL');
-          return false;
+          return this.errorHandle('Could not validate response URL');
         }
+      }).catch((err) => {
+        this.errorHandle(err);
       });
+    }, 
+    errorHandle(typeError) {
+      this.errorOccurred = true;
+      this.errorType = typeError;
+      console.log(`An error occurred! ${typeError}`);
+      return false;
+    }
+  }, 
+  created() {
+    if (this.$store.state.errorOccurred !== false && this.$store.state.errorOccurred.route === this.$route.path) {
+      this.errorHandle(this.$store.state.errorOccurred.errorType);
+      this.$store.commit('errorHandle', false);
     }
   }
 }

@@ -6,6 +6,7 @@ import Store from './store.js'
 import About from './views/About.vue'
 import Callback from './views/Callback.vue'
 import Room from './views/Room.vue'
+import io from 'socket.io-client'
 
 Vue.use(Router)
 
@@ -31,8 +32,37 @@ export default new Router({
       component: Room,
       beforeEnter: (to, from, next) => {
         const loggedState = Store.state.spotifyAPIData.refreshToken;
+        const socketConnect = io.connect('http://localhost:3000/rooms');
+
         if (loggedState !== null) {
-          next();
+          socketConnect.emit('checkLock', {'roomID': to.params.id, 'token': Store.state.spotifyAPIData.refreshToken});
+
+          socketConnect.on('lockedRoom', (data) => {
+            if (data.hasOwnProperty('userLimit')) {
+              console.log('Error! User limit reached!');
+              next('/');
+            } else if (data.passwordProtected === false) {
+              next();
+            } else {
+              let passwordInput;
+
+              if (Store.state.spotifyAPIData.refreshToken === data.token) {
+                next();
+              } else {
+                passwordInput = prompt('What is the secret secret password?');
+              }
+
+              socketConnect.emit('checkLock', {'roomID': to.params.id, 'password': passwordInput});
+              socketConnect.on('passwordCheck', (res) => {
+                if (res) {
+                  next();
+                } else {
+                  console.log('Error! Incorrect password!');
+                  next('/');
+                }
+              });
+            }
+          });
         } else {
           next("login");
         }

@@ -19,8 +19,11 @@ export default new Vuex.Store({
       'expiresIn': localStorage.getItem('expires'),
       'userID': localStorage.getItem('userID'),
       'devices': localStorage.getItem('devices'),
+      'premium': localStorage.getItem('premium'),
     },
-    roomID: ''
+    roomID: '',
+    errorOccurred: false,
+    roomKeys: []
   },
   mutations: {
     checkLoggedIn(state, payload) {
@@ -34,6 +37,8 @@ export default new Vuex.Store({
           state.spotifyAPIData[curr] = Object.values(payload)[index];
         }
       });
+    }, errorHandle(state, payload) {
+      state.errorOccurred = payload;
     }
   },
   actions: {
@@ -51,6 +56,8 @@ export default new Vuex.Store({
         console.log(`Error! Could not handle callback @${ERROR}`);
         // Return back to login || other path
         returnTo.redirect = '/login'
+        
+        commit('errorHandle', {'route': '/login', 'errorType': 'Access Denied'});
 
         // #TO-DO, set a warning so user knows WHY they were redirected
         return returnTo;
@@ -61,6 +68,7 @@ export default new Vuex.Store({
         let USER;
         let ID;
         let DEVICES;
+        let PREMIUM;
 
         if (urlParams !== false) {
           // Grab returned code
@@ -80,7 +88,7 @@ export default new Vuex.Store({
 
         // Handle Auth Flow
         const data = refreshToken === false ? {'auth_code': SPOTIFY_CODE, 'auth_state': SPOTIFY_STATE} : {'refresh_token': refreshToken};
-
+        
         let response = await fetch(`http://localhost:3000/${callAPI}`, {
           method: 'POST',
           body: JSON.stringify(data),
@@ -103,11 +111,13 @@ export default new Vuex.Store({
           USER = res.display_name;
           ID = res.id;
           DEVICES = JSON.stringify(res.devices);
+          PREMIUM = res.product === 'premium' ? true : false;
 
           localStorage.setItem('refresh_token', REFRESH_TOKEN);
           localStorage.setItem('user', USER);
           localStorage.setItem('userID', ID);
           localStorage.setItem('devices', DEVICES);
+          localStorage.setItem('premium', PREMIUM);
         }
 
         commit('addSpotifyAPIData', {
@@ -117,6 +127,7 @@ export default new Vuex.Store({
           expiresIn: EXPIRES,
           userID: refreshToken === false ? ID : state.spotifyAPIData.userID,
           devices: refreshToken === false ? DEVICES : state.spotifyAPIData.devices,
+          premium: refreshToken === false ? PREMIUM : state.spotifyAPIData.premium,
         });
 
         // Set isLoggedIn state to true
