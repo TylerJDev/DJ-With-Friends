@@ -1,0 +1,11 @@
+@mixin card_style {
+    margin-bottom: 50px;
+    height: 180px;
+    text-align: left;
+}
+
+@mixin help_link {
+    text-decoration: underline;
+    color: black;
+    font-size: 0.8rem;
+  }

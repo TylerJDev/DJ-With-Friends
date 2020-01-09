@@ -1,6 +1,5 @@
-import { shallowMount } from '@vue/test-utils';
-import Login from '@/views/Login.vue';
-import store from '@/store.js';
+import { shallowMount, mount } from '@vue/test-utils';
+import Login from '@/pages/LoginPage/index.vue';
 
 describe('Login page for auth', () => {
   const $store = {'state': {'errorOccurred': {'route': 'route'}}};
@@ -14,7 +13,7 @@ describe('Login page for auth', () => {
   });
 
   it('renders login panel', () => {
-    let welcomeLoginMsg = 'Please Login';
+    let welcomeLoginMsg = 'Spotify With Friends';
 
     // Ensure login heading is rendered properly
     expect(wrapper.find('h1').text()).toMatch(welcomeLoginMsg);

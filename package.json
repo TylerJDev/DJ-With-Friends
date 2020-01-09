@@ -36,6 +36,8 @@
     "jquery": "^3.4.1",
     "node-fetch": "^2.6.0",
     "popper.js": "^1.15.0",
+    "sass": "^1.24.0",
+    "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {

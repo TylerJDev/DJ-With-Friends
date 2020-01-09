@@ -2,16 +2,16 @@
   <div>
     <table id="tracklist">
       <tr>
-        <th>User</th>
-        <th>Next Up</th>
+        <th>Track</th>
         <th>Artist</th>
+        <th>Album</th>
         <th>Duration</th>
       </tr>
-      <tr id="tracks" v-for="(currentTrack, index) in currentTrackData">
+      <!-- <tr id="tracks" v-for="(currentTrack, index) in currentTrackData">
         <td v-for="(current, index) in currentTrack">
           {{ current }}
         </td>
-      </tr>
+      </tr> -->
     </table>
   </div>
 </template>

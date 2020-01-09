@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-    </div>
     <router-view/>
   </div>
 </template>
@@ -46,7 +44,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -66,5 +67,9 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.modal-backdrop.show {
+    opacity: 0.8 !important;
 }
 </style>

@@ -1,12 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import userListStore from './components/store/store.js'
+import userListStore from '@/store/modules/rooms.js';
+import lobbyStore from '@/store/modules/lobby.js'
+import * as getters from './getters';
+import * as mutations from './mutations';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    a: userListStore
+    a: userListStore,
+    lobby: lobbyStore
   },
   state: {
     isLoggedIn: false,
@@ -23,24 +27,15 @@ export default new Vuex.Store({
     },
     roomID: '',
     errorOccurred: false,
-    roomKeys: []
+    roomKeys: [],
+    genres: ["All", "Musical theatre", "Popular music", "Hip hop", "Jazz", "Folk music", "Rock", "Blues", "Classical music", "Country music","Heavy metal",
+    "Pop music","Reggae","Rhythm and blues","Disco","Funk","Punk rock","Electronic dance music","Techno","Rapping","Soul music","Alternative rock",
+    "Instrumental","Singing","Dubstep","Indie rock","Orchestra","House music","Dance music","Gospel music","Grunge","Trance music","Ambient music",
+    "Ska","Pop rock","World music","Hardcore punk","Easy listening","Death metal","Folk rock","Drum and bass","Emo","Experimental music","New wave",
+    "Progressive rock","Electro","Baroque music","Classic rock","Dance-pop","Opera","Breakbeat","Trap music"]
   },
-  mutations: {
-    checkLoggedIn(state, payload) {
-      state.isLoggedIn = payload.status;
-    },
-    addSpotifyAPIData(state, payload) {
-      let payloadData = Object.keys(payload);
-      payloadData.forEach((curr, index) => {
-        if (state.spotifyAPIData[curr] !== undefined) {
-          console.log(`Key: ${curr} assigned, Value:${Object.values(payload)[index]}`);
-          state.spotifyAPIData[curr] = Object.values(payload)[index];
-        }
-      });
-    }, errorHandle(state, payload) {
-      state.errorOccurred = payload;
-    }
-  },
+  mutations,
+  getters,
   actions: {
     async auth ({commit, state}, payload) {
       const urlParams = payload.urlCurrent !== undefined ? new URLSearchParams(payload.urlCurrent) : false;
@@ -53,7 +48,7 @@ export default new Vuex.Store({
       const ERROR = urlParams !== false ? urlParams.get('error') : false;
 
       if (ERROR) {
-        console.log(`Error! Could not handle callback @${ERROR}`);
+        console.log(`Error! Could not handle callback @${ERROR}`); // eslint-disable-line
         // Return back to login || other path
         returnTo.redirect = '/login'
         

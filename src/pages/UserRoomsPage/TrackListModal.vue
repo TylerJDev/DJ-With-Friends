@@ -61,11 +61,11 @@ export default {
       const trackDetails = {
         trackURI: this.tracks[trackCurrent].uri,
         trackName: this.tracks[trackCurrent].name,
-        trackAritst: this.tracks[trackCurrent].artists.map(curr => curr.name).join(' '),
+        trackArtist: this.tracks[trackCurrent].artists,
         trackDuration: this.tracks[trackCurrent]['duration_ms']
       }
 
-      console.log(this.tracks[trackCurrent]);
+      console.log(trackDetails);
       // Add to queue
       this.$emit('add-queue', trackDetails);
     }

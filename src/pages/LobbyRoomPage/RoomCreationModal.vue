@@ -13,7 +13,10 @@
 
               <div class="input_container">
                 <label for="room-genre" class="col-form-label">Genre:</label>
-                <input type="text" class="form-control" id="room-genre" required>
+                <!-- <input type="text" class="form-control" id="room-genre" required> -->
+                <select id="room-genre" name="genres" required>
+                  <option v-for="(curr, index) in grabGenres" :value="curr" :key="'genre_' + index">{{curr}}</option>
+                </select>
               </div>
             </div>
 
@@ -53,7 +56,7 @@
 
             <div class="form-group">
               <label for="message-text" class="col-form-label">Description:</label>
-              <textarea class="form-control" id="message-text" required></textarea>
+              <textarea class="form-control" id="message-text" maxlength="256" required></textarea>
             </div>
           </form>
         </div>
@@ -138,6 +141,11 @@ export default {
       this.password_protected = e.target.checked;
     }
   },
+  computed: {
+    grabGenres: function() {
+      return this.$store.getters.grabGenre('');
+    }
+  }
 }
 </script>
 

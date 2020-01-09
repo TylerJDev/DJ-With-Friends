@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import userListStore from '../components/store/store.js'
+import userListStore from '@/store/modules/rooms.js';
 
 export default {
   props: {

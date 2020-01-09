@@ -1,9 +1,5 @@
-import Vuex from "vuex";
-import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Callback from '@/views/Callback.vue';
-import store from '@/store.js';
-
-const localVue = createLocalVue();
+import { createLocalVue } from '@vue/test-utils';
+import store from '@/store/index.js';
 
 describe('Testing callback and store', () => {
   it('Check redirect upon error in params', () => {

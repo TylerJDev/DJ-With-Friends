@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Login from './views/Login.vue'
-import Store from './store.js'
-import About from './views/About.vue'
+import Home from './pages/LobbyRoomPage/index.vue'
+import Login from './pages/LoginPage/index.vue'
+import Store from '@/store/index.js';
+import About from './pages/AboutPage/index.vue'
 import Callback from './views/Callback.vue'
-import Room from './views/Room.vue'
+import Room from './pages/UserRoomsPage/index.vue'
 import io from 'socket.io-client'
 
 Vue.use(Router)
@@ -72,14 +72,6 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: About,
-      beforeEnter: (to, from, next) => {
-        const loggedState = Store.state.spotifyAPIData.refreshToken;
-        if (loggedState !== null) {
-          next();
-        } else {
-          next("login");
-        }
-      }
     },
     {
       path: '/login',
