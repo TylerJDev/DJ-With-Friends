@@ -1,4 +1,6 @@
 import { shallowMount, mount } from '@vue/test-utils';
+import Vue from 'vue'
+import Vuex from 'vuex'
 import Home from '@/pages/LobbyRoomPage/index.vue';
 import RoomList from '@/pages/LobbyRoomPage/RoomList.vue';
 import RoomCard from '@/pages/LobbyRoomPage/RoomCard.vue';
@@ -22,10 +24,14 @@ describe('Lobby rendering and functionality', () => {
   });
 
   it('Modal functionality', () => {
+    const $store = {'state': store.state, 'getters': store.getters};
     const wrapper = shallowMount(RoomList, {
       propsData: {
         rooms: []
-      } 
+      },
+      mocks: {
+        $store,
+      }
     });
 
     const modalTrigger = wrapper.find('#modal_create_room');
@@ -42,7 +48,15 @@ describe('Testing RoomList component', () => {
   });
 
   it('Genres rendering', () => {
-    const wrapper = shallowMount(RoomList);
+    const $store = {'state': store.state, 'getters': store.getters};
+    const wrapper = shallowMount(RoomList, {
+      propsData: {
+        rooms: []
+      },
+      mocks: {
+        $store
+      }
+    });
     
     const genres_btn = wrapper.find('#genres');
     expect(genres_btn.text()).toBe('All Hip hop');
@@ -100,6 +114,76 @@ describe('Testing RoomUser component', () => {
       }
     });
     
-    expect(wrapper.find('.user_data_room .plus_users').text()).toBe('+5');
+    expect(wrapper.find('.user_data_room .plus_users').text()).toBe('+6');
+  });
+});
+
+/* Pagination */
+describe('Test pagination', () => {
+  Vue.use(Vuex);
+  const store = new Vuex.Store(LobbyStore);
+
+  beforeEach(() => {
+    LobbyStore.state.rooms = [{'settings': { 'room-genre': 'All ' }}, {'settings': { 'room-genre': 'Hip hop'}},
+    {'settings': { 'room-genre': 'Progressive rock' }}, {'settings': { 'room-genre': 'Electro'}},
+    {'settings': { 'room-genre': 'Baroque music' }}, {'settings': { 'room-genre': 'Classic rock'}}];
+  });
+
+  it('Page change on click', () => {
+    expect(store.state.page).toEqual([1]);
+    store.commit('changeCurrentPage', {page: 2});
+    expect(store.state.page).toEqual([2]);
+
+    const wrapper = mount(RoomList, {
+      propsData: {
+        rooms: []
+      },
+      mocks: {
+        $store: {
+          'state': {
+            'lobby': store.state
+          }, 
+          'getters': store.getters,
+        }
+      }
+    });
+
+    expect(wrapper.find('.current_page').text()).toBe('2');
+    expect(wrapper.text()).toContain('Genre: Classic rock');
+    expect(wrapper.text()).not.toContain('Genre: Hip hop');
+
+    store.commit('changeCurrentPage', {page: 1});
+    expect(wrapper.find('.current_page').text()).toBe('1');
+    expect(wrapper.text()).toContain('Genre: Electro');
+    expect(wrapper.text()).not.toContain('Genre: Classic rock');
+  });
+
+  it('Page change on click of pagination controls', () => {
+    const wrapper = mount(RoomList, {
+      propsData: {
+        rooms: []
+      },
+      mocks: {
+        $store: {
+          'state': {
+            'lobby': store.state
+          }, 
+          'getters': store.getters,
+          'commit': store.commit
+        }
+      }
+    });
+
+    const nextControl = wrapper.find('#next_control');
+    nextControl.trigger('click');
+    expect(wrapper.find('.current_page').text()).toBe('2');
+    nextControl.trigger('click');
+    expect(wrapper.find('.current_page').text()).toBe('2');
+
+    const prevControl = wrapper.find('#prev_control');
+    prevControl.trigger('click');
+    expect(wrapper.find('.current_page').text()).toBe('1');
+    prevControl.trigger('click');
+    expect(wrapper.find('.current_page').text()).toBe('1');
   });
 });

@@ -1,18 +1,13 @@
 <template>
   <div id="room_list">
       <div class="container-fluid">
-        <div class="row">
+        <main class="row">
             <div id="genre_col" class="col">
                 <h3 class="col_heading">Filter By</h3>
 
                 <div id="filter_container">
                   <div id="genres">
                       <button class="genres_btn" v-for="(item, index) in grabGenres" v-bind:key="index" v-on:click="filterBy" :class="item === filter ? 'active' : ''">{{item}}</button>
-                  </div>
-
-                  <div id="footer_links">
-                    <a href="/about">About</a>
-                    <a href="/">Need Help?</a>
                   </div>
                 </div>
             </div>
@@ -31,11 +26,10 @@
                   <RoomUsers v-for="(item, index) in roomResults" :rooms="grabUsers(index)" :key="'user_item' + index"/>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <div id="pagination" class="col">
-          {{grabPages()}}
-          <LobbyFooter />
+        <div id="footer" class="col">
+          <LobbyFooter :totalPages="totalPages" />
         </div>
       </div>
   </div>
@@ -54,14 +48,20 @@ export default {
   },
   data() {
     return {
-      roomResults: LobbyStore.state.rooms,
+      roomResults: this.$store.getters.grabPages(),
       filter: 'All',
-      activeModal: false
+      activeModal: false,
+      rooms: this.$store.state.lobby.rooms,
+      totalPages: this.$store.state.lobby.rooms,
+      page: this.$store.state.lobby.page
     }
   },
   watch: {
     rooms: function() {
       this.filterBy(this.filter);
+    },
+    page: function() {
+      this.changePage();
     }
   },
   computed: {
@@ -72,23 +72,28 @@ export default {
   },
   methods: {
     grabUsers: function(idx) {
-      if (LobbyStore.state.rooms[idx] !== undefined)
-        return LobbyStore.state.rooms[idx].users;
+      if (this.$store.getters.grabPages()[idx] !== undefined)
+        return this.$store.getters.grabPages()[idx].users;
     },
-    filterBy: function(e) {
+    changePage: function() {
+      this.roomResults = this.$store.getters.grabGenres(this.filter === 'All' ? '' : this.filter);
+    },
+    filterBy: function(e="All") {
       const targetGenre = typeof e === 'string' ? e : e.target.textContent;
       this.filter = targetGenre;
-
-      if (targetGenre === 'All') {
-        this.roomResults = LobbyStore.state.rooms;
-        return true;
+      
+      this.totalPages = this.$store.getters.grabPages([], true, this.filter === 'All' ? '' : this.filter);
+      
+      // Return to first page
+      if (this.page != 1) {
+        this.$store.commit('changeCurrentPage', {page: 1});
       }
 
-      this.roomResults = LobbyStore.state.rooms.filter(curr => curr.settings['room-genre'].includes(targetGenre));
-    },
-    grabPages: function() {
-      console.log(this.$store.getters.grabPages);
-      return this.$store.getters.grabPages.map(x => x.settings['room-genre']);
+      if (targetGenre === 'All') {
+        this.roomResults = this.$store.getters.grabPages();
+        return true;
+      }
+      this.roomResults = this.$store.getters.grabGenres(targetGenre);
     }
   },
   components: {
@@ -149,15 +154,6 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     height: 50vh;
-  }
-
-  #footer_links {
-    position: absolute;
-    bottom: 0;
-    a {
-      margin: 10px;
-      @include help_link;
-    }
   }
 
   .room-card {

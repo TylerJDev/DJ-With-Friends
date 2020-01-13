@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import userListStore from '@/store/modules/rooms.js';
-import lobbyStore from '@/store/modules/lobby.js'
+import LobbyStore from '@/store/modules/lobby.js'
 import * as getters from './getters';
 import * as mutations from './mutations';
 
@@ -9,8 +9,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    a: userListStore,
-    lobby: lobbyStore
+    lobby: LobbyStore,
+    rooms: userListStore
   },
   state: {
     isLoggedIn: false,

@@ -2,7 +2,7 @@
   <div class="room_users">
       <div class="user_data_room">
         <button v-for="(item, index) in currentUsers" :key="'currentUser_' + index" class="user_item"><i class="far fa-user"></i></button>
-        <span v-if="extraUsers.length > 4" class="plus_users" v-bind:aria-label="'Plus ' + (extraUsers.length - 4) + ' users'">+{{extraUsers.length - 4}}</span>
+        <span v-if="extraUsers.length > 3" class="plus_users" v-bind:aria-label="'Plus ' + (extraUsers.length - 3) + ' users'">+{{extraUsers.length - 3}}</span>
       </div>
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
       },
       currentUsers: function() {
           if (this.rooms !== undefined) {
-            return this.rooms.filter((current, index) => index < 4);
+            return this.rooms.filter((current, index) => index < 3);
           } else {
               return []
           }

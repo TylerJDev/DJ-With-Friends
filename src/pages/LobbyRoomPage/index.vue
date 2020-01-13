@@ -48,7 +48,8 @@ export default {
     /* Add mock data for rooms */
     let mockData = [new MockRoom({'roomGenre': 'Hip Hop', 'roomPrivate': true}), new MockRoom({'roomGenre': 'All'}), new MockRoom({'roomGenre': 'Rap'}), new MockRoom({'roomGenre': 'Jazz'}),
     new MockRoom({'roomGenre': 'Popular music'}), new MockRoom({'roomGenre': 'Soul music'}), new MockRoom({'roomGenre': 'Grunge'}), new MockRoom({'roomGenre': 'World music'}),
-    new MockRoom({'roomGenre': 'Breakbeat'}), new MockRoom({'roomGenre': 'Classical music'}), new MockRoom({'roomGenre': 'Raggae'}), new MockRoom({'roomGenre': 'Disco'}), new MockRoom({'roomGenre': 'New wave'})]
+    new MockRoom({'roomGenre': 'Breakbeat'}), new MockRoom({'roomGenre': 'Classical music'}), new MockRoom({'roomGenre': 'Raggae'}), new MockRoom({'roomGenre': 'Disco'}), new MockRoom({'roomGenre': 'New wave'}),
+    new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'})]
     LobbyStore.state.rooms.push(...mockData);
 
     this.socketConnect.emit('create_user', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID});
