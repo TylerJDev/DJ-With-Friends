@@ -111,7 +111,7 @@ export default new Vuex.Store({
           'refresh_token': refreshToken
         };
 
-        let response = await fetch(`${this.$store.state.location}${callAPI}`, {
+        let response = await fetch(`${state.location}${callAPI}`, {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
