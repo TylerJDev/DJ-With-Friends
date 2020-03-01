@@ -32,7 +32,7 @@ export default new Router({
       component: Room,
       beforeEnter: (to, from, next) => {
         const loggedState = Store.state.spotifyAPIData.refreshToken;
-        const socketConnect = io.connect('http://localhost:3000/rooms');
+        const socketConnect = io.connect(Store.state.location + 'rooms');
 
         if (loggedState !== null) {
           socketConnect.emit('checkLock', {'roomID': to.params.id, 'token': Store.state.spotifyAPIData.refreshToken});

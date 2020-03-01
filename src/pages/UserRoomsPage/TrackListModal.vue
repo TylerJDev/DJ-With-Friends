@@ -86,7 +86,7 @@ export default {
       if (userInput.length) {
         const data = {'access_token': this.$store.state.spotifyAPIData.accessToken};
 
-        let response = await fetch(`http://localhost:3000/search?search_query=${userInput}`, {
+        let response = await fetch(`${this.$store.state.location}search?search_query=${userInput}`, {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {

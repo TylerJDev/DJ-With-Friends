@@ -44,7 +44,8 @@ export default new Vuex.Store({
       actionLabel: 'test_3',
       lowContrast: false,
       initialised: false
-    }
+    },
+    location: 'https://dj-with-friends.herokuapp.com/' // http://localhost:3000/
   },
   mutations,
   getters,
@@ -110,7 +111,7 @@ export default new Vuex.Store({
           'refresh_token': refreshToken
         };
 
-        let response = await fetch(`http://localhost:3000/${callAPI}`, {
+        let response = await fetch(`${this.$store.state.location}${callAPI}`, {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {

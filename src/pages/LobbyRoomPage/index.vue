@@ -19,7 +19,7 @@ export default {
   name: 'home',
   data() {
     return {
-      socketConnect: io.connect('http://localhost:3000/rooms'),
+      socketConnect: io.connect(this.$store.state.location + 'rooms'),
       currentLocation: window.location.href, /* DEV VALUE */
       activeModal: false,
       currentGenres: this.$store.getters.grabGenre('')
@@ -44,7 +44,7 @@ export default {
     }
   },
   mounted() {
-    const privateSocket = io.connect('http://localhost:3000');
+    const privateSocket = io.connect(this.$store.state.location);
     /* Add mock data for rooms 
     let mockData = [new MockRoom({'roomGenre': 'Hip Hop', 'roomPrivate': true}), new MockRoom({'roomGenre': 'All'}), new MockRoom({'roomGenre': 'Rap'}), new MockRoom({'roomGenre': 'Jazz'}),
     new MockRoom({'roomGenre': 'Popular music'}), new MockRoom({'roomGenre': 'Soul music'}), new MockRoom({'roomGenre': 'Grunge'}), new MockRoom({'roomGenre': 'World music'}),

@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     handleAuthenticate() {
-      return fetch('http://localhost:3000/login', {
+      return fetch(this.$store.state.location + 'login', {
         method: 'GET'
       }).then(res => res.text())
       .then(res => {

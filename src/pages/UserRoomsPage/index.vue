@@ -25,7 +25,7 @@ export default {
       currentTrackData: [{'user': 'Tyler', 'name': 'Drive In', 'artist': 'MED, Blu, Madlib, Aloe Blacc', 'duration': '3:59'}],
       currentUsers: [],
       currentTrackPlaying: {'track': '', 'playing': false, 'artist': ''},
-      socketConnect: io.connect(`http://localhost:3000/${this.$route.params.id}`),
+      socketConnect: io.connect(`${this.$store.state.location}${this.$route.params.id}`),
       visibleModal: false
     }
   },
