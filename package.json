@@ -9,6 +9,8 @@
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@carbon/icons-vue": "^10.8.1",
+    "@carbon/vue": "^2.20.1",
     "bcryptjs": "^2.4.3",
     "core-js": "^2.6.5",
     "socket.io": "^2.3.0",
@@ -87,7 +89,7 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/(?!(@carbon)/)"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"

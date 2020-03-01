@@ -36,10 +36,9 @@ export default new Router({
 
         if (loggedState !== null) {
           socketConnect.emit('checkLock', {'roomID': to.params.id, 'token': Store.state.spotifyAPIData.refreshToken});
-
           socketConnect.on('lockedRoom', (data) => {
             if (data.hasOwnProperty('userLimit')) {
-              console.log('Error! User limit reached!');
+              Store.dispatch('handleNotification', {'timeout': 10000, 'type': 'error', 'initialised': true, 'title': 'Room User Limit Reached', 'subtitle': 'The current room is full!'});
               next('/');
             } else if (data.passwordProtected === false) {
               next();
@@ -50,15 +49,15 @@ export default new Router({
                 next();
               } else {
                 passwordInput = prompt('What is the secret secret password?');
+                socketConnect.emit('checkLock', {'roomID': to.params.id, 'password': passwordInput});
               }
 
-              socketConnect.emit('checkLock', {'roomID': to.params.id, 'password': passwordInput});
               socketConnect.on('passwordCheck', (res) => {
                 if (res) {
                   next();
                 } else {
-                  console.log('Error! Incorrect password!');
                   next('/');
+                  Store.dispatch('handleNotification', {'timeout': 10000, 'type': 'error', 'initialised': true, 'title': 'Incorrect Password', 'subtitle': 'The password was incorrect!'});
                 }
               });
             }

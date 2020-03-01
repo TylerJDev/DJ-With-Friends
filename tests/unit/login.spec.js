@@ -2,7 +2,7 @@ import { shallowMount, mount } from '@vue/test-utils';
 import Login from '@/pages/LoginPage/index.vue';
 
 describe('Login page for auth', () => {
-  const $store = {'state': {'errorOccurred': {'route': 'route'}}};
+  const $store = {'state': {'errorOccurred': {'route': 'route'}}, 'dispatch': jest.fn()};
   const $route = {'route': 'route'};
 
   const wrapper = shallowMount(Login, {
@@ -44,12 +44,4 @@ describe('Login page for auth', () => {
       expect(res).toBe(false);
     });
   });
-
-  it('Check if error message is rendered', () => {
-    fetch.mockResponseOnce('Nothing!');
-
-    return wrapper.vm.handleAuthenticate().then(res => {
-      expect(wrapper.find('span#error').exists()).toBeTruthy();
-    });
-  }) 
 });

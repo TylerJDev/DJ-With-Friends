@@ -8,6 +8,11 @@ const LobbyStore = {
         changeCurrentPage(state, currentPage) {
             state.page.shift();
             state.page.push(currentPage.page);
+        },
+        addToRooms(state, payload) {
+            if (payload.length >= 1) {
+                state.rooms = payload;
+            }
         }
     },
     getters: {                

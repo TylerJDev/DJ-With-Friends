@@ -1,7 +1,6 @@
 <template>
   <div id="login">
     <Navbar />
-    <span v-if="errorOccurred" id="error">An error occurred: {{errorType}} <br> Please refresh or contact support!</span>
     <div id="cta">
       <h1 id="loginHeader">Spotify With Friends</h1>
       <h2>Connect With Spotify</h2>
@@ -17,6 +16,7 @@
 import Navbar from '@/pages/LoginPage/LoginNavbar.vue';
 import Footer from '@/pages/LoginPage/LoginFooter.vue';
 import Modal from '@/pages/LoginPage/HelpModal.vue';
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'login',
@@ -45,10 +45,10 @@ export default {
     errorHandle(typeError) {
       this.errorOccurred = true;
       this.errorType = typeError;
-      console.log(`An error occurred! ${typeError}`);
+      this.$store.dispatch('handleNotification', {'timeout': 10000, 'type': 'error', 'initialised': true, 'title': 'Connection To Server Failed', 'subtitle': 'Failed to connect to the server, please try again or contact support!'});
       return false;
     }
-  }, 
+  },
   created() {
     if (this.$store.state.errorOccurred !== false && this.$store.state.errorOccurred.route === this.$route.path) {
       this.errorHandle(this.$store.state.errorOccurred.errorType);

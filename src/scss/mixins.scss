@@ -8,4 +8,26 @@
     text-decoration: underline;
     color: black;
     font-size: 0.8rem;
-  }
+}
+
+@mixin extra_text {
+    font-weight: lighter;
+    font-size: 0.7rem;
+}
+
+@mixin list_style {
+    border-bottom: 1px solid black;
+    text-align: left;
+    margin: 5px;
+}
+
+@mixin sr_only {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}

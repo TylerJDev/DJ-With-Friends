@@ -12,6 +12,12 @@
 export const focusEle = (elem) => {
   let focusElement = '';
 
+  if (typeof elem === 'string') {
+    console.log(elem);
+    elem = document.querySelectorAll(elem);
+    console.log(elem);
+  }
+
   elem.forEach((current) => {
     let currentElem = '';
     
