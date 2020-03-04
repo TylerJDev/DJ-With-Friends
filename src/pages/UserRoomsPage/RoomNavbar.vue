@@ -6,7 +6,7 @@
         Skip to content
       </cv-skip-to-content>
       <cv-header-name href="/">
-        Collabey
+        DJ With Friends
       </cv-header-name>
       <cv-header-nav aria-label="Carbon nav">
       <cv-header-menu-item href="/" class="nav_item">

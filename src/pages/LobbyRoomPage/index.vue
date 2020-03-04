@@ -1,8 +1,42 @@
 <template>
   <div class="home">
+
+    <!-- <div id="header">
+        <div class="dj_banner">
+          Vinyl
+        </div>
+
+        <div class="dj_banner">
+          List
+        </div>
+    </div>
+    <div id="left_panel" class="col-md panel-main">
+      <div class="panel_container">
+        <h2>Rooms</h2>
+      </div>
+      <div class="sort">     
+        <cv-multi-select 
+          :theme="theme"
+          :label="label"
+          :inline="inline"
+          :helper-text="helperText"
+          :invalid-message="invalidMessage"
+          :title="title"
+          :disabled="disabled"
+          :selection-feedback="selectionFeedback"
+          :filterable="filterable"
+          :auto-filter="autoFilter"
+          :auto-highlight="autoHighlight"
+          :value="initialValue"
+          :options="options">
+        </cv-multi-select>
+      </div>
+    </div>
+    <div id="right_panel" class="col-md panel-main">
+    </div> -->
+
     <header>
-      <h1>Join a room with friends, <br>or strangers.</h1>
-      <h2 id="swf">Spotify<br>With<br>Friends.</h2>
+      <h2 id="swf">DJ<br>With<br>Friends.</h2>
     </header>
     <RoomList v-bind:genres="currentGenres"/>
     <RoomCreationModal @createRoom="createRoom"/>
@@ -57,10 +91,11 @@ export default {
     this.socketConnect.on('servers', (data) => { this.$store.commit('addToRooms', data); });
 
     privateSocket.on('rooms', (data) => {
-      this.$store.commit('addToRooms', data);
+      const _data = data.map(current => JSON.parse(current));
+      this.$store.commit('addToRooms', _data);
       this.$store.state.lobby.rooms.forEach(function(curr, index) {
         // Find the room "name" from data
-        let currentData = data.filter(current => current.name === curr.name)[0];
+        let currentData = _data.filter(current => current.name === curr.name)[0];
         if (currentData !== undefined)
           this.$store.state.lobby.rooms[index].users = currentData.users;
       }, this);
@@ -76,15 +111,37 @@ export default {
 
 
 <style lang="scss" scoped>
-  .home header {
-    display: flex;
-    justify-content: space-between;
+  .home {
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: space-between;
     width: 90%;
     margin: 0 auto;
     padding-top: 3rem;
+    padding: 0;
+    height: 100%;
     #swf {
       font-size: 3.3rem;
       font-weight: bold;
+      margin-top: 30px;
+      // position: absolute;
+      // right: 50%;
+      // .a_right {
+      //   left: 50% !important;
+      // }
+    }
+
+    .dj_banner {
+      font-size: 2.5rem;
+      font-weight: bold;
+      font-family: 'IBM Plex Sans', sans-serif;
+      position: absolute;
+      &:first-of-type {
+        right: 51%;
+      }
+      &:last-of-type {
+        left: 51%;
+      }
     }
   }
 
@@ -92,6 +149,18 @@ export default {
     text-align: initial;
     font-family: 'Roboto Condensed', sans-serif;
     color: black;
+  }
+
+  .panel-main {
+    border: 1px solid grey;
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    h2 {
+      font-family: 'IBM Plex Mono';
+    }
   }
 
 </style>
