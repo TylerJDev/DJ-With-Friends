@@ -5,8 +5,8 @@
         <cv-tab label="Queue">
           <div class="row">
             <div v-for="(item, index) in queueAlbumImages" :key="'album_item_' + index" class="album_cover" v-bind:style="{backgroundImage: 'url(' + item + ')'}">
-                <h3>{{trackDataQueue[index].trackName}}</h3>
-                <h4>{{trackDataQueue[index].trackAlbum}}</h4>
+                <!-- <h3>{{trackDataQueue[index].trackName}}</h3>
+                <h4>{{trackDataQueue[index].trackAlbum}}</h4> -->
             </div>
           </div>
         </cv-tab>
@@ -14,8 +14,8 @@
         <cv-tab label="History">
             <div class="row">
               <div v-for="(item, index) in historyAlbumImages" :key="'album_item_' + index" class="album_cover" v-bind:style="{backgroundImage: 'url(' + item + ')'}">
-                <h3>{{trackDataHistory[index].trackName}}</h3>
-                <h4>{{trackDataHistory[index].trackAlbum}}</h4>
+                <!-- <h3>{{trackDataHistory[index].trackName}}</h3>
+                <h4>{{trackDataHistory[index].trackAlbum}}</h4> -->
               </div>
           </div>
         </cv-tab>

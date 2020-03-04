@@ -33,33 +33,33 @@ export default {
     if (authCode === null) {
       console.log('No access_token found!');
     } else {
-      this.$store.dispatch('handleReAuth');
+      //this.$store.dispatch('handleReAuth');
       // // Check if access code has expired
-      // const expiresAt = JSON.parse(localStorage.getItem('expires'));
-      // console.log(expiresAt);
-      // const isExpired = (expiresAt.expiresWhen + expiresAt.timestamp) - Math.floor(new Date().getTime() / 1000);
-      // if (isExpired < 0) {
-      //   console.log('Access token has expired!');
+      const expiresAt = JSON.parse(localStorage.getItem('expires'));
+      console.log(expiresAt);
+      const isExpired = (expiresAt.expiresWhen + expiresAt.timestamp) - Math.floor(new Date().getTime() / 1000);
+      if (isExpired < 0) {
+        console.log('Access token has expired!');
 
-      //   // Request a new token
-      //   const refreshToken = this.$store.state.spotifyAPIData.refreshToken
-      //   if (refreshToken) {
-      //     console.log('Request new token!');
-      //     this.$store.dispatch('auth', {callbackURL: '/', refresh: refreshToken, callToAPI: 'callback'}).then(res => {
-      //       console.log('Request of new token successful')
-      //       this.$router.push(res.redirect); // Go to homepage
-      //     });
+        // Request a new token
+        const refreshToken = this.$store.state.spotifyAPIData.refreshToken
+        if (refreshToken) {
+          console.log('Request new token!');
+          this.$store.dispatch('auth', {callbackURL: '/', refresh: refreshToken, callToAPI: 'callback'}).then(res => {
+            console.log('Request of new token successful')
+            this.$router.push(res.redirect); // Go to homepage
+          });
 
-      //   } else {
-      //     // Clear localStorage items
-      //     localStorage.clear();
+        } else {
+          // Clear localStorage items
+          localStorage.clear();
 
-      //     // Return to login
-      //     this.$router.push('/login');
-      //   }
-      // } else {
-      //   console.log(`Access token expires in ${isExpired}`);
-      // }
+          // Return to login
+          this.$router.push('/login');
+        }
+      } else {
+        console.log(`Access token expires in ${isExpired}`);
+      }
     }
   }
 }
@@ -177,6 +177,14 @@ export default {
 
     .side_panel_tab {
       text-shadow: 0px 1px 4px black;
+    }
+
+    #genres > button {
+      color: white;
+    }
+
+    #footer_links > a {
+      color: white;
     }
   }
 }

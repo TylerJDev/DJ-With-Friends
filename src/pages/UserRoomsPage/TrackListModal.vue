@@ -102,8 +102,7 @@ export default {
             this.tracks = res.tracks.items;
           }
         } catch(TypeError) {
-          console.log('trys:', i);
-          if (i < 5) {
+          if (i < 2) {
             let iterationTrys = (i + 1);
             this.$store.dispatch('handleReAuth', {refreshFromRooms: true});
 

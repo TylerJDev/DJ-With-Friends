@@ -91,6 +91,7 @@ export default {
     this.socketConnect.on('servers', (data) => { this.$store.commit('addToRooms', data); });
 
     privateSocket.on('rooms', (data) => {
+      console.log(data);
       const _data = data.map(current => JSON.parse(current));
       this.$store.commit('addToRooms', _data);
       this.$store.state.lobby.rooms.forEach(function(curr, index) {
@@ -123,12 +124,15 @@ export default {
     #swf {
       font-size: 3.3rem;
       font-weight: bold;
-      margin-top: 30px;
       // position: absolute;
       // right: 50%;
       // .a_right {
       //   left: 50% !important;
       // }
+    }
+
+    header {
+      padding-top: 30px;
     }
 
     .dj_banner {
