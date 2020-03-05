@@ -252,7 +252,7 @@ export default {
   #current_playing_data {
     position: absolute;
     top: 10%;
-    left: 35%;
+    left: 47%;
     h1 {
       font-weight: bold;
     }

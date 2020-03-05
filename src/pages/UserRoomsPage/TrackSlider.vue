@@ -40,7 +40,7 @@ export default {
       const items = this.$store.state.rooms.currentQueue;
       const images = items.map(current => current.trackAlbumImage[0].url);
 
-      return images
+      return images.filter((curr, index) => index <= 4);
     }, 
     historyAlbumImages: function() {
       const items = this.$store.state.rooms.history;

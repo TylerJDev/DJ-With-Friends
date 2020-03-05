@@ -7,7 +7,6 @@ export const grabNotifications = (state) => {
 }
 
 export const grabDarkMode = (state) => {
-    console.log(state);
     return state.darkMode === 'true' ? true : false;
 }
 

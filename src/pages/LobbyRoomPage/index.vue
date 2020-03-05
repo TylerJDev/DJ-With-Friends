@@ -91,8 +91,8 @@ export default {
     this.socketConnect.on('servers', (data) => { this.$store.commit('addToRooms', data); });
 
     privateSocket.on('rooms', (data) => {
-      console.log(data);
       const _data = data.map(current => JSON.parse(current));
+
       this.$store.commit('addToRooms', _data);
       this.$store.state.lobby.rooms.forEach(function(curr, index) {
         // Find the room "name" from data

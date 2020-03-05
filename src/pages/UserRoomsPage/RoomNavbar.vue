@@ -201,6 +201,12 @@ export default {
     padding: 0px 30px 0px 30px;
   }
 
+  .bx--header__global {
+    button.cv-header-global-action > * {
+      pointer-events: none;
+    }
+  }
+
   .navbar {
     height: 60px; 
     padding: 0px;
