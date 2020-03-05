@@ -255,11 +255,12 @@ export default {
     left: 47%;
     h1 {
       font-weight: bold;
+      font-size: 2.45rem;
     }
 
     h2 {
       font-weight: 600;
-      font-weight: 1.5rem;
+      font-size: 1.3rem !important;
       text-align: center;
     }
   }
