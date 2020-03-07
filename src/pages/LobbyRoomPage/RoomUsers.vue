@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import LobbyStore from '@/store/modules/lobby.js';
-
 export default {
   name: 'RoomUsers',
   props: {
