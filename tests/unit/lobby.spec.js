@@ -20,7 +20,7 @@ describe('Lobby rendering and functionality', () => {
     });
 
     expect(wrapper.find('h1').exists()).toBe(true);
-    expect(wrapper.find('h1').text()).toBe('Join a room with friends, or strangers.');
+    expect(wrapper.find('h1').text()).toBe('DJWithFriends.');
   });
 
   it('Modal functionality', () => {

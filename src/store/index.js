@@ -66,7 +66,6 @@ export default new Vuex.Store({
       const ERROR = urlParams !== false ? urlParams.get('error') : false;
 
       if (ERROR) {
-        console.log(`Error! Could not handle callback @${ERROR}`); // eslint-disable-line
         // Return back to login || other path
         returnTo.redirect = '/login'
 
@@ -182,23 +181,21 @@ export default new Vuex.Store({
     async handleReAuth({state, dispatch}, payload) {
       // Check if access code has expired
       const expiresAt = JSON.parse(localStorage.getItem('expires'));
-      const oldAccessToken = state.spotifyAPIData.accessToken;
-      console.log(expiresAt);
+      // const oldAccessToken = state.spotifyAPIData.accessToken;
 
       const isExpired = (expiresAt.expiresWhen + expiresAt.timestamp) - Math.floor(new Date().getTime() / 1000);
       if (isExpired < 0) {
-        console.log('Access token has expired!');
+        console.log('Access token has expired!'); // eslint-disable-line
 
         // Request a new token
         const refreshToken = state.spotifyAPIData.refreshToken
         if (refreshToken) {
-          console.log('Request new token!');
+          console.log('Request new token!'); // eslint-disable-line
           dispatch('auth', {callbackURL: '/', refresh: refreshToken, callToAPI: 'callback'}).then(res => {
-            console.log('Request of new token successful')
+            console.log('Request of new token successful', res); // eslint-disable-line
             // this.$router.push(res.redirect); // Go to homepage
 
             if (payload !== undefined && payload.refreshFromRooms === true) {
-              console.log('Doing the thing from the payload yo!');
               return 'done';
             }
 
@@ -212,7 +209,7 @@ export default new Vuex.Store({
           // this.$router.push('/login');
         }
       } else {
-        console.log(`Access token expires in ${isExpired}`);
+        console.log(`Access token expires in ${isExpired}`); // eslint-disable-line
       }
     }
   }

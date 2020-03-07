@@ -9,7 +9,7 @@
           <div id="current_playing_data">
             <div id="current_song">
               <transition name="slide-fade">
-                <h1 v-if="this.$store.state.rooms.currentTrack.track !== ''">{{(this.$store.state.rooms.currentTrack.track === '') ? 'No Song Playing!' : currentPlaying.track}}</h1>
+                <h1 v-if="this.$store.getters.grabCurrentPlaying.track !== ''">{{(this.$store.getters.grabCurrentPlaying.track === '') ? 'No Song Playing!' : currentPlaying.track}}</h1>
               </transition>
             </div>
             <div id="current_album">
@@ -20,25 +20,19 @@
 
         <div id="track_controls">
           <div class="controls">     
-            <cv-button
-              :kind="kind"
-              :size="size"
-              :disabled="false"
-              @click="addSong"
-              :icon="icon">
-              Add to queue
-            </cv-button>
+            <button
+            class="bx--btn bx--btn--primary"
+            type="button" id="add_to_queue_btn" @click="addSong">
+              Add to Queue
+              <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--btn__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 7L9 3 7 3 7 7 3 7 3 9 7 9 7 13 9 13 9 9 13 9 13 7z"></path></svg>
+            </button> 
 
-            <cv-button
-              id="skip_btn"
-              kind="secondary"
-              :size="size"
-              :disabled="this.$store.state.rooms.voted"
-              @click="skipTrack"
-              :icon="icon"
-              >
-              Skip Track
-            </cv-button>
+            <button
+            class="bx--btn bx--btn--secondary"
+            type="button" id="skip_btn" :disabled="this.$store.getters.grabIfVoted" @click="skipTrack">
+            Skip Track
+              <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--btn__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 7L9 3 7 3 7 7 3 7 3 9 7 9 7 13 9 13 9 9 13 9 13 7z"></path></svg>
+            </button> 
           </div>
 
           <div id="progress_bar">
@@ -103,7 +97,7 @@ export default {
     return {
       loginStatus: '',
       kind: 'primary',
-      disabled: this.$store.state.rooms.toSkip.voted,
+      disabled: this.$store.getters.grabCurrentVotes.voted,
       icon: AddFilled16,
       activatedTab: 'Next Up',
       visibleModal: false,
@@ -159,7 +153,7 @@ export default {
       return grabCurrent > 0 ? String(grabCurrent / this.trackDuration[1] * 100) + '%' : '0';
     },
     grabCurrentImageAlbum() {
-      const currentTrack = this.$store.state.rooms.currentTrack;
+      const currentTrack = this.$store.getters.grabCurrentPlaying;
       let albumImage = '';
       if (currentTrack.hasOwnProperty('albumImage') && currentTrack.albumImage.length) {
         albumImage = currentTrack.albumImage[0].url;

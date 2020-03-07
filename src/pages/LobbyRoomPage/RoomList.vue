@@ -66,7 +66,6 @@ export default {
   },
   computed: {
     grabGenres: function() {
-      console.log(this.$store.getters.grabPages());
       const currentGenres = new Set(LobbyStore.state.rooms.map(curr => curr.settings['room-genre']).sort());
       return currentGenres;
     }

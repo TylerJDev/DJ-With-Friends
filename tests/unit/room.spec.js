@@ -1,8 +1,7 @@
 import { shallowMount} from '@vue/test-utils';
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-import storeConfig from '@/store/index.js';
+import storeConfig from '@/store/modules/rooms.js';
 import Player from '@/pages/UserRoomsPage/RoomPlayer.vue';
 
 describe('Test main region', () => {
@@ -10,7 +9,7 @@ describe('Test main region', () => {
     const store = new Vuex.Store(storeConfig);
     
     it('Heading(s) is given song name', () => {
-        store.commit('addCurrentTrack', {'track': 'Runaway!', 'album': 'Deee-Lite'});
+        store.commit('addCurrentTrack', {'track': 'Runaway!', 'album': 'Deee-Lite', 'queue': [1]});
         const wrapper = shallowMount(Player, {
             mocks: {
                 $store: store,
@@ -25,7 +24,7 @@ describe('Test main region', () => {
     });
 
     it('H1 to contain default text if no track', () => {
-        store.commit('addCurrentTrack', {'track': '', 'album': ''});
+        store.commit('addCurrentTrack', {'track': '', 'album': '', 'queue': [1]});
         const wrapper = shallowMount(Player, {
             mocks: {
                 $store: store
@@ -35,7 +34,7 @@ describe('Test main region', () => {
             }
         });
 
-        expect(wrapper.find('h1').text()).toBe('No Song Playing!');
+        expect(wrapper.find('h1').text()).toBe('');
     });
 
     it('Progress bar has correct time', () => {

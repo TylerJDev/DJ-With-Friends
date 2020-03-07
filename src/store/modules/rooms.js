@@ -86,6 +86,12 @@ const userListStore = {
         },
         grabCurrentProgress: (state) => {
             return state.currentProgress;
+        },
+        grabCurrentVotes: (state) => {
+            return state.toSkip;
+        },
+        grabIfVoted: (state) => {
+            return state.voted;
         }
     }, 
     actions: {

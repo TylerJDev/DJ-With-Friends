@@ -36,7 +36,7 @@
     </div> -->
 
     <header>
-      <h2 id="swf">DJ<br>With<br>Friends.</h2>
+      <h1 id="swf">DJ<br>With<br>Friends.</h1>
     </header>
     <RoomList v-bind:genres="currentGenres"/>
     <RoomCreationModal @createRoom="createRoom"/>
