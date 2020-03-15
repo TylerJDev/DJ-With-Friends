@@ -98,9 +98,9 @@ export default {
         let res = await response.json();
         // console.log(res);
 
-        this.tracksFound = res.tracks.items.length > 0;
-
         try {
+          this.tracksFound = res.tracks.items.length > 0;
+          
           if (res.tracks.items.length) {
             this.tracks = res.tracks.items;
           }
