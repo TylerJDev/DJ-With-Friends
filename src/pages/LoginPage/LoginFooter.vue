@@ -3,6 +3,7 @@
     <div id="footer_controls">
       <a href="https://github.com/TylerJDev/Spotify-With-Friends" target="_blank">View On GitHub</a>
       <a href="/about#contact">Need Help?</a>
+      <span>Version 0.0.1</span>
     </div>
   </footer>
 </template>
