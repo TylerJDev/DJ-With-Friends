@@ -18,6 +18,7 @@
     <div id="footer_links">
       <a href="/about">About</a>
       <a href="/">Need Help?</a>
+      <span>Version 0.0.1</span>
     </div>
   </footer>
   </div>
