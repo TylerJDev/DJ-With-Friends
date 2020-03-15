@@ -8,7 +8,7 @@
   :auto-hide-off="autoHideOff">
   <template v-if="use_contentWithInput" slot="content">
       <div class="bx--form-item">
-        <label for="search-input" class="bx--label" id="search_songs_label">Search Songs</label>
+        <label for="search-input" class="bx--label" id="search_songs_label">Search Songs<span v-if="this.tracksFound === false" class="warning_msg" role="alert"> - No tracks found!</span></label>
         <div id="input_search_container">
           <form v-on:submit.prevent="searchTracks">
             <input id="search-input" type="text" class="bx--text-input" placeholder="Search for a song" data-modal-primary-focus>
@@ -74,7 +74,8 @@ export default {
       autoHideOff: false,
       featuredTrack: 0,
       selectedTrack: '',
-      ordered: false
+      ordered: false,
+      tracksFound: true,
     }
   },
   methods: {
@@ -95,9 +96,11 @@ export default {
         });
 
         let res = await response.json();
-        console.log(res);
+        // console.log(res);
 
         try {
+          this.tracksFound = res.tracks.items.length > 0;
+          
           if (res.tracks.items.length) {
             this.tracks = res.tracks.items;
           }
@@ -106,9 +109,9 @@ export default {
             let iterationTrys = (i + 1);
             this.$store.dispatch('handleReAuth', {refreshFromRooms: true});
 
-          this.$store.dispatch('handleReAuth', {refreshFromRooms: true}).then(res => {
-            console.log('Finished!');
-            console.log(res);
+          this.$store.dispatch('handleReAuth', {refreshFromRooms: true}).then(() => {
+            // console.log('Finished!');
+            // console.log(res);
 
             this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': '?', 'id': this.$store.state.spotifyAPIData.userID});
           });
@@ -371,5 +374,10 @@ export default {
     .bx--btn--primary {
       white-space: nowrap;
     }
+  }
+
+  .warning_msg {
+    color: red;
+    margin-left: 5px;
   }
 </style>
