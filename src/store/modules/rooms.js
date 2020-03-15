@@ -10,7 +10,8 @@ const userListStore = {
         voted: false,
         currentQueue: [],
         history: [],
-        maxTime: 0
+        maxTime: 0,
+        hosting: false
     },
     mutations: {
         notifyUsers: (state, payload) => {
@@ -78,6 +79,10 @@ const userListStore = {
                 payload.shift();
                 state.currentQueue = payload;
             }
+        },
+        setHosting: (state, payload) => {
+            if (typeof payload === 'boolean')
+                state.hosting = payload;
         }
     },
     getters: {
@@ -92,6 +97,9 @@ const userListStore = {
         },
         grabIfVoted: (state) => {
             return state.voted;
+        },
+        grabIfHosting: (state) => {
+            return state.hosting;
         }
     }, 
     actions: {
