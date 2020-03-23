@@ -36,6 +36,7 @@ export default {
     addToQueueSocket(data) {
       this.socketConnect.emit('addQueue', data);
       this.socketConnect.on('removeFromQueue', () => {
+
         this.currentTrackData.shift();
       })
     },

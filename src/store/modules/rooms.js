@@ -32,6 +32,10 @@ const userListStore = {
                     if (!state.currentQueue.length) {
                         payload.queue.shift();
                         state.currentQueue = payload.queue;
+                    } else if (!state.currentQueue.length && !payload.queue.length && payload.track.length && state.currentTrack.track === '') {
+                        state.maxTime = payload.duration;
+                        state.currentTrack = payload;
+                        state.trackPlaying = payload.currentlyPlaying; 
                     }
 
                     if (payload.hasOwnProperty('history')) {
