@@ -107,7 +107,21 @@ export default {
     });
 
     this.socketConnect.on('user', (data) => {
-      const ROOM_USERS = data.users.map(curr => curr.name);
+      /* data.users.push({accessToken: "", host: true, id: "5xm4va5mohag68yw3xfu9yt64", mainDevice: null, name: "Bloo", premium: "true", roomID: 3707, timeJoined: 1585352845629, userCount: 1})
+      data.users.push({accessToken: "", host: true, id: "5xm4va5mohag68yw3xfu9yt64", mainDevice: null, name: "Bloo", premium: "true", roomID: 3707, timeJoined: 1585352845629, userCount: 1}) */
+
+      let usersActive = [];
+
+      const ROOM_USERS = data.users.map((curr) => {
+        let prefix = '';
+        if (usersActive.indexOf(curr.name) >= 0) {
+          prefix = ` (${usersActive.filter(c => c === curr.name).length})`;
+        }
+
+        usersActive.push(curr.name)
+        return curr.name + prefix;
+      });
+
       this.$store.commit('notifyUsers', data.messageData);
       this.$store.state.rooms.users = ROOM_USERS;
 

@@ -31,24 +31,25 @@ export default {
   },
   computed: {
     timeAgo: function() {
-      let items = this.notifications.map(current => Math.floor((Date.now() - current.timeJoined) / 1000));
+      // let items = this.notifications.map(current => Math.floor((Date.now() - current.timeJoined) / 1000));
 
-      items.forEach((item, index) => {
-        let itemTitle = '';
+      // items.forEach((item, index) => {
+      //   let itemTitle = '';
 
-        if (item !== false) {
-          if (item < 60) {
-            itemTitle = 'A few seconds ago'
-          } else if (item > 60 && item < 600) {
-            itemTitle = 'A few minutes ago';
-          } else {
-            itemTitle = `${Math.floor(item / 60)} minutes ago`;
-          }
-        }
-        items[index] = itemTitle;
-      });
+      //   if (item !== false) {
+      //     if (item < 60) {
+      //       itemTitle = 'A few seconds ago'
+      //     } else if (item > 60 && item < 600) {
+      //       itemTitle = 'A few minutes ago';
+      //     } else {
+      //       itemTitle = `${Math.floor(item / 60)} minutes ago`;
+      //     }
+      //   }
+      //   items[index] = itemTitle;
+      // });
 
-      return items;
+      // return items;
+      return this.$store.getters.timeAgo;
     },
     users: function() {
       let notificationItems = this.limit ? this.$store.state.rooms.notificationList.filter((current, index) => index < 10) : this.$store.state.rooms.notificationList;

@@ -4,6 +4,17 @@ import Vuex from 'vuex'
 import storeConfig from '@/store/modules/rooms.js';
 import Player from '@/pages/UserRoomsPage/RoomPlayer.vue';
 
+/** TO-DO
+ * TEST: Settings => Dark mode => Light mode * Navbar
+ * TEST: Devices => If no devices display message * Navbar
+ * TEST: Notifications => Adding => Deleting * Navbar
+ * TEST: Progress bar
+ * TEST: Skip => If skipped & no playing track
+ * TEST: Hosting => Stop Hosting
+ * TEST: Next up => History => Users
+ * TEST: Queue => History
+ */
+
 describe('Test main region', () => {
     Vue.use(Vuex);
     const store = new Vuex.Store(storeConfig);
@@ -51,4 +62,19 @@ describe('Test main region', () => {
         expect(wrapper.find('p.initial').text()).toBe('0:50');
 
     });
+
+    it('Expect album image to be displayed', () => {
+        store.commit('addCurrentTrack', {'track': '', 'album': '', 'queue': [1], 'albumImage': [{'url': 'www.djwithfriends.com'}]});
+
+        const wrapper = shallowMount(Player, {
+            mocks: {
+                $store: store,
+            },
+            propsData: {
+                currentTrackPlaying: {'track': ''}
+            }
+        });
+
+        expect(wrapper.find('div#artist_container').attributes('style')).toContain('www.djwithfriends.com');
+    })
 });

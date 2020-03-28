@@ -1,5 +1,6 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light">      
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <NotificationAlert />      
     <cv-header aria-label="Carbon header">
       <cv-header-menu-button aria-label="Header menu" aria-controls="side-nav" />
       <cv-skip-to-content href="#main-content">
@@ -104,7 +105,8 @@
 </template>
 
 <script>
-import NotificationList from '@/components/NotificationList.vue'
+import NotificationList from '@/components/NotificationList.vue';
+import NotificationAlert from '@/components/NotificationAlert.vue';
 import { focusEle } from '@/utils/focus.js';
 
 export default {
@@ -186,7 +188,8 @@ export default {
     }
   },
   components: {
-    NotificationList
+    NotificationList,
+    NotificationAlert
   }
 }
 </script>
