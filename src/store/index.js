@@ -45,7 +45,7 @@ export default new Vuex.Store({
       lowContrast: false,
       initialised: false
     },
-    location: window.location.hostname.indexOf('localhost') >= 0 ? 'http://localhost:3000/' : 'https://dj-with-friends.herokuapp.com/' 
+    location: window.location.hostname.indexOf('localhost') >= 0 ? 'http://localhost:3000/' : location.hostname.replace('.com', '').split('.').length === 2 ? 'https://dj-with-friends-dev.herokuapp.com/' : 'https://dj-with-friends.herokuapp.com/'
   },
   mutations,
   getters,

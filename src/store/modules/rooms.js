@@ -10,7 +10,8 @@ const userListStore = {
         voted: false,
         currentQueue: [],
         history: [],
-        maxTime: 0
+        maxTime: 0,
+        hosting: false
     },
     mutations: {
         notifyUsers: (state, payload) => {
@@ -31,6 +32,10 @@ const userListStore = {
                     if (!state.currentQueue.length) {
                         payload.queue.shift();
                         state.currentQueue = payload.queue;
+                    } else if (!state.currentQueue.length && !payload.queue.length && payload.track.length && state.currentTrack.track === '') {
+                        state.maxTime = payload.duration;
+                        state.currentTrack = payload;
+                        state.trackPlaying = payload.currentlyPlaying; 
                     }
 
                     if (payload.hasOwnProperty('history')) {
@@ -78,6 +83,10 @@ const userListStore = {
                 payload.shift();
                 state.currentQueue = payload;
             }
+        },
+        setHosting: (state, payload) => {
+            if (typeof payload === 'boolean')
+                state.hosting = payload;
         }
     },
     getters: {
@@ -92,6 +101,9 @@ const userListStore = {
         },
         grabIfVoted: (state) => {
             return state.voted;
+        },
+        grabIfHosting: (state) => {
+            return state.hosting;
         }
     }, 
     actions: {

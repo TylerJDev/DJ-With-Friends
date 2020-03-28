@@ -2,7 +2,7 @@
   <div id="room_container">
     <a href="/" id="leave_room" style="display: none;">Leave Room</a>
     <Navbar @change-device="changeMainDevice" />
-    <Player @add-track="handleTrackAddition" :currentTrackPlaying="currentTrackPlaying" @skip-track="skipTrack" :currentTrackData="currentTrackData" @handle-modal="handleModal"/>
+    <Player @add-track="handleTrackAddition" :currentTrackPlaying="currentTrackPlaying" @skip-track="skipTrack" :currentTrackData="currentTrackData" @handle-modal="handleModal" @handle-host="handleHost"/>
     <UserList :currentUsers="currentUsers" style="display: none;"/>
     <TrackListModal @add-queue="addToQueueSocket" :visible="visibleModal" @handle-modal="handleModal" @refresh-token="refreshToken"/>
     <TrackSlider />
@@ -36,6 +36,7 @@ export default {
     addToQueueSocket(data) {
       this.socketConnect.emit('addQueue', data);
       this.socketConnect.on('removeFromQueue', () => {
+
         this.currentTrackData.shift();
       })
     },
@@ -68,11 +69,14 @@ export default {
     },
     refreshToken(oldAccessToken) {
       this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': oldAccessToken, 'id': this.$store.state.spotifyAPIData.userID});
+    },
+    handleHost(value) {
+      this.socketConnect.emit('userHosts', {'host': value});
     }
   },
   created() {
     // Send user details to the socket
-    this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice});
+    this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice, 'premium': this.$store.state.spotifyAPIData.premium});
     this.socketConnect.on('currentTrack', (data) => {
       if (data.track.length) {
         // Get current progress from server
@@ -106,6 +110,13 @@ export default {
       const ROOM_USERS = data.users.map(curr => curr.name);
       this.$store.commit('notifyUsers', data.messageData);
       this.$store.state.rooms.users = ROOM_USERS;
+
+      // Set host
+      const hostCurrent = data.users.filter(currentUser => currentUser.host === true);
+
+      if (hostCurrent.length && this.$store.state.spotifyAPIData.userID === hostCurrent[0].id && !this.$store.state.rooms.hosting) {
+        this.$store.state.rooms.hosting = true;
+      }
     });
 
     this.socketConnect.on('roomError', (roomError) => {

@@ -30,11 +30,18 @@
             <button
             class="bx--btn bx--btn--secondary"
             type="button" id="skip_btn" :disabled="this.$store.getters.grabIfVoted" @click="skipTrack">
-            Skip Track
-              <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--btn__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 7L9 3 7 3 7 7 3 7 3 9 7 9 7 13 9 13 9 9 13 9 13 7z"></path></svg>
+            Skip
             </button> 
-          </div>
 
+            <button
+            class="bx--btn bx--btn--secondary"
+            type="button" id="host_btn" :disabled="this.$store.getters.grabIfVoted" @click="host">
+              <span v-if="isHosting">Stop Hosting</span>
+              <span v-if="!isHosting">Host</span>
+            </button> 
+            
+          </div>
+          
           <div id="progress_bar">
             <div id="progress_times">
               <p class="initial">{{currentDuration.join(':')}}</p>
@@ -160,6 +167,9 @@ export default {
       }
 
       return albumImage;
+    },
+    isHosting: function() {
+      return this.$store.getters.grabIfHosting;
     }
   },
   methods: {
@@ -173,6 +183,10 @@ export default {
     sideTab: function(event) {
       const elem = event.target;
       this.activatedTab = elem.textContent;
+    },
+    host: function() {
+      this.$store.commit('setHosting', this.isHosting === true ? false : true);
+      this.$emit('handle-host', this.isHosting);
     }
   },
   mounted() {
@@ -285,10 +299,15 @@ export default {
   }
 
   #skip_btn {
-    max-width: 175px;
+    max-width: 50px;
     .vote_skips {
       margin-left: 2px;
     }
+  }
+
+  #host_btn {
+    width: 120px;
+    white-space: nowrap;
   }
 
   #side_panel {
