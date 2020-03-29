@@ -15,6 +15,7 @@ export default new Vuex.Store({
   state: {
     isLoggedIn: false,
     darkMode: localStorage.getItem('dark_mode') === null ? false : localStorage.getItem('dark_mode') === 'true' ? true : false,
+    hostMode: localStorage.getItem('host_mode') === null ? false : localStorage.getItem('host_mode') === 'true' ? true : false,
     spotifyAPIData: {
       'authCode': localStorage.getItem('auth_code'),
       'spotifyState': localStorage.getItem('spotify_state'),

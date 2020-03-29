@@ -87,16 +87,22 @@
                       label="Dark Mode"
                       value="Dark"
                       @change="darkMode"
-                      :checked="checked">
+                      :checked="this.$store.state.darkMode">
                     </cv-checkbox>
                   </template>
                 </cv-accordion-item>
-                <!-- <cv-accordion-item>
+                <cv-accordion-item>
                   <template slot="title">Hosting</template>
                   <template slot="content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p>Enable always-hosting</p>
+                    <cv-checkbox
+                      label="Always Host"
+                      value="Host"
+                      @change="hostMode"
+                      :checked="this.$store.state.hostMode">
+                    </cv-checkbox>
                   </template>
-                </cv-accordion-item> -->
+                </cv-accordion-item>
             </cv-accordion>
           </cv-tile>
       </template>
@@ -145,6 +151,9 @@ export default {
     },
     darkMode(value) {
       this.$store.commit('darkMode', {mode: value});
+    },
+    hostMode(value) {
+      this.$store.commit('hostMode', {mode: value});
     },
     closePopup(typePopup) {
       const labels = {'popupNotify': 'Notifications', 'popupUser': 'User avatar'};

@@ -103,7 +103,11 @@ const userListStore = {
             return state.voted;
         },
         grabIfHosting: (state) => {
-            return state.hosting;
+            if (state.hosting !== true && localStorage.getItem('host_mode') === 'true') {
+                return true;
+            } else {
+                return state.hosting;
+            }
         },
         grabNavNotifications: (state) => {
             return state.notificationList;

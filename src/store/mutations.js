@@ -28,3 +28,10 @@ export const darkMode = (state, payload) => {
         localStorage.setItem('dark_mode', state.darkMode);
     }
 }
+
+export const hostMode = (state, payload) => {
+    if (payload.hasOwnProperty('mode') && typeof payload.mode === 'boolean') {
+        state.hostMode = payload.mode;
+        localStorage.setItem('host_mode', state.hostMode);
+    }
+}
