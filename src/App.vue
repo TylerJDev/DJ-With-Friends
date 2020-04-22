@@ -70,6 +70,16 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,500,600,700&display=swap');
 
+@media (max-width: 66rem) {
+  #app {
+    height: auto !important;
+  }
+}
+
+body {
+  background-color: rgb(226, 215, 202) !important;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -77,6 +87,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100vh;
+  background-color: rgb(226, 215, 202);
 }
 
 #nav {
@@ -108,6 +119,39 @@ export default {
   transition: 1000ms;
   &.dark {
     background-color: $bg--dark;
+    .bx--list-box.bx--list-box--inline, select.bx--select-input {
+      background-color: $bg--dark;
+      border: 1px solid whitesmoke;
+      color: whitesmoke;
+      .bx--text-input::placeholder, .bx--list-box__label {
+        color: whitesmoke !important;
+      }
+    }
+    input.bx--text-input {
+      border-bottom: none;
+    }
+
+    button#card_close > svg {
+      fill: white !important;
+    }
+    h1#main_heading, h2#details_heading {
+      background-color: $bg--dark;
+    }
+
+    .cv-pagination.bx--pagination {
+      background-color: $bg--dark;
+      span {
+        color: white !important;
+      }
+      .bx--pagination__button {
+        background-color: white;
+      }
+      [disabled="disabled"] {
+          background-color: grey !important;
+      }
+      border: 1px solid whitesmoke;
+    }
+
     h1, h2, h3, h4, h5, h6, p, li, [role="tab"], .navbar a   {
       color: $text--light;
     }
@@ -185,6 +229,33 @@ export default {
 
     #footer_links > a {
       color: white;
+    }
+
+    .room_card .room_link, .room_details_btn {
+      color: whitesmoke;
+      border-color: whitesmoke;
+    }
+    
+    #room_vinyl {
+      #sleeve {
+        background-color: grey;
+        border: 2px solid whitesmoke;
+        box-shadow: 3px 5px 0px 3px black;
+      }
+      #vinyl {
+        border: 2px solid whitesmoke;
+        // border-color: whitesmoke;
+        background-color: transparent;
+        box-shadow: 0px 0px 0px 170px grey, 0px 0px 0px 171px whitesmoke, 8px 8px 0px 172px black;
+      }
+    }
+
+    #users_table {
+      color: white;
+    }
+
+    #tone_arm {
+      filter: contrast(1%);
     }
   }
 }

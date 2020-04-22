@@ -1,8 +1,7 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap'
+import Vue from 'vue';
+import App from './App.vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap';
 import store from '@/store/index.js';
 import 'carbon-components/css/carbon-components.css';
 import CarbonComponentsVue from '@carbon/vue/src/index';
@@ -17,6 +16,7 @@ import CheckedFilled16 from '@carbon/icons-vue/es/checkmark--filled/16.js';
 import TrashCan16 from '@carbon/icons-vue/es/trash-can/16.js';
 import Search16 from '@carbon/icons-vue/es/search/16.js';
 import Close16 from '@carbon/icons-vue/es/close/16.js';
+import router from './router';
 
 Vue.use(CarbonComponentsVue);
 Vue.use(CarbonIconsVue, {
@@ -30,14 +30,14 @@ Vue.use(CarbonIconsVue, {
     CheckedFilled16,
     TrashCan16,
     Search16,
-    Close16
+    Close16,
   },
 });
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount('#app');

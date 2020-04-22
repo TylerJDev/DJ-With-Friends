@@ -7,21 +7,14 @@
 </template>
 
 <style scoped lang="scss">
-  @mixin center-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
 
   .navbar {
-    height: 60px; 
-    padding: 0px;
+    display: flex;
+    width: 100%;
     position: absolute;
-    right: 0;
-    width: 200px;
-    @include center-content;
-
+    justify-content: flex-end;
+    padding: 25px;
+    
     #nav_controls {
       font-family: 'Roboto Condensed', sans-serif;
       a {

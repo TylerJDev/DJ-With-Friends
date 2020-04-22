@@ -8,11 +8,12 @@
 export default {
   methods: {
     clearNotify() {
+      const notification = this.$store.getters.grabNavNotifications;
       let notifyElem = document.querySelector('#sr-notify-topic');
 
-      if (notifyElem && !notifyElem.textContent.length) {
-        notifyElem.textContent =  this.$store.getters.grabNavNotifications[0].message + ' ' +
-        this.$store.getters.grabNavNotifications[0].name + ' ' + 
+      if (notifyElem && !notifyElem.textContent && notification[0] !== undefined) {
+        notifyElem.textContent =  notification[0].message + ' ' +
+        notification[0].name + ' ' + 
         this.$store.getters.timeAgo[0];
       } 
       

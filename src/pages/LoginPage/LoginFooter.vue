@@ -1,9 +1,8 @@
 <template>
   <footer>
     <div id="footer_controls">
-      <a href="https://github.com/TylerJDev/Spotify-With-Friends" target="_blank">View On GitHub</a>
-      <a href="/about#contact">Need Help?</a>
-      <span>Version 0.0.1</span>
+      <router-link to="/about">About</router-link>
+      <router-link to="/about#contact">Need Help?</router-link>
     </div>
   </footer>
 </template>
@@ -35,7 +34,7 @@
     padding: 20px;
     #footer_controls {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       a {
         color: black;
         text-decoration: none;

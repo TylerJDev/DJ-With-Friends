@@ -1,19 +1,19 @@
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import Login from '@/pages/LoginPage/index.vue';
 
 describe('Login page for auth', () => {
-  const $store = {'state': {'errorOccurred': {'route': 'route'}}, 'dispatch': jest.fn()};
-  const $route = {'route': 'route'};
+  const $store = { state: { errorOccurred: { route: 'route' } }, dispatch: jest.fn() };
+  const $route = { route: 'route' };
 
   const wrapper = shallowMount(Login, {
     mocks: {
       $store,
       $route,
-    }
+    },
   });
 
   it('renders login panel', () => {
-    let welcomeLoginMsg = 'Spotify With Friends';
+    const welcomeLoginMsg = 'DJ With Friends';
 
     // Ensure login heading is rendered properly
     expect(wrapper.find('h1').text()).toMatch(welcomeLoginMsg);
@@ -27,7 +27,7 @@ describe('Login page for auth', () => {
 
     fetch.mockResponseOnce('https://accounts.spotify.com/authorize?response_type=code&client_id=');
 
-    return wrapper.vm.handleAuthenticate().then(res => {
+    return wrapper.vm.handleAuthenticate().then((res) => {
       expect(res).toBe(true);
 
       // Ensure error message has not rendered
@@ -36,11 +36,11 @@ describe('Login page for auth', () => {
   });
 
   it('Check if fetch is failure', () => {
-    // Ensure if server returns error, it's handled 
+    // Ensure if server returns error, it's handled
 
     fetch.mockResponseOnce('Nothing!');
 
-    return wrapper.vm.handleAuthenticate().then(res => {
+    return wrapper.vm.handleAuthenticate().then((res) => {
       expect(res).toBe(false);
     });
   });

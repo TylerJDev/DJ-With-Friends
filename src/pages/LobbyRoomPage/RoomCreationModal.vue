@@ -98,7 +98,7 @@ export default {
           let invalidTypes = this.input_types.filter(curr => formData.hasOwnProperty(curr) !== true);
           let invalidElems = this.$el.querySelectorAll('#' + invalidTypes.join(', #'));
 
-          console.log('Error!');
+
           Array.from(invalidElems, (curr) => curr.classList.add('is-invalid'));
           return false;
         }
