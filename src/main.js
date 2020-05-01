@@ -16,6 +16,10 @@ import CheckedFilled16 from '@carbon/icons-vue/es/checkmark--filled/16.js';
 import TrashCan16 from '@carbon/icons-vue/es/trash-can/16.js';
 import Search16 from '@carbon/icons-vue/es/search/16.js';
 import Close16 from '@carbon/icons-vue/es/close/16.js';
+import ExpandCategories from '@carbon/icons-vue/es/expand-categories/16.js';
+import ArrowRight from '@carbon/icons-vue/es/arrow--right/16.js';
+import ArrowLeft from '@carbon/icons-vue/es/arrow--left/16.js';
+
 import router from './router';
 
 Vue.use(CarbonComponentsVue);
@@ -31,6 +35,9 @@ Vue.use(CarbonIconsVue, {
     TrashCan16,
     Search16,
     Close16,
+    ExpandCategories,
+    ArrowRight,
+    ArrowLeft,
   },
 });
 

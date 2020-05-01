@@ -145,6 +145,17 @@ export default {
 </script>
 
 <style lang="scss">
+  @media (max-width: $breakpoint--03) {
+    #room_container {
+      height: auto !important;
+    }
+
+    #trackslider_container {
+      margin-top: 15% !important;
+      display: none;
+    }
+  }
+
   #room_container {
     height: 100vh;
     display: flex;

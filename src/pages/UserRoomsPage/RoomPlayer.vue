@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <div class="col">
+      <div id="side_panel_col" class="col">
         <div id="currently_playing" style="display: none">
           <h1>{{currentTrackPlaying.track}}</h1>
           <h2>By</h2> <a v-for="link in currentTrackPlaying.artist" v-bind:key="link.id" v-bind:href="link.external_urls.spotify" target="_blank" class="artist_name">{{link.name}}</a>
@@ -112,8 +112,10 @@ export default {
     }
   },
   props: {
-    currentTrackPlaying: Object,
-    currentTrackData: Array
+    currentTrackPlaying: {
+      type: Object,
+      default: { track: 'No song playing!', artist: ''} 
+    }
   },
   computed: {
     logStatus: function() {
@@ -201,6 +203,97 @@ export default {
 
 <style lang="scss" scoped>
   @import url(https://fonts.googleapis.com/css?family=Oswald&display=swap);
+
+   @media (max-width: $breakpoint--12) {
+    #track_controls {
+      margin-left: 15px;
+      #add_to_queue_btn {
+        width: 72%;
+        display: block;
+      }
+
+      #host_btn, #skip_btn {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint--09) {
+    #progress_bar {
+      width: 230px !important;
+    } 
+
+    div.controls {
+      width: 300px;
+    }
+
+    #add_to_queue_btn {
+      width: 67% !important;
+    }
+    
+    // #main {
+    //   min-width: 850px !important;
+    // }
+
+    #side_panel .side_panel_active {
+      font-size: 1.5rem !important;
+    }
+
+    #side_panel #side_panel_tablist {
+      margin-left: 5px !important;
+    }
+  }
+
+  @media (max-width: $breakpoint--03) {
+    #current_track {
+      flex-direction: column !important;
+      margin-top: 15% !important;
+    }
+
+    #artist_container {
+      margin: 0 auto;
+      box-shadow: -20px 23px 0px 2px rgba(0, 0, 0, 0.75) !important;
+    }
+
+    #track_controls {
+      position: fixed;
+      bottom: 0;
+      background-color: grey;
+      width: 100%;
+      margin-left: 0px;
+      margin: 0 auto !important;
+      z-index: 5;
+      height: 100px;
+    }
+
+    #controls {
+      display: flex;
+    }
+
+    #progress_times {
+      display: flex !important;
+      flex-direction: row !important;
+    }
+
+    #progress_bar {
+      width: 100% !important;
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    #side_panel {
+      box-shadow: 3px 10px 0px 2px rgba(0, 0, 0, 0.75) !important;
+    }
+
+    #side_panel_col {
+      margin-top: 25% !important;
+      margin-bottom: 20%;
+    }
+
+    #side_panel_tablist {
+      top: -18% !important;
+    }
+  }
 
   h1, h2, h3, h4 {
     font-family: 'IBM Plex Sans', sans-serif;

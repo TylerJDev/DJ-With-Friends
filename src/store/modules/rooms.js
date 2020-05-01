@@ -9,7 +9,9 @@ const userListStore = {
     toSkip: { votes: [], requiredVotes: 0 },
     voted: false,
     currentQueue: [],
+    sliderQueue: [],
     history: [],
+    sliderHistory: [],
     maxTime: 0,
     hosting: false,
   },
@@ -26,6 +28,7 @@ const userListStore = {
           if (!state.currentQueue.length) {
             payload.queue.shift();
             state.currentQueue = payload.queue;
+            state.sliderQueue = payload.queue;
           } else if (!state.currentQueue.length && !payload.queue.length && payload.track.length && state.currentTrack.track === '') {
             state.maxTime = payload.duration;
             state.currentTrack = payload;
@@ -74,10 +77,22 @@ const userListStore = {
       if (payload.length) {
         payload.shift();
         state.currentQueue = payload;
+        state.sliderQueue = payload;
       }
     },
     setHosting: (state, payload) => {
       if (typeof payload === 'boolean') { state.hosting = payload; }
+    },
+    setIndex: (state, payload) => {
+      if (Object.prototype.hasOwnProperty.call(payload, 'index') === true) {
+        if (payload.type === 'queue') {
+          const queueCopy = [...state.currentQueue];
+          state.sliderQueue = queueCopy.splice(payload.index, state.currentQueue.length);
+        } else if (payload.type === 'history') {
+          const historyCopy = [...state.history];
+          state.sliderHistory = historyCopy.splice(payload.index, state.history.length);
+        }
+      }
     },
   },
   getters: {

@@ -127,8 +127,20 @@ body {
         color: whitesmoke !important;
       }
     }
+
+    .cv-header.bx--header {
+      background-color: transparent;
+    }
+
     input.bx--text-input {
       border-bottom: none;
+    }
+
+    .slider_btn {
+      background-color: #4f4f4f;
+      > svg {
+        fill: white;
+      }
     }
 
     button#card_close > svg {

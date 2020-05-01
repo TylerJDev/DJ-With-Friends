@@ -61,7 +61,10 @@
 <script>
 export default {
   props: {
-    visible: Boolean
+    visible: {
+      type: Boolean,
+      required: true
+    }
   },
   data() {
     return {
@@ -96,7 +99,6 @@ export default {
         });
 
         let res = await response.json();
-        // console.log(res);
 
         try {
           this.tracksFound = res.tracks.items.length > 0;
@@ -129,7 +131,8 @@ export default {
           trackArtist: this.tracks[this.selectedTrack].artists,
           trackDuration: this.tracks[this.selectedTrack]['duration_ms'],
           trackAlbum: this.tracks[this.selectedTrack].album.name,
-          trackAlbumImage: this.tracks[this.selectedTrack].album.images
+          trackAlbumImage: this.tracks[this.selectedTrack].album.images,
+          whoQueued: this.$store.state.spotifyAPIData.user
         }
 
         this.$emit('add-queue', trackDetails);
