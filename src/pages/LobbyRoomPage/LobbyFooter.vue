@@ -2,7 +2,7 @@
   <footer>
     <div id="footer_links">
       <a href="/about">About</a>
-      <a href="/">Need Help?</a>
+      <a href="/about">Need Help?</a>
     </div>
   </footer>
 </template>

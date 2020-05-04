@@ -195,30 +195,6 @@ export default {
     margin: 0 auto;
     box-shadow: 0px 0px 0px 170px #2c2c2a, 0px 0px 0px 171px black, 8px 8px 0px 172px grey;
     z-index: 1;
-    // box-shadow: 0px 0px 0px 1px #707070, 
-    // 0px 0px 0px 2px black, 
-    // 0px 0px 0px 3px #707070, 
-    // 0px 0px 0px 4px black, 
-    // 0px 0px 0px 5px #707070,
-    // 0px 0px 0px 10px black, 
-    // 0px 0px 0px 11px #707070, 
-    // 0px 0px 0px 12px black,
-    // 0px 0px 0px 13px #707070, 
-    // 0px 0px 0px 14px black, 
-    // 0px 0px 0px 15px #707070, 
-    // 0px 0px 0px 20px black, 
-    // 0px 0px 0px 21px #707070, 
-    // 0px 0px 22px black, 
-    // 0px 0px 0px 23px #707070,
-    // 0px 0px 0px 24px black,
-    // 0px 0px 0px 25px #707070, 
-    // 0px 0px 0px 40px black,
-    // 0px 0px 0px 41px #707070,
-    // 0px 0px 0px 42px black,
-    // 0px 0px 0px 43px #707070,  
-    // 0px 0px 0px 44px black,
-    // 0px 0px 0px 45px #707070,  
-    // 0px 0px 0px 100px black;
   }
 
   #sleeve {
@@ -233,6 +209,7 @@ export default {
     box-shadow: 3px 5px 0px 3px grey;
     background-size: cover;
     z-index: 100;
+    background-color: burlywood;
   }  
 
   #tone_arm {
