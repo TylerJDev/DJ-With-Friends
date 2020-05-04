@@ -45,7 +45,7 @@
           <div id="progress_bar">
             <div id="progress_times">
               <p class="initial">{{currentDuration.join(':')}}</p>
-              <p class="end">{{trackDuration[0]}}</p>
+              <p class="end">{{duration[0]}}</p>
             </div>
             <div id="progress"><div id="progress__innerbar" :style="{'width': currentProgress}"></div></div>
           </div>
@@ -124,7 +124,7 @@ export default {
     currentPlaying: function() {
       return this.$store.getters.grabCurrentPlaying;
     },
-    trackDuration: function() {
+    duration: function() {
         let seconds = this.currentPlaying.duration / 1000;
         let result1 = Math.floor(seconds / 60); 
         let result2 = Math.round(seconds - (result1 * 60));
@@ -159,7 +159,7 @@ export default {
     currentProgress: function() {
       let grabCurrent = Math.floor(this.$store.getters.grabCurrentProgress);
 
-      return grabCurrent > 0 ? String(grabCurrent / this.trackDuration[1] * 100) + '%' : '0';
+      return grabCurrent > 0 ? String(grabCurrent / this.duration[1] * 100) + '%' : '0';
     },
     grabCurrentImageAlbum() {
       const currentTrack = this.$store.getters.grabCurrentPlaying;

@@ -107,19 +107,10 @@ export default {
             this.tracks = res.tracks.items;
           }
         } catch(TypeError) {
-          if (i < 2) {
-            let iterationTrys = (i + 1);
-            this.$store.dispatch('handleReAuth', {refreshFromRooms: true});
-
-          this.$store.dispatch('handleReAuth', {refreshFromRooms: true}).then(() => {
-            // console.log('Finished!');
-            // console.log(res);
-
-            this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': '?', 'id': this.$store.state.spotifyAPIData.userID});
+          const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+          this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
+            this.$emit('refresh-token', oldAccess);
           });
-
-            this.searchTracks(e, iterationTrys);
-          }
         }
       }
     },
@@ -127,11 +118,11 @@ export default {
       if (this.selectedTrack) {
         const trackDetails = {
           trackURI: this.tracks[this.selectedTrack].uri,
-          trackName: this.tracks[this.selectedTrack].name,
-          trackArtist: this.tracks[this.selectedTrack].artists,
-          trackDuration: this.tracks[this.selectedTrack]['duration_ms'],
-          trackAlbum: this.tracks[this.selectedTrack].album.name,
-          trackAlbumImage: this.tracks[this.selectedTrack].album.images,
+          track: this.tracks[this.selectedTrack].name,
+          artist: this.tracks[this.selectedTrack].artists,
+          duration: this.tracks[this.selectedTrack]['duration_ms'],
+          album: this.tracks[this.selectedTrack].album.name,
+          albumImage: this.tracks[this.selectedTrack].album.images,
           whoQueued: this.$store.state.spotifyAPIData.user
         }
 

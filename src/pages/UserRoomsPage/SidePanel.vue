@@ -3,17 +3,17 @@
     <ol id="tracklist_panel" v-if="currentPanel === 'Next Up'">
 
       <li v-for="(item, index) in getQueue" :key="'track_item_' + index">
-        <span>{{item.trackName}} 
+        <span>{{item.track}} 
           <cv-interactive-tooltip :alignment="alignment" :direction="direction"
           :visible="visible">
             <template v-if="use_label" slot="label">
-              Added by {{item.trackName}}
+              Added by {{item.track}}
             </template>
             <template v-if="use_trigger" slot="trigger"><InformationFilled16 class="bx--overflow-menu__icon bx--toolbar-filter-icon" />
             </template>
             <template v-if="use_content" slot="content">
-              <h3 class="tooltip_heading">{{item.trackName}}</h3>
-              <p>Album: <em>{{item.trackAlbum}}</em></p>
+              <h3 class="tooltip_heading">{{item.track}}</h3>
+              <p>Album: <em>{{item.album}}</em></p>
               <p>Track Duration: <em>{{getDuration[0][index]}}</em></p>
               <p>Track Artists: <em>{{getArtists[0][index].join(' ')}}</em></p>
 
@@ -24,7 +24,7 @@
           </cv-interactive-tooltip>
         </span>
         <br>
-        <span>{{item.trackAlbum}}</span>
+        <span>{{item.album}}</span>
         <!-- <button class="heart_track" :aria-label="'Favorite Track ' + 'Track_name'" @click="favoriteTrack"><Favorite16/></button> -->
 
         <span class="added_by bx--tooltip__label" v-if="users.indexOf(item.whoQueued) >= 0">Added by {{item.whoQueued}}</span>
@@ -33,17 +33,17 @@
 
     <ol id="history_panel" v-if="currentPanel === 'History'">
       <li v-for="(item, index) in getHistory" :key="'history_item_' + index">
-        <span>{{item.trackName}}
+        <span>{{item.track}}
           <cv-interactive-tooltip :alignment="alignment" :direction="direction"
           :visible="visible">
             <template v-if="use_label" slot="label">
-              Added by {{item.trackName}}
+              Added by {{item.track}}
             </template>
             <template v-if="use_trigger" slot="trigger"><InformationFilled16 class="bx--overflow-menu__icon bx--toolbar-filter-icon" />
             </template>
             <template v-if="use_content" slot="content">
-              <h3 class="tooltip_heading">{{item.trackName}}</h3>
-              <p><strong>Album:</strong> <em>{{item.trackAlbum}}</em></p>
+              <h3 class="tooltip_heading">{{item.track}}</h3>
+              <p><strong>Album:</strong> <em>{{item.album}}</em></p>
               <p>Track Duration: <em>{{getDuration[1][index]}}</em></p>
               <p>Track Artists: <em>{{getArtists[1][index].join(' ')}}</em></p>
 
@@ -54,7 +54,7 @@
           </cv-interactive-tooltip>
         </span>
         <br>
-        <span>{{item.trackAlbum}}</span>
+        <span>{{item.album}}</span>
         <!-- <button class="heart_track" :aria-label="'Favorite Track ' + 'Track_name'" @click="favoriteTrack"><Favorite16/></button> -->
         <span class="added_by bx--tooltip__label" v-if="users.indexOf(item.whoQueued) >= 0">Added by {{item.whoQueued}}</span>
       </li>
@@ -108,7 +108,7 @@ export default {
     getDuration: function() {
       let tracksDuraiton = [[], []];
       this.getQueue.forEach((curr) => {
-        const totalSeconds = curr.trackDuration / 1000;
+        const totalSeconds = curr.duration / 1000;
         let result = [Math.floor(totalSeconds / 60), Math.floor(totalSeconds - (Math.floor(totalSeconds / 60) * 60))];
         
         if (result[1] < 10) {
@@ -124,7 +124,7 @@ export default {
       });
 
       this.getHistory.forEach((curr) => {
-        const totalSeconds = curr.trackDuration / 1000;
+        const totalSeconds = curr.duration / 1000;
         let result = [Math.floor(totalSeconds / 60), Math.floor(totalSeconds - (Math.floor(totalSeconds / 60) * 60))];
         
         if (result[1] < 10) {
@@ -145,11 +145,11 @@ export default {
       let artists = [[], []];
 
       this.getQueue.forEach((curr) => {
-        artists[0].push(curr.trackArtist.map(curr => curr.name));
+        artists[0].push(curr.artist.map(curr => curr.name));
       });
 
       this.getHistory.forEach((curr) => {
-        artists[1].push(curr.trackArtist.map(curr => curr.name));
+        artists[1].push(curr.artist.map(curr => curr.name));
       });
 
       return artists;

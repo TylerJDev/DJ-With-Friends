@@ -190,10 +190,10 @@ export default {
     height: 100px;
     border: 1px solid #707070;
     border-radius: 50%;
-    background-color: white;
+    background-color: rosybrown;
     border: 1px solid black;
     margin: 0 auto;
-    box-shadow: 0px 0px 0px 170px white, 0px 0px 0px 171px black, 8px 8px 0px 172px grey;
+    box-shadow: 0px 0px 0px 170px #2c2c2a, 0px 0px 0px 171px black, 8px 8px 0px 172px grey;
     z-index: 1;
     // box-shadow: 0px 0px 0px 1px #707070, 
     // 0px 0px 0px 2px black, 

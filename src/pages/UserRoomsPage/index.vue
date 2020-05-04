@@ -65,7 +65,7 @@ export default {
       }
     },
     refreshToken(oldAccessToken) {
-      this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': oldAccessToken, 'id': this.$store.state.spotifyAPIData.userID});
+      this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': oldAccessToken, 'id': this.$store.state.spotifyAPIData.userID, 'newAccessToken': this.$store.state.spotifyAPIData.accessToken});
     },
     handleHost(value) {
       this.socketConnect.emit('userHosts', {'host': value});
@@ -89,6 +89,11 @@ export default {
 
     this.socketConnect.on('addedQueue', (data) => {
       this.currentTrackData = data;
+
+      data.forEach((current, index) => {
+        let prefix = Object.prototype.hasOwnProperty.call(current, 'track') === true ? current.track.substring(0, 3) : '___';
+        current.keyID = String(Math.floor(Math.random() * (10000 * 1000))) + '-' + prefix;
+      });
 
       this.$store.commit('addToQueue', data);
 
@@ -132,6 +137,15 @@ export default {
 
     this.socketConnect.on('roomError', (roomError) => {
       this.$store.dispatch('handleNotification', {'type': 'error', 'initialised': true, 'title': roomError.typeError, 'subtitle': roomError.errorMessage});
+    });
+
+    this.socketConnect.on('reAuth', (data) => {
+      if (data.user === this.$store.state.spotifyAPIData.userID) {
+        const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+        this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
+            this.refreshToken(oldAccess);
+        });
+      }
     });
   },
   components: {

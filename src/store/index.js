@@ -41,8 +41,8 @@ export default new Vuex.Store({
     notification: {
       type: 'info',
       title: '',
-      subtitle: 'test_2',
-      actionLabel: 'test_3',
+      subtitle: '',
+      actionLabel: '',
       lowContrast: false,
       initialised: false,
     },
@@ -200,18 +200,18 @@ export default new Vuex.Store({
       // const oldAccessToken = state.spotifyAPIData.accessToken;
 
       const isExpired = (expiresAt.expiresWhen + expiresAt.timestamp) - Math.floor(new Date().getTime() / 1000);
-      if (isExpired < 0) {
+      if (isExpired < 0 || (Object.prototype.hasOwnProperty.call(payload, 'forceAuth') && payload.forceAuth === true)) {
         console.log('Access token has expired!'); // eslint-disable-line
 
         // Request a new token
         const { refreshToken } = state.spotifyAPIData;
         if (refreshToken) {
           console.log('Request new token!'); // eslint-disable-line
-          dispatch('auth', { callbackURL: '/', refresh: refreshToken, callToAPI: 'callback' }).then((res) => {
+          return dispatch('auth', { callbackURL: '/', refresh: refreshToken, callToAPI: 'callback' }).then((res) => {
             console.log('Request of new token successful', res); // eslint-disable-line
             // this.$router.push(res.redirect); // Go to homepage
 
-            if (payload !== undefined && payload.refreshFromRooms === true) {
+            if (payload !== undefined && payload.refreshFromRooms === true || (Object.prototype.hasOwnProperty.call(payload, 'forceAuth') && payload.forceAuth === true)) {
               return 'done';
             }
           });

@@ -58,6 +58,16 @@ const userListStore = {
         state.trackPlaying = false;
         state.toSkip.votes = { votes: [], requiredVotes: 0 };
         state.voted = false;
+
+        // Add currentTrack to history
+        if (Object.prototype.hasOwnProperty.call(state.currentTrack, 'albumImage')) {
+          if (!Object.prototype.hasOwnProperty.call(state.currentTrack, 'whoQueued')) {
+            state.currentTrack.whoQueued = '';
+          }
+
+          state.history.push(state.currentTrack);
+        }
+
         state.currentTrack = { track: '', album: '', duration: '0' };
       }
     },

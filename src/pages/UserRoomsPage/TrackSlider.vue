@@ -91,13 +91,13 @@ export default {
   computed: {
     queueAlbumImages: function() {
       const items = this.$store.state.rooms.sliderQueue;
-      const images = items.map(current => current.trackAlbumImage[0].url);
+      const images = items.map(current => current.albumImage[0].url);
 
       return images.filter((curr, index) => index <= 4);
     }, 
     historyAlbumImages: function() {
       const items = this.$store.state.rooms.history;
-      const images = items.map(current => current.trackAlbumImage[0].url);
+      const images = items.map(current => current.albumImage[0].url);
 
       return images.reverse().filter((curr, index) => index <= 4);
     },

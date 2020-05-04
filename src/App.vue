@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''">
+    <span id="prefer"></span>
     <router-view/>
     <cv-toast-notification v-if="grabNotifications.initialised"
       :kind="typeNotify"
@@ -61,6 +62,13 @@ export default {
         console.log(`Access token expires in ${isExpired}`);
       }
     }
+  },
+  mounted() {
+    const bgMode = getComputedStyle(this.$el.querySelector('#prefer')).getPropertyValue('content');
+    if (localStorage.getItem('dark_mode') === null) {
+      let typeMode = bgMode === '"dark"' ? true : false;
+      this.$store.commit('darkMode', {'mode': typeMode});
+    }
   }
 }
 </script>
@@ -113,6 +121,19 @@ body {
   position: fixed !important;
   width: 25rem !important;
   text-align: left !important;
+}
+
+@media (prefers-color-scheme: light) {
+  #prefer {
+    content: "light";
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  #prefer {
+    content: "dark";
+  }
 }
 
 #app {
