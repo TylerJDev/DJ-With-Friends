@@ -188,6 +188,30 @@ export default {
     white-space: nowrap;
   }
 
+  @media (max-width: $breakpoint--09) {
+    .modal_pane {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+
+  @media (max-width: $breakpoint--03) {
+    .bx--modal-container, .bx--modal-content {
+      overflow: initial !important;
+    }
+
+    #tracks_container {
+      flex-direction: column;
+      #tracks_pane {
+        width: 100%;
+      }
+    }
+
+    #tracks_pane {
+      height: 190px;
+    }
+  }
+
   .bx--modal-header__heading {
     display: none;
   }

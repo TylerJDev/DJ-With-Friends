@@ -236,11 +236,15 @@ export default {
     // }
 
     #side_panel .side_panel_active {
-      font-size: 1.5rem !important;
+      font-size: 1.5rem;
     }
 
     #side_panel #side_panel_tablist {
       margin-left: 5px !important;
+    }
+
+    #side_panel_col {
+      margin-top: 75px;
     }
   }
 
@@ -252,18 +256,20 @@ export default {
 
     #artist_container {
       margin: 0 auto;
-      box-shadow: -20px 23px 0px 2px rgba(0, 0, 0, 0.75) !important;
+      box-shadow: none !important;
     }
 
-    #track_controls {
-      position: fixed;
-      bottom: 0;
-      background-color: grey;
-      width: 100%;
-      margin-left: 0px;
-      margin: 0 auto !important;
-      z-index: 5;
-      height: 100px;
+    #current_playing_data {
+      position: initial !important;
+      margin-top: 20px;
+      h1 {
+        font-size: 1.5rem !important;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.1rem !important;
+      }
     }
 
     #controls {
@@ -273,12 +279,28 @@ export default {
     #progress_times {
       display: flex !important;
       flex-direction: row !important;
+      margin-top: 5% !important;
     }
 
     #progress_bar {
       width: 100% !important;
       padding-left: 30px;
       padding-right: 30px;
+    }
+
+    #track_controls > .controls {
+      width: 100%;
+      display: flex;
+      #add_to_queue_btn {
+        width: 40% !important;
+        white-space: nowrap;
+      }
+      > button {
+        margin: 0 auto;
+      }
+      & {
+        margin-left: 0px !important;
+      }
     }
 
     #side_panel {
@@ -292,6 +314,14 @@ export default {
 
     #side_panel_tablist {
       top: -18% !important;
+    }
+
+    .side_panel_tab {
+      font-size: 1.5rem;
+    }
+
+    .side_panel_tab.side_panel_active {
+      font-size: 2rem !important;
     }
   }
 
@@ -361,7 +391,7 @@ export default {
 
     h2 {
       font-weight: 600;
-      font-size: 1.3rem !important;
+      font-size: 1.3rem;
       text-align: center;
     }
   }
