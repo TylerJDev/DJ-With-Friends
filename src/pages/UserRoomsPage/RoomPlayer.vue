@@ -246,6 +246,14 @@ export default {
     #side_panel_col {
       margin-top: 75px;
     }
+
+    #current_playing_data h1 {
+      font-size: 2rem;
+    }
+
+    #current_album h2 {
+      font-size: 1.5rem;
+    }
   }
 
   @media (max-width: $breakpoint--03) {
@@ -322,6 +330,20 @@ export default {
 
     .side_panel_tab.side_panel_active {
       font-size: 2rem !important;
+    }
+
+    #track_controls {
+      margin-left: 0px !important;
+      .controls {
+        justify-content: center !important;
+      }
+      button {
+        margin: 1px !important;
+        border: 1px solid whitesmoke;
+      }
+      #add_to_queue_btn svg {
+        display: none;
+      }
     }
   }
 

@@ -115,6 +115,12 @@ export default {
 </script>
 
 <style lang="scss">
+@media (max-width: $breakpoint--04) and (min-width: $breakpoint--03) {
+  #trackslider_container {
+    visibility: hidden !important;
+  }
+}
+
 #trackslider_container {
   .row {
     display: flex;
@@ -138,7 +144,7 @@ export default {
     flex-direction: column;
     border: 2px solid black;
     width: 150px;
-    height: 150px;
+    height: 148px;
     margin-right: 25px;
     margin-left: 25px;
     box-shadow: -7px 7px 0px -1px rgba(0, 0, 0, 0.75);

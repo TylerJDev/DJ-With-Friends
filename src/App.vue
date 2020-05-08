@@ -150,7 +150,7 @@ body {
     }
 
     .cv-header.bx--header {
-      background-color: transparent;
+      background-color: $bg--dark;
     }
 
     input.bx--text-input {

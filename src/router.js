@@ -33,10 +33,12 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         const loggedState = Store.state.spotifyAPIData.refreshToken;
         const socketConnect = io.connect(`${Store.state.location}rooms`);
+        let connectState = false;
 
         if (loggedState !== null) {
           socketConnect.emit('checkLock', { roomID: to.params.id, token: Store.state.spotifyAPIData.refreshToken });
           socketConnect.on('lockedRoom', (data) => {
+            connectState = true;
             if (data.hasOwnProperty('userLimit')) {
               Store.dispatch('handleNotification', {
                 timeout: 10000, type: 'error', initialised: true, title: 'Room User Limit Reached', subtitle: 'The current room is full!',
@@ -66,6 +68,22 @@ export default new Router({
               });
             }
           });
+          let timerTicker = 0;
+
+          const checkConnect = setInterval(() => {
+            if (connectState === true || socketConnect.connect === true || timerTicker >= 5) {
+              clearInterval(checkConnect);
+              if (!connectState && timerTicker >= 10) {
+                const locationCurrent = Store.state.location;
+                next('/');
+                Store.dispatch('handleNotification', {
+                  timeout: 10000, type: 'error', initialised: true, title: 'Could not find room', subtitle: `Could not find room ${locationCurrent}`,
+                });
+              }
+            } else {
+              timerTicker += 1;
+            }
+          }, 2500);
         } else {
           next('login');
         }

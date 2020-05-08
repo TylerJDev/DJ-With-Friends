@@ -298,7 +298,6 @@ export default {
   }
 
   #album_pane {
-
     padding-top: 15px;
     // max-height: 415px;
     max-width: 360px;
