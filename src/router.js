@@ -7,6 +7,7 @@ import Login from './pages/LoginPage/index.vue';
 import About from './pages/AboutPage/index.vue';
 import Callback from './views/Callback.vue';
 import Room from './pages/UserRoomsPage/index.vue';
+import NotFound from './components/NotFound.vue';
 
 Vue.use(Router);
 
@@ -39,7 +40,7 @@ export default new Router({
           socketConnect.emit('checkLock', { roomID: to.params.id, token: Store.state.spotifyAPIData.refreshToken });
           socketConnect.on('lockedRoom', (data) => {
             connectState = true;
-            if (data.hasOwnProperty('userLimit')) {
+            if (Object.prototype.hasOwnProperty.call(data, 'userLimit')) {
               Store.dispatch('handleNotification', {
                 timeout: 10000, type: 'error', initialised: true, title: 'Room User Limit Reached', subtitle: 'The current room is full!',
               });
@@ -68,12 +69,13 @@ export default new Router({
               });
             }
           });
+          const limit = 5;
           let timerTicker = 0;
 
           const checkConnect = setInterval(() => {
-            if (connectState === true || socketConnect.connect === true || timerTicker >= 5) {
+            if (connectState === true || socketConnect.connect === true || timerTicker >= limit) {
               clearInterval(checkConnect);
-              if (!connectState && timerTicker >= 10) {
+              if (!connectState && timerTicker >= limit) {
                 const locationCurrent = Store.state.location;
                 next('/');
                 Store.dispatch('handleNotification', {
@@ -111,6 +113,11 @@ export default new Router({
       path: '/callback',
       name: 'callback',
       component: Callback,
+    },
+    {
+      path: '*',
+      name: 'notFound',
+      component: NotFound,
     },
   ],
 });

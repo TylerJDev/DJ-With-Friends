@@ -5,7 +5,8 @@
   :visible="visible"
   @modal-hidden="closeModal"
     @primary-click="addToQueue"
-  :auto-hide-off="autoHideOff">
+  :auto-hide-off="autoHideOff"
+  id="track_list_modal">
   <template v-if="use_contentWithInput" slot="content">
       <div class="bx--form-item">
         <label for="search-input" class="bx--label" id="search_songs_label">Search Songs<span v-if="this.tracksFound === false" class="warning_msg" role="alert"> - No tracks found!</span></label>
@@ -108,8 +109,18 @@ export default {
           }
         } catch(TypeError) {
           const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+          this.$store.commit('loadingState', {'status': true});
           this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
             this.$emit('refresh-token', oldAccess);
+            if (this.$store.state.spotifyAPIData.accessToken === oldAccess) {
+              Store.dispatch('handleNotification', {
+                timeout: 10000, type: 'error', initialised: true, title: 'Request failed', subtitle: 'Could not request new access token!',
+              });
+              this.$store.commit('loadingState', {'status': false});
+            } else {
+              this.$store.commit('loadingState', {'status': false});
+              this.searchTracks(e);
+            }
           });
         }
       }
@@ -211,9 +222,10 @@ export default {
       height: 190px;
     }
   }
-
-  .bx--modal-header__heading {
-    display: none;
+  #track_list_modal {
+    .bx--modal-header__heading {
+      display: none;
+    }
   }
 
   #input_search_container {

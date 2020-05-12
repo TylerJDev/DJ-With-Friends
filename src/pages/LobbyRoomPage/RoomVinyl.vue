@@ -43,12 +43,12 @@ export default {
         this.toneArm = false;
         this.toneArmIn = true;  
 
-        setTimeout(hideTone.bind(this), 2500);
+        //setTimeout(hideTone.bind(this), 2500);
         function hideTone() {
           this.toneArmLeave = true;
         }
 
-        setTimeout(change.bind(this), 5000);
+        //setTimeout(change.bind(this), 5000);
         function change() {
           this.changeVinyl();
         }
@@ -194,6 +194,7 @@ export default {
     border: 1px solid black;
     margin: 0 auto;
     box-shadow: 0px 0px 0px 170px #2c2c2a, 0px 0px 0px 171px black, 8px 8px 0px 172px grey;
+    position: relative;
     z-index: 1;
   }
 
@@ -218,9 +219,7 @@ export default {
     width: 360px;
     bottom: -130%;
     left: 110%;
-    z-index: 100;
     width: 360px;
     transform: rotate(340deg);
-    z-index: 100;
   }
 </style>

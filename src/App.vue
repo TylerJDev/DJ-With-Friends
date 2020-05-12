@@ -10,6 +10,7 @@
       :low-contrast="grabNotifications.lowContrast"
       aria-live="polite">
     </cv-toast-notification>
+    <cv-loading :active="this.$store.state.loading" overlay></cv-loading>
   </div>
 </template>
 
@@ -34,7 +35,6 @@ export default {
     if (authCode === null) {
       console.log('No access_token found!');
     } else {
-      //this.$store.dispatch('handleReAuth');
       // // Check if access code has expired
       const expiresAt = JSON.parse(localStorage.getItem('expires'));
       console.log(expiresAt);
@@ -123,6 +123,10 @@ body {
   text-align: left !important;
 }
 
+.bx--loading-overlay {
+  z-index: 9000 !important;
+}
+
 @media (prefers-color-scheme: light) {
   #prefer {
     content: "light";
@@ -169,6 +173,10 @@ body {
     }
     h1#main_heading, h2#details_heading {
       background-color: $bg--dark;
+    }
+
+    #back_to_home {
+      color: whitesmoke;
     }
 
     .cv-pagination.bx--pagination {
@@ -260,7 +268,7 @@ body {
       color: white;
     }
 
-    #footer_links > a {
+    #footer_links > a, #footer_links button{
       color: white;
     }
 
@@ -288,7 +296,7 @@ body {
     }
 
     #tone_arm {
-      filter: contrast(1%);
+      filter: contrast(10%);
     }
   }
 }

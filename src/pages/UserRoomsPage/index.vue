@@ -142,11 +142,24 @@ export default {
     this.socketConnect.on('reAuth', (data) => {
       if (data.user === this.$store.state.spotifyAPIData.userID) {
         const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+
+        this.$store.commit('loadingState', {'status': true});
         this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
-            this.refreshToken(oldAccess);
+          this.refreshToken(oldAccess);
+            if (this.$store.state.spotifyAPIData.accessToken === oldAccess) {
+              Store.dispatch('handleNotification', {
+                timeout: 10000, type: 'error', initialised: true, title: 'Request failed', subtitle: 'Could not request new access token!',
+              });
+              this.$store.commit('loadingState', {'status': false});
+            } else {
+              this.$store.commit('loadingState', {'status': false});
+            }
         });
       }
     });
+  },
+  mounted() {
+    this.$store.state.loading = false;
   },
   components: {
     Player,

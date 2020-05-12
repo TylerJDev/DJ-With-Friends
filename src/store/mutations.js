@@ -43,3 +43,9 @@ export const notifyUsers = (state, payload) => {
 export const clearNotifications = (state) => {
   state.notificationList = [];
 };
+
+export const loadingState = (state, payload) => {
+  if (Object.prototype.hasOwnProperty.call(payload, 'status') && typeof payload.status === 'boolean') {
+    state.loading = payload.status;
+  }
+};

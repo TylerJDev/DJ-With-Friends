@@ -6,7 +6,7 @@
       <div id="left_panel" class="col-md panel-main">
         <div class="panel_container">
           <h2>Rooms</h2>
-          <button type="button" id="modal_create_room" class="cv-button bx--btn bx--btn--tertiary" data-toggle="modal" data-target="#room_create_modal" v-on:click="activeModal = true">Create Room</button>
+          <button type="button" id="modal_create_room" class="cv-button bx--btn bx--btn--tertiary" v-on:click="activeModal = true">Create Room</button>
         </div>
         <div class="sort">
           <RoomSelect @show-details="showDetails"/>     
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <RoomCreationModal @createRoom="createRoom"/>
+    <RoomCreationModal @createRoom="createRoom" :modalActive="activeModal" @closeModal="closeModal"/>
     <LobbyFooter />
   </div>
 </template>
@@ -74,11 +74,14 @@ export default {
     },
     hideDetails: function() {
       this.detailsActive = false;
-    } 
+    },
+    closeModal: function() {
+      this.activeModal = false;
+    }
   },
   mounted() {
     const privateSocket = io.connect(this.$store.state.location);
-
+    this.$store.state.loading = false;
     /* this.$store.state.lobby.rooms.push(...mockData);
     this.$store.commit('addToRooms', mockData); */
 
