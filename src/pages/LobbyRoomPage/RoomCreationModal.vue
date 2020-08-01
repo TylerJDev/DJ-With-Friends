@@ -10,12 +10,11 @@
       @secondary-click="handleModalClose"
       @modal-hidden="handleModalClose"
       id="room_create_modal">
-      <template v-if="use_label" slot="label">DJ With Friends {{String(modalActive)}}</template>
       <template v-if="use_title" slot="title">Create a room</template>
       <template v-if="use_content" slot="content"><p class="room_modal_bio">Create a room to DJ with others or private with friends!</p></template>
       <template slot="content">
         <div class="bx--form-item bx--form-container bx--room-name">
-          <label for="room-name" class="bx--label">Room Name: {{createData['room-name']}}</label>
+          <label for="room-name" class="bx--label">Room Name</label>
           <input id="room-name" type="text" :aria-describedby="(createData['room-name'].length < 3 && createData['room-name'].length > 0) || roomNameError.length && createData['room-name'] < 3 ? 'error_msg_x9s0' : false" :class="[(createData['room-name'].length < 3 && createData['room-name'].length > 0) || roomNameError.length && createData['room-name'] < 3 ? 'bx--text-input bx--text-input--invalid' : 'bx--text-input']" placeholder="Room Name" data-modal-primary-focus v-on:input="giveInput" minlength="3" required>
           <div v-if="(createData['room-name'].length < 3 && createData['room-name'].length > 0) || roomNameError.length && createData['room-name'] < 3" id="error_msg_x9s0" class="bx--form-requirement">Minimum Length 3 characters!</div>
         </div>
@@ -55,15 +54,13 @@
           </div>
         </div>
         <div class="bx--form-item bx--form-container descr_textarea">   
-          <cv-text-area
-            :label="textAreaLabel"
-            :disabled="textAreaDisabled"
-            placeholder="Room Description"
-            helper-text="Add a room description for others to read (max, 256)"
-            id="room-descr"
-            v-on:input="giveInput"
-            maxlength="256">
-          </cv-text-area>
+          <div class="cv-text-area bx--form-item">
+            <label for="room-descr" class="bx--label">Room Description</label>
+            <div class="bx--form__helper-text">Add a room description for others to read (max, 256)</div>
+            <div class="bx--text-area__wrapper">
+            <textarea id="room-descr" placeholder="Room Description" maxlength="256" class="bx--text-area" v-on:input="giveInput"></textarea>
+          </div>
+        </div>
        </div>
         <div class="bx--form-item bx--form-container">
           <p class="bx--label" id="room_private_label">Room Private</p>   
@@ -175,7 +172,8 @@ export default {
       let formData = {
         'room-name': this.createData['room-name'], 
         'room-genre': this.createData['room-genres'].join(', '), 
-        'room-private_': this.createData['room-private'] === true ? this.$el.querySelector('#room-password').value : false, 
+        'room-private_': this.createData['room-private'] === true,
+        'password': this.createData['room-private'] === true ? this.$el.querySelector('#room-password').value : '', 
         'user-limit_': this.createData['room-limit_yes'] === true ? this.$el.querySelector('#room-limit_current').value : false, 
         'message-text': this.createData['room-descr']
       };

@@ -48,12 +48,30 @@ const LobbyStore = {
           state.rooms = state.allRooms;
           state.genre = payload.genres;
         } else {
-          const newResults = [];
+          let newResults = [];
           state.genre = payload.genres;
           payload.genres.forEach((current) => {
-            const result = state.allRooms.filter((curr) => curr.settings['room-genre'].toLowerCase() === current.toLowerCase());
-            if (result.length) {
-              newResults.push(...result);
+            const myResults = [];
+
+
+
+            state.allRooms.forEach((currItem) => {
+              let toFilter = currItem.settings['room-genre'];
+              if (Array.isArray(currItem.settings['room-genre']) !== true && currItem.settings['room-genre'].length) {
+                toFilter = currItem.settings['room-genre'].split(' ');
+              }
+
+              const currGenre = toFilter.filter((curr) => curr === current.toLowerCase().replace(' ', '_'));
+              if (currGenre.length) {
+                myResults.push(currItem);
+              }
+            });
+
+            /* const result = state.allRooms.filter((curr) => curr.settings['room-genre'][0] === current.toLowerCase().replace(' ', '_')); */
+
+            if (myResults.length) {
+              newResults.push(...myResults);
+              newResults = Array.from(new Set(newResults));
             }
           });
 

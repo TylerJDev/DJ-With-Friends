@@ -168,6 +168,19 @@ body {
       }
     }
 
+    #room_create_modal {
+      h2, h4, .room_modal_bio {
+        color: black !important;
+      }
+
+      .bx--multi-select {
+        background-color: #ffffff !important;
+        input::placeholder {
+          color: black !important;
+        }
+      }
+    }
+
     button#card_close > svg {
       fill: white !important;
     }

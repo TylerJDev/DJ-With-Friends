@@ -6,7 +6,7 @@
       </button>
       <h2 class="room_name">{{getCurrentDisplayed.settings['room-name']}}</h2>
       <p class="bio_host"><strong>Host:</strong> {{getCurrentDisplayed.display_name}}</p>
-      <p class="bio_genre"><strong>Genre:</strong> {{getCurrentDisplayed.settings['room-genre']}}</p>
+      <p class="bio_genre"><strong>Genre:</strong> {{Array.isArray(getCurrentDisplayed.settings['room-genre']) ? getCurrentDisplayed.settings['room-genre'].join(', ').replace(/[_]/g, ' ') : getCurrentDisplayed.settings['room-genre']}}</p>
       <p class="bio_label">Description:</p>
       <p class="bio_description">
         {{getCurrentDisplayed.settings['message-text']}}
@@ -94,6 +94,10 @@ export default {
       max-height: 80px;
       overflow: auto;
       margin-top: 10px;
+    }
+
+    .bio_genre {
+      text-transform: capitalize;
     }
 
     .users_current {

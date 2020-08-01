@@ -2,6 +2,7 @@
 node_modules
 /dist
 notes.txt
+bugs.txt
 .eslintrc.js
 
 # local env files

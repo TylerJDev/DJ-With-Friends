@@ -82,11 +82,11 @@ export default {
   mounted() {
     const privateSocket = io.connect(this.$store.state.location);
     this.$store.state.loading = false;
-    /* this.$store.state.lobby.rooms.push(...mockData);
-    this.$store.commit('addToRooms', mockData); */
+    // this.$store.state.lobby.rooms.push(...mockData);
+    // this.$store.commit('addToRooms', mockData);
 
     this.socketConnect.emit('create_user', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID});
-    this.socketConnect.on('servers', (data) => { 
+    this.socketConnect.on('servers', (data) => {
       this.$store.state.lobby.rooms.push(...data); 
       this.$store.commit('addToRooms', data); 
     });

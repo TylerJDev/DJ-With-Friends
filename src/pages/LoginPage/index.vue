@@ -54,6 +54,9 @@ export default {
       this.$store.commit('errorHandle', false);
     }
   },
+  mounted() {
+    this.$store.state.loading = false;
+  },
   components: {
     Navbar,
     Footer,

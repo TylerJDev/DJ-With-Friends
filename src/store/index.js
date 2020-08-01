@@ -49,6 +49,7 @@ export default new Vuex.Store({
     notificationList: [],
     location: window.location.hostname.indexOf('localhost') >= 0 ? 'http://localhost:3000/' : location.hostname.replace('.com', '').split('.').length === 2 ? 'https://dj-with-friends-dev.herokuapp.com/' : 'https://dj-with-friends.herokuapp.com/',
     loading: true,
+    roomKey: '',
   },
   mutations,
   getters,

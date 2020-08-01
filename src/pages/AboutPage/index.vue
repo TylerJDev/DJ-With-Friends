@@ -65,6 +65,9 @@ export default {
   name: 'about',
   components: {
     Navbar
+  },
+  mounted() {
+    this.$store.state.loading = false;
   }
 }
 </script>
