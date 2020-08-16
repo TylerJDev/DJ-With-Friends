@@ -17,7 +17,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import Firebase from 'firebase';
-import db from './db.js';
+// import db from './db.js';
 
 export default {
   data() {
