@@ -3,19 +3,60 @@
     <ol id="tracklist_panel" v-if="currentPanel === 'Next Up'">
 
       <li v-for="(item, index) in getQueue" :key="'track_item_' + index">
-        <span>{{item.trackName}}</span>
+        <span>{{item.track}} 
+          <cv-interactive-tooltip :alignment="alignment" :direction="direction"
+          :visible="visible">
+            <template v-if="use_label" slot="label">
+              Added by {{item.track}}
+            </template>
+            <template v-if="use_trigger" slot="trigger"><InformationFilled16 class="bx--overflow-menu__icon bx--toolbar-filter-icon" />
+            </template>
+            <template v-if="use_content" slot="content">
+              <h3 class="tooltip_heading">{{item.track}}</h3>
+              <p>Album: <em>{{item.album}}</em></p>
+              <p>Track Duration: <em>{{getDuration[0][index]}}</em></p>
+              <p>Track Artists: <em>{{getArtists[0][index].join(' ')}}</em></p>
+
+              <br/>
+              <a target="_blank" :href="'https://open.spotify.com/track/' + item.trackURI.split('track:')[1]">View on Spotify</a>
+              <button class="bx--button tooltip">Close</button>
+            </template>
+          </cv-interactive-tooltip>
+        </span>
         <br>
-        <span>{{item.trackAlbum}}</span>
+        <span>{{item.album}}</span>
         <!-- <button class="heart_track" :aria-label="'Favorite Track ' + 'Track_name'" @click="favoriteTrack"><Favorite16/></button> -->
+
+        <span class="added_by bx--tooltip__label" v-if="users.indexOf(item.whoQueued) >= 0">Added by {{item.whoQueued}}</span>
       </li>
     </ol>
 
     <ol id="history_panel" v-if="currentPanel === 'History'">
       <li v-for="(item, index) in getHistory" :key="'history_item_' + index">
-        <span>{{item.trackName}}</span>
+        <span>{{item.track}}
+          <cv-interactive-tooltip :alignment="alignment" :direction="direction"
+          :visible="visible">
+            <template v-if="use_label" slot="label">
+              Added by {{item.track}}
+            </template>
+            <template v-if="use_trigger" slot="trigger"><InformationFilled16 class="bx--overflow-menu__icon bx--toolbar-filter-icon" />
+            </template>
+            <template v-if="use_content" slot="content">
+              <h3 class="tooltip_heading">{{item.track}}</h3>
+              <p><strong>Album:</strong> <em>{{item.album}}</em></p>
+              <p>Track Duration: <em>{{getDuration[1][index]}}</em></p>
+              <p>Track Artists: <em>{{getArtists[1][index].join(' ')}}</em></p>
+
+              <br/>
+              <a target="_blank" :href="'https://open.spotify.com/track/' + item.trackURI.split('track:')[1]">View on Spotify</a>
+              <button class="bx--button tooltip">Close</button>
+            </template>
+          </cv-interactive-tooltip>
+        </span>
         <br>
-        <span>{{item.trackAlbum}}</span>
+        <span>{{item.album}}</span>
         <!-- <button class="heart_track" :aria-label="'Favorite Track ' + 'Track_name'" @click="favoriteTrack"><Favorite16/></button> -->
+        <span class="added_by bx--tooltip__label" v-if="users.indexOf(item.whoQueued) >= 0">Added by {{item.whoQueued}}</span>
       </li>
     </ol>
 
@@ -30,7 +71,21 @@
 <script>
 export default {
   props: {
-    currentPanel: String
+    currentPanel: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      alignment: 'center',
+      direction: 'right',
+      use_label: false,
+      use_trigger: true,
+      use_content: true,
+      visible: false,
+      users: this.$store.state.rooms.users
+    }
   },
   methods: {
     favoriteTrack: function() {
@@ -49,18 +104,83 @@ export default {
     },
     getUsers: function() {
       return this.$store.state.rooms.users;
+    },
+    getDuration: function() {
+      let tracksDuraiton = [[], []];
+      this.getQueue.forEach((curr) => {
+        const totalSeconds = curr.duration / 1000;
+        let result = [Math.floor(totalSeconds / 60), Math.floor(totalSeconds - (Math.floor(totalSeconds / 60) * 60))];
+        
+        if (result[1] < 10) {
+          result[1] = '0' + result[1]
+        } else if (result[1] === 60) {
+          result[0] += 1
+          result[1] = '00';
+        }
+
+        if (result !== undefined || result !== null) {
+          tracksDuraiton[0].push(result.join(':'));
+        }
+      });
+
+      this.getHistory.forEach((curr) => {
+        const totalSeconds = curr.duration / 1000;
+        let result = [Math.floor(totalSeconds / 60), Math.floor(totalSeconds - (Math.floor(totalSeconds / 60) * 60))];
+        
+        if (result[1] < 10) {
+          result[1] = '0' + result[1]
+        } else if (result[1] === 60) {
+          result[0] += 1
+          result[1] = '00';
+        }
+
+        if (result !== undefined || result !== null) {
+          tracksDuraiton[1].push(result.join(':'));
+        }
+      });
+
+      return tracksDuraiton;
+    },
+    getArtists: function() {
+      let artists = [[], []];
+
+      this.getQueue.forEach((curr) => {
+        artists[0].push(curr.artist.map(curr => curr.name));
+      });
+
+      this.getHistory.forEach((curr) => {
+        artists[1].push(curr.artist.map(curr => curr.name));
+      });
+
+      return artists;
     }
   },
 }
 </script>
 
 <style lang="scss">
+  .tooltip_heading {
+    font-size: 1rem !important;
+    line-height: 1rem;
+    margin-bottom: 10px;
+  }
   #sidepanel_container {
     font-family: 'IBM Plex Sans', sans-serif;
     padding: 40px;
+    
     ol {
       list-style-type: decimal;
       list-style-position: inside;
+    }
+
+    .cv-interactive-tooltip {
+      display: inline;
+    }
+
+    .added_by {
+      font-weight: normal !important;
+      font-style: italic;
+      display: block;
     }
 
     li {

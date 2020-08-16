@@ -1,53 +1,44 @@
 <template>
   <div class="home">
-
-    <!-- <div id="header">
-        <div class="dj_banner">
-          Vinyl
+    <Navbar @change-device="changeMainDevice" />
+    <h1 id="main_heading">DJ WITH FRIENDS {{user}}</h1>
+    
+    <div id="main_container" class="container-fluid">
+      <div id="left_panel" class="col-md panel-main">
+        <div class="panel_container">
+          <h2>Rooms</h2>
+          <button type="button" id="modal_create_room" class="cv-button bx--btn bx--btn--tertiary" v-on:click="activeModal = true">Create Room</button>
         </div>
-
-        <div class="dj_banner">
-          List
+        <div class="sort">
+          <RoomSelect @show-details="showDetails"/>     
         </div>
-    </div>
-    <div id="left_panel" class="col-md panel-main">
-      <div class="panel_container">
-        <h2>Rooms</h2>
       </div>
-      <div class="sort">     
-        <cv-multi-select 
-          :theme="theme"
-          :label="label"
-          :inline="inline"
-          :helper-text="helperText"
-          :invalid-message="invalidMessage"
-          :title="title"
-          :disabled="disabled"
-          :selection-feedback="selectionFeedback"
-          :filterable="filterable"
-          :auto-filter="autoFilter"
-          :auto-highlight="autoHighlight"
-          :value="initialValue"
-          :options="options">
-        </cv-multi-select>
+      <div id="mid_panel" class="col-md panel-main">
+        <RoomVinyl />
+      </div>
+      <transition name="slide-in">
+        <h2 id="details_heading" v-if="detailsActive">DETAILS</h2>
+      </transition>
+      <div id="right_panel" class="col-md panel-main">
+        <RoomBio @hide-details="hideDetails"/>
       </div>
     </div>
-    <div id="right_panel" class="col-md panel-main">
-    </div> -->
 
-    <header>
-      <h1 id="swf">DJ<br>With<br>Friends.</h1>
-    </header>
-    <RoomList v-bind:genres="currentGenres"/>
-    <RoomCreationModal @createRoom="createRoom"/>
+    <RoomCreationModal @createRoom="createRoom" :modalActive="activeModal" @closeModal="closeModal"/>
+    <LobbyFooter />
   </div>
 </template>
 
 <script>
 import io from 'socket.io-client';
 import RoomCreationModal from '@/pages/LobbyRoomPage/RoomCreationModal.vue';
-import RoomList from '@/pages/LobbyRoomPage/RoomList.vue';
-import MockRoom from '@/utils/mocks/RoomList.js';
+import RoomSelect from '@/pages/LobbyRoomPage/RoomSelect.vue';
+import {mockData} from '@/utils/mocks/RoomList.js';
+import Navbar from '@/components/Navbar.vue';
+import RoomBio from '@/pages/LobbyRoomPage/RoomBio.vue';
+import RoomVinyl from '@/pages/LobbyRoomPage/RoomVinyl.vue';
+import LobbyFooter from '@/pages/LobbyRoomPage/LobbyFooter.vue';
+// import db from '../../db.js';
 
 export default {
   name: 'home',
@@ -56,7 +47,9 @@ export default {
       socketConnect: io.connect(this.$store.state.location + 'rooms'),
       currentLocation: window.location.href, /* DEV VALUE */
       activeModal: false,
-      currentGenres: this.$store.getters.grabGenre('')
+      currentGenres: this.$store.getters.grabGenre(''),
+      detailsActive: false,
+      user: null,
     }
   },
   methods: {
@@ -69,30 +62,47 @@ export default {
 
       this.socketConnect.on('serverCreated', (roomData) => {
         this.$store.state.lobby.rooms = roomData['roomData'];
-
-        // this.$store.state.randID = roomData['roomID']; What is this for?
         this.$router.push(`room/${roomData['roomID']}`);
       });
     }, modalActivate: function() {
       this.activeModal = true;
+    },
+    changeMainDevice: function(data) {
+      if (data.hasOwnProperty('id') && typeof data.id === 'string') {
+        this.$store.dispatch('changeMainDevice', data);
+      }
+    },
+    showDetails: function() {
+      this.detailsActive = true;
+    },
+    hideDetails: function() {
+      this.detailsActive = false;
+    },
+    closeModal: function() {
+      this.activeModal = false;
     }
   },
   mounted() {
     const privateSocket = io.connect(this.$store.state.location);
-    /* Add mock data for rooms 
-    let mockData = [new MockRoom({'roomGenre': 'Hip Hop', 'roomPrivate': true}), new MockRoom({'roomGenre': 'All'}), new MockRoom({'roomGenre': 'Rap'}), new MockRoom({'roomGenre': 'Jazz'}),
-    new MockRoom({'roomGenre': 'Popular music'}), new MockRoom({'roomGenre': 'Soul music'}), new MockRoom({'roomGenre': 'Grunge'}), new MockRoom({'roomGenre': 'World music'}),
-    new MockRoom({'roomGenre': 'Breakbeat'}), new MockRoom({'roomGenre': 'Classical music'}), new MockRoom({'roomGenre': 'Raggae'}), new MockRoom({'roomGenre': 'Disco'}), new MockRoom({'roomGenre': 'New wave'}),
-    new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'}), new MockRoom({'roomGenre': 'New wave'})]
-    this.$store.state.lobby.rooms.push(...mockData);
-    */
+
+    this.$store.state.loading = false;
+    // this.$store.state.lobby.rooms.push(...mockData);
+    // this.$store.commit('addToRooms', mockData);
 
     this.socketConnect.emit('create_user', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID});
-    this.socketConnect.on('servers', (data) => { this.$store.commit('addToRooms', data); });
+    this.socketConnect.on('servers', (data) => {
+      this.$store.state.lobby.rooms.push(...data); 
+      this.$store.commit('addToRooms', data); 
+    });
 
     privateSocket.on('rooms', (data) => {
+      addRooms(data);
+    });
+
+    const addRooms = (data, refresh=false) => {
       const _data = data.map(current => JSON.parse(current));
 
+      this.$store.state.lobby.rooms.push(...data);
       this.$store.commit('addToRooms', _data);
       this.$store.state.lobby.rooms.forEach(function(curr, index) {
         // Find the room "name" from data
@@ -100,39 +110,98 @@ export default {
         if (currentData !== undefined)
           this.$store.state.lobby.rooms[index].users = currentData.users;
       }, this);
-
-    });
+    }
   },
   components: {
     RoomCreationModal,
-    RoomList
+    Navbar,
+    RoomSelect,
+    RoomBio,
+    RoomVinyl,
+    LobbyFooter
   }
 }
 </script>
 
 
 <style lang="scss" scoped>
+  @media (max-width: 66rem) {
+    #main_container {
+      flex-direction: column;
+    }
+
+    .panel-main {
+      width: 100% !important;
+    }
+
+
+    #left_panel {
+      margin-top: 100px;
+      margin-bottom: 50px;
+    }
+
+    .home {
+      overflow: auto !important;
+    }
+  }
+
   .home {
-    // display: flex;
-    // flex-direction: row;
-    // justify-content: space-between;
-    width: 90%;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     padding-top: 3rem;
     padding: 0;
     height: 100%;
+    overflow: hidden;
+
+    .bx--btn--tertiary {
+      background-color: black;
+      color: white;
+      border-color: black;
+      &:focus, &:hover {
+        border-color: #ffffff;
+        outline: transparent;
+        box-shadow: 0px 0px 1px 2px black;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      font-style: "IBM Plex Sans";
+      position: relative;
+      top: 26px;
+      background-color: #e2d7ca;
+      width: 25%;
+      left: 6%;
+      font-weight: 500;
+    }
+    h2#details_heading {
+      position: absolute;
+      background-color: #e2d7ca;
+      top: 12.5%;
+      right: 15%;
+    }
+
     #swf {
       font-size: 3.3rem;
       font-weight: bold;
-      // position: absolute;
-      // right: 50%;
-      // .a_right {
-      //   left: 50% !important;
-      // }
+      position: absolute;
+      right: 50%;
+      .a_right {
+        left: 50% !important;
+      }
     }
 
     header {
       padding-top: 30px;
+    }
+
+    #main_container {
+      display: flex;
+      padding: 0px !important;
+      height: 80%;
+      border: 1px dashed grey;
+      width: 95%;
     }
 
     .dj_banner {
@@ -156,7 +225,6 @@ export default {
   }
 
   .panel-main {
-    border: 1px solid grey;
     height: 100%;
     width: 50%;
     display: flex;
@@ -166,5 +234,41 @@ export default {
       font-family: 'IBM Plex Mono';
     }
   }
+
+  #left_panel {
+    min-height: 465px;
+  }
+
+  .panel_container { 
+    display: flex;
+    justify-content: space-between;
+    h2 {
+      margin-bottom: 30px;
+    }
+    #modal_create_room {
+      height: 30px;
+    }
+  }
+
+  .slide-in-enter-active {
+    animation: wide-in .9s;
+  }
+
+  .slide-in-leave-active {
+    animation: wide-in .9s reverse;
+  }
+
+
+  @keyframes wide-in {
+    0% {
+      opacity: 0;
+      right: 5%;
+    }
+    100% {
+      opacity: 1;
+      right: 15%;
+    }
+  }
+
 
 </style>

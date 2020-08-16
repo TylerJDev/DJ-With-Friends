@@ -1,6 +1,10 @@
 .DS_Store
 node_modules
 /dist
+notes.txt
+bugs.txt
+.eslintrc.js
+src/db.js
 
 # local env files
 .env.local

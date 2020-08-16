@@ -3,35 +3,36 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Spotify With Friends</h5>
+                <h5 class="modal-title">DJ With Friends</h5>
             </div>
             <div class="modal-body">
                  <p>
-                    Spotify With Friends utilizes the Spotify API to allow for group sessions.
+                    DJ With Friends utilizes the Spotify API to allow for group sessions.
 
-                    This means that you'll have to approve </b>Spotify With Friends</b> for access to your Spotify account.
-                    This allows for the following:
+                    This means that you'll have to approve <strong>DJ With Friends</strong> to access some features from your Spotify account.
+                    <br/>
+                    Approved access allows for the following:
                 </p>
-
+                <br/>
                 <ol>
                     <li>Allows you to search and add songs to a queue-based system</li>
                     <li>Host via your account, even if you're not the current room owner</li>
-                    <li>Join public rooms, and interact by adding your own songs to the room's queue</li>
+                    <li>Join public rooms, and interact by adding your own songs to queue</li>
                 </ol>
-
+                <br/>
                 <p>
                     No data is held or stored.
 
                     The following scopes are requested for use:
                 </p>
-
+                <br/>
                 <ol>
-                    <li><b>user-modify-playback-state</b></li>
-                    <li><b>user-read-private</b></li>
-                    <li><b>user-read-playback-state</b></li>
+                    <li><strong>user-modify-playback-state</strong></li>
+                    <li><strong>user-read-private</strong></li>
+                    <li><strong>user-read-playback-state</strong></li>
                 </ol>
-
-                <a href="/about#contact" class="help_link">Need help, or have questions?</a>
+                <br/>
+                <a href="/about#contact" class="help_link">Need help or have questions?</a>
             </div>
             <div class="modal-footer">
                <button type="button" class="close btn btn-primary" data-dismiss="modal">
@@ -51,7 +52,7 @@
     }
 
     .modal-dialog {
-        width: 590px;
+        max-width: 590px;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -88,5 +89,15 @@
 
     .help_link {
         @include help_link;
+    }
+
+    ol {
+        list-style: initial;
+        font-size: 1rem;
+        padding-left: 20px;
+        li {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
     }
 </style>

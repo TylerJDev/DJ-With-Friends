@@ -32,15 +32,19 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "bootstrap": "^4.3.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "firebase": "^7.17.1",
     "jest-fetch-mock": "^2.1.2",
     "jquery": "^3.4.1",
     "node-fetch": "^2.6.0",
     "popper.js": "^1.15.0",
     "sass": "^1.24.0",
     "sass-loader": "^8.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "vuefire": "^2.2.4"
   },
   "eslintConfig": {
     "root": true,

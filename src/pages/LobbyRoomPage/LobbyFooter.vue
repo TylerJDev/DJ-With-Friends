@@ -1,97 +1,113 @@
 <template>
-<div>
-  <nav aria-label="Pagination" id="pagination_navigation"> <!-- Asscoiate label with navigation region -->
-      <ul>
-        <li>
-          <a href="#" aria-describedby="pagination_navigation" id="prev_control" class="pagination_controls" v-on:click="paginationControl" v-if="pages != 1"><i class="fas fa-chevron-left"></i>Previous</a>
-        </li>
-        <li v-for="(item, index) in allPages" :key="'current_page_' + index">
-          <a href="#" v-on:click="switchPage" :class="(index + 1) == pages ? 'current_page pagination_link' : 'pagination_link'" aria-describedby="pagination_navigation" :aria-current="(index + 1) == pages ? 'page' : false">{{index + 1}}</a> <!-- SR: 1, Pagination-->
-        </li>
-        <li>
-          <a href="#" aria-describedby="pagination_navigation" id="next_control" class="pagination_controls" v-on:click="paginationControl" v-if="pages != this.allPages.length">Next<i class="fas fa-chevron-right"></i></a>
-        </li>
-      </ul>
-  </nav>
-
   <footer>
     <div id="footer_links">
       <a href="/about">About</a>
-      <a href="/">Need Help?</a>
-      <span>Version 0.0.1</span>
+      <button id="need_help" v-on:click="showModal">Need Help?</button>
     </div>
+    <cv-modal
+      :close-aria-label="closeAriaLabel"
+      :size="size"
+      :visible="modalVisible"
+      :auto-hide-off="autoHideOff"
+      @modal-hidden="closeModal"
+      id="help_modal">
+      <template v-if="use_label" slot="label">DJ With Friends</template>
+      <template v-if="use_title" slot="title">Quick Help</template>
+      <template v-if="use_content" slot="content">
+        <p id="main_bio_modal">Please refer to the FAQ section below for quick help. If you still need help, <a href="/about#contact">please contact us here.</a></p>
+        <cv-accordion>
+          <cv-accordion-item>
+            <template slot="title">Do I need Spotify Premium?</template>
+              <template slot="content"> 
+                <p><strong>No</strong>, you do not need Spotify Premium to use DJ With Friends. Premium is only needed to “DJ/Host”.</p>
+              </template>
+          </cv-accordion-item>
+          <cv-accordion-item>
+            <template slot="title">Can I host a private room?</template>
+            <template slot="content">
+              <p><strong>Yes</strong>, you can make a private room by enabling the "Private Room" checkbox when creating a new room.</p>
+            </template>
+          </cv-accordion-item>
+          <cv-accordion-item id="hosting_tab">
+            <template slot="title">Can I create more than one room?</template>
+            <template slot="content">
+              <p><strong>No</strong>, currently you may only create one room. This may change in the future.</p>
+            </template>
+          </cv-accordion-item>
+        </cv-accordion>
+      </template>
+    </cv-modal>
   </footer>
-  </div>
 </template>
 
 <script>
-import * as elemFocus from '@/utils/focus.js';
+import { focusEle } from '@/utils/focus.js';
+
 export default {
   name: 'LobbyFooter',
-  props: {
-    totalPages: Array
-  },
-  data()  {
+  data() {
     return {
-      pages: this.$store.state.lobby.page
-    }
-  },
-  computed: {
-    allPages() {
-      return new Array(Math.ceil(this.totalPages.length / 4)).fill(0);
+      closeAriaLabel: "Close",
+      use_label: true,
+      use_title: true,
+      use_content: true,
+      size: "small",
+      visible: false,
+      autoHideOff: false,
+      modalVisible: false,
     }
   },
   methods: {
-    switchPage(e) {
-      this.$store.commit('changeCurrentPage', {page: parseInt(e.target.textContent)});
+    showModal: function() {
+      this.modalVisible = this.modalVisible === true ? false : true;
     },
-    paginationControl(e) {
-      let currentPage = parseInt(this.pages);
-      const setPageTo = e.target.textContent === 'Next' ? (currentPage + 1) : (currentPage - 1);
-      
-      if (setPageTo !== 0 && setPageTo <= this.allPages.length) {
-        this.$store.commit('changeCurrentPage', {page: setPageTo});
-        elemFocus.focusEle(['a.room_link', '#modal_create_room']);
-      }
+    closeModal: function() {
+      this.modalVisible = false;
+      focusEle('#need_help');
     }
-  },
-  mounted() {
-    this.$store.state.lobby.maxPages = new Array(Math.ceil(this.$store.state.lobby.rooms.length / 4)).fill(0);
   }
 }
-
 </script>
 
-<style lang="scss" scoped>
-  .current_page {
-    color: black;
-    text-decoration: underline;
-  }
-
-  #pagination_navigation {
-    text-align: right;
-    
-    ul {
-      list-style-type: none;
-      li {
-        display: inline-block;
-        margin: 10px;
-      }
-      a {
-        color: black;
-      }
-    }
-
-    .fas {
-      margin: 8px;
-    }
-  }
-
+<style lang="scss">
   #footer_links {
     bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    margin-bottom: 10px;
     a {
-      margin: 10px;
       @include help_link;
+    }
+
+    #need_help {
+      border: none;
+      background-color: transparent;
+      color: white;
+
+      @include help_link;
+    }
+  }
+
+  #help_modal {
+    .bx--modal-container {
+      height: 500px;
+      width: 25% !important;
+      background-color: whitesmoke;
+      box-shadow: 3px 5px 0px 0px black;
+      .bx--modal-header {
+        h2, h4 {
+          font-family: 'IBM Plex Sans', sans-serif;
+        }
+      }
+
+      #main_bio_modal {
+        margin-bottom: 20px;
+      }
+      .bx--modal-content, .bx--modal-header, .bx--accordion__content {
+        padding-right: 10px !important;
+        padding-left: 10px !important;
+      }
     }
   }
 </style>

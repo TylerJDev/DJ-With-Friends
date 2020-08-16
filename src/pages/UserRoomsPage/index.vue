@@ -15,7 +15,7 @@ import Player from '@/pages/UserRoomsPage/RoomPlayer.vue';
 import UserList from '@/pages/UserRoomsPage/UserList.vue';
 import io from 'socket.io-client';
 import TrackListModal from '@/pages/UserRoomsPage/TrackListModal.vue';
-import Navbar from '@/pages/UserRoomsPage/RoomNavbar.vue';
+import Navbar from '@/components/Navbar.vue';
 import TrackSlider from '@/pages/UserRoomsPage/TrackSlider.vue'
 
 export default {
@@ -25,7 +25,7 @@ export default {
       currentTrackData: [{'user': 'Tyler', 'name': 'Drive In', 'artist': 'MED, Blu, Madlib, Aloe Blacc', 'duration': '3:59'}],
       currentUsers: [],
       currentTrackPlaying: {'track': '', 'playing': false, 'artist': ''},
-      socketConnect: io.connect(`${this.$store.state.location}${this.$route.params.id}`),
+      socketConnect: io.connect(`${this.$store.state.location}${this.$route.params.id}${this.$store.state.roomKey}`),
       visibleModal: false
     }
   },
@@ -61,14 +61,11 @@ export default {
     changeMainDevice(data) {
       if (data.hasOwnProperty('id') && typeof data.id === 'string') {
         this.socketConnect.emit('changeSetting', {'type': 'devices', 'mainDevice': data.id});
-        localStorage.setItem('main_device', data.id);
-
-        this.$store.dispatch('handleNotification', {'type': 'success', 'initialised': true, 'title': 'Device has changed', 'subtitle': 'The main device has changed! Playback from that device will start when the next track is played.'});
-
+        this.$store.dispatch('changeMainDevice', data);
       }
     },
     refreshToken(oldAccessToken) {
-      this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': oldAccessToken, 'id': this.$store.state.spotifyAPIData.userID});
+      this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': oldAccessToken, 'id': this.$store.state.spotifyAPIData.userID, 'newAccessToken': this.$store.state.spotifyAPIData.accessToken});
     },
     handleHost(value) {
       this.socketConnect.emit('userHosts', {'host': value});
@@ -76,7 +73,7 @@ export default {
   },
   created() {
     // Send user details to the socket
-    this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice, 'premium': this.$store.state.spotifyAPIData.premium});
+    this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice, 'premium': this.$store.state.spotifyAPIData.premium, 'hostMode': this.$store.state.hostMode, 'images': this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {}});
     this.socketConnect.on('currentTrack', (data) => {
       if (data.track.length) {
         // Get current progress from server
@@ -93,6 +90,11 @@ export default {
     this.socketConnect.on('addedQueue', (data) => {
       this.currentTrackData = data;
 
+      data.forEach((current, index) => {
+        let prefix = Object.prototype.hasOwnProperty.call(current, 'track') === true ? current.track.substring(0, 3) : '___';
+        current.keyID = String(Math.floor(Math.random() * (10000 * 1000))) + '-' + prefix;
+      });
+
       this.$store.commit('addToQueue', data);
 
       this.socketConnect.on('timeUpdate', (data) => {
@@ -107,7 +109,21 @@ export default {
     });
 
     this.socketConnect.on('user', (data) => {
-      const ROOM_USERS = data.users.map(curr => curr.name);
+      /* data.users.push({accessToken: "", host: true, id: "5xm4va5mohag68yw3xfu9yt64", mainDevice: null, name: "Bloo", premium: "true", roomID: 3707, timeJoined: 1585352845629, userCount: 1})
+      data.users.push({accessToken: "", host: true, id: "5xm4va5mohag68yw3xfu9yt64", mainDevice: null, name: "Bloo", premium: "true", roomID: 3707, timeJoined: 1585352845629, userCount: 1}) */
+
+      let usersActive = [];
+
+      const ROOM_USERS = data.users.map((curr) => {
+        let prefix = '';
+        if (usersActive.indexOf(curr.name) >= 0) {
+          prefix = ` (${usersActive.filter(c => c === curr.name).length})`;
+        }
+
+        usersActive.push(curr.name)
+        return curr.name + prefix;
+      });
+
       this.$store.commit('notifyUsers', data.messageData);
       this.$store.state.rooms.users = ROOM_USERS;
 
@@ -122,6 +138,28 @@ export default {
     this.socketConnect.on('roomError', (roomError) => {
       this.$store.dispatch('handleNotification', {'type': 'error', 'initialised': true, 'title': roomError.typeError, 'subtitle': roomError.errorMessage});
     });
+
+    this.socketConnect.on('reAuth', (data) => {
+      if (data.user === this.$store.state.spotifyAPIData.userID) {
+        const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+
+        this.$store.commit('loadingState', {'status': true});
+        this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
+          this.refreshToken(oldAccess);
+            if (this.$store.state.spotifyAPIData.accessToken === oldAccess) {
+              Store.dispatch('handleNotification', {
+                timeout: 10000, type: 'error', initialised: true, title: 'Request failed', subtitle: 'Could not request new access token!',
+              });
+              this.$store.commit('loadingState', {'status': false});
+            } else {
+              this.$store.commit('loadingState', {'status': false});
+            }
+        });
+      }
+    });
+  },
+  mounted() {
+    this.$store.state.loading = false;
   },
   components: {
     Player,
@@ -134,6 +172,17 @@ export default {
 </script>
 
 <style lang="scss">
+  @media (max-width: $breakpoint--03) {
+    #room_container {
+      height: auto !important;
+    }
+
+    #trackslider_container {
+      margin-top: 15% !important;
+      display: none;
+    }
+  }
+
   #room_container {
     height: 100vh;
     display: flex;

@@ -1,14 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './pages/LobbyRoomPage/index.vue'
-import Login from './pages/LoginPage/index.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
 import Store from '@/store/index.js';
-import About from './pages/AboutPage/index.vue'
-import Callback from './views/Callback.vue'
-import Room from './pages/UserRoomsPage/index.vue'
-import io from 'socket.io-client'
+import io from 'socket.io-client';
+import Home from './pages/LobbyRoomPage/index.vue';
+import Login from './pages/LoginPage/index.vue';
+import About from './pages/AboutPage/index.vue';
+import Callback from './views/Callback.vue';
+import Room from './pages/UserRoomsPage/index.vue';
+import NotFound from './components/NotFound.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -22,9 +23,9 @@ export default new Router({
         if (loggedState !== null) {
           next();
         } else {
-          next("login");
+          next('login');
         }
-      }
+      },
     },
     {
       path: '/room/:id',
@@ -32,40 +33,72 @@ export default new Router({
       component: Room,
       beforeEnter: (to, from, next) => {
         const loggedState = Store.state.spotifyAPIData.refreshToken;
-        const socketConnect = io.connect(Store.state.location + 'rooms');
+        const socketConnect = io.connect(`${Store.state.location}rooms`);
+        let connectState = false;
 
-        if (loggedState !== null) {
-          socketConnect.emit('checkLock', {'roomID': to.params.id, 'token': Store.state.spotifyAPIData.refreshToken});
-          socketConnect.on('lockedRoom', (data) => {
-            if (data.hasOwnProperty('userLimit')) {
-              Store.dispatch('handleNotification', {'timeout': 10000, 'type': 'error', 'initialised': true, 'title': 'Room User Limit Reached', 'subtitle': 'The current room is full!'});
-              next('/');
-            } else if (data.passwordProtected === false) {
-              next();
-            } else {
-              let passwordInput;
+        // Check if room has a password
+        let roomIndex = Store.state.lobby.rooms.findIndex((current) => String(current.name) === to.params.id);
 
-              if (Store.state.spotifyAPIData.refreshToken === data.token) {
-                next();
-              } else {
-                passwordInput = prompt('What is the secret secret password?');
-                socketConnect.emit('checkLock', {'roomID': to.params.id, 'password': passwordInput});
-              }
+        // Clear out previous key
+        Store.state.roomKey = '';
+        if (roomIndex === -1) {
+          // Assume user went to link without hitting lobby
+          // As lobby contains the store
+          next('/');
 
-              socketConnect.on('passwordCheck', (res) => {
-                if (res) {
-                  next();
-                } else {
-                  next('/');
-                  Store.dispatch('handleNotification', {'timeout': 10000, 'type': 'error', 'initialised': true, 'title': 'Incorrect Password', 'subtitle': 'The password was incorrect!'});
-                }
-              });
+          socketConnect.emit('checkLock', { roomID: to.params.id, checkRoom: true });
+          socketConnect.on('lockedStatus', (res) => {
+            if (res.locked === true) {
+              const paramsNow = res.paramsTo === '/' ? '/' : `/room/${res.paramsTo}`;
+              next(paramsNow);
+              connectState = true;
             }
           });
-        } else {
-          next("login");
+
+          roomIndex = Store.state.lobby.rooms.findIndex((current) => String(current.name) === to.params.id);
         }
-      }
+
+        if (loggedState !== null) {
+          if (roomIndex >= 0) {
+            if (Object.prototype.hasOwnProperty.call(Store.state.lobby.rooms[roomIndex], 'psw_index')) {
+              const pwPrompt = prompt('What is the secret password?');
+              socketConnect.emit('checkLock', { roomID: to.params.id, token: Store.state.spotifyAPIData.refreshToken, password: pwPrompt });
+              socketConnect.on('passwordCheck', (res) => {
+                const resData = JSON.parse(res);
+
+                if (resData.result === true) {
+                  connectState = true;
+                  Store.state.roomKey = resData.queryHash;
+                  next();
+                }
+              });
+            } else {
+              connectState = true;
+              next();
+            }
+          }
+
+          const limit = 5;
+          let timerTicker = 0;
+
+          const checkConnect = setInterval(() => {
+            if (connectState === true || socketConnect.connect === true || timerTicker >= limit) {
+              clearInterval(checkConnect);
+              if (!connectState && timerTicker >= limit) {
+                const locationCurrent = Store.state.location;
+                next('/');
+                Store.dispatch('handleNotification', {
+                  timeout: 10000, type: 'error', initialised: true, title: 'Could not find room', subtitle: `Could not find room ${locationCurrent}`,
+                });
+              }
+            } else {
+              timerTicker += 1;
+            }
+          }, 2500);
+        } else {
+          next('login');
+        }
+      },
     },
     {
       path: '/about',
@@ -79,16 +112,21 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         const loggedState = Store.state.spotifyAPIData.refreshToken;
         if (loggedState) {
-          next("/");
+          next('/');
         } else {
           next();
         }
-      }
+      },
     },
     {
       path: '/callback',
       name: 'callback',
-      component: Callback
+      component: Callback,
+    },
+    {
+      path: '*',
+      name: 'notFound',
+      component: NotFound,
     },
   ],
-})
+});

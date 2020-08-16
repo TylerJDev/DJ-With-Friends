@@ -1,27 +1,51 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light">      
-    <cv-header aria-label="Carbon header">
+  <nav class="navbar navbar-expand-lg navbar-light" v-on:keydown="arrowLoop">
+    <NotificationAlert />      
+    <cv-header aria-label="Main">
       <cv-header-menu-button aria-label="Header menu" aria-controls="side-nav" />
       <cv-skip-to-content href="#main-content">
         Skip to content
       </cv-skip-to-content>
-      <cv-header-name href="/">
+      <a href="/" class="cv-header-name bx--header__name menu_item">
+        <span class="desktop_item">
         DJ With Friends
-      </cv-header-name>
-      <cv-header-nav aria-label="Carbon nav">
-      <cv-header-menu-item href="/" class="nav_item">
+        </span>
+        <span class="mobile_item">
+        DJWF
+        </span>
+      </a>
+
+      <a href="/" class="nav_item bx--header__menu-item menu_item mobile_item" role="menuitem">
         Home
-      </cv-header-menu-item>
-      <cv-header-menu-item href="/about" class="nav_item" style="color: black !important">
+      </a>
+
+      <a href="/about" class="nav_item bx--header__menu-item menu_item mobile_item" role="menuitem">
         About
-      </cv-header-menu-item>
+      </a>
+
+      <cv-header-nav aria-label="Sub">
+      <li class="cv-header-menu-item nav_item" role="presentation">
+        <a href="/" class="nav_item bx--header__menu-item menu_item" role="menuitem">
+          Home
+        </a>
+      </li>
+      <li class="cv-header-menu-item nav_item" role="presentation">
+        <a href="/about" class="nav_item bx--header__menu-item menu_item" role="menuitem">
+          About
+        </a>
+      </li>
+      <li v-if="user" role="presentation">
+        Hello {{user}}
+        <button @click="$emit('logout')">Log out</button>
+      </li>
     </cv-header-nav>
-      <template slot="header-global">
+      <template v-if="hideBar" slot="header-global">
         <cv-header-global-action
           :aria-expanded="popupNotify === true ? 'true' : 'false'"
           aria-haspopup="true"
           aria-label="Notifications"
-          @click="handlePopup" >
+          @click="handlePopup"
+          class="menu_item" >
           <Notification20 />
         </cv-header-global-action>
         <cv-tile v-if="popupNotify"
@@ -29,22 +53,20 @@
           theme=""
           id="notify_panel" class="panel" :style="{zIndex: notifyIndex}">
             <div id="notifications_panel">
-              <button id="clear_notifications" aria-label="Clear Notifications" @click="clearNotifications">
-                <TrashCan16 role="presentation" />
-                <span class="sr_only">Clear Notifications</span>
-              </button>
-
-              <h3>Notifications</h3>
-
               <button class="close_popup" aria-label="Close" @click="closePopup('popupNotify')">
                 <Close16 role="presentation"/>
                 <span class="sr_only">Close</span>
+              </button>
+              <h3>Notifications</h3>
+              <button id="clear_notifications" aria-label="Clear Notifications" @click="clearNotifications">
+                <TrashCan16 role="presentation" />
+                <span class="sr_only">Clear Notifications</span>
               </button>
             </div>
             <hr/>
             <NotificationList/>
         </cv-tile>
-        <cv-header-global-action aria-label="User avatar"  aria-haspopup="true" :aria-expanded="popupUser === true ? 'true' : 'false'" @click="handlePopup" aria-controls="user-panel">
+        <cv-header-global-action aria-label="Settings"  aria-haspopup="true" :aria-expanded="popupUser === true ? 'true' : 'false'" @click="handlePopup" aria-controls="user-panel" class="menu_item">
           <UserAvatar20 />
         </cv-header-global-action>
         <cv-tile v-if="popupUser"
@@ -59,7 +81,7 @@
             <div id="user_icon" :style="{backgroundImage: 'url(' + userAvatar + ')'}"><span v-if="userAvatar === false"><i class="far fa-user"></i></span></div>
             <h3>Settings</h3>     
             <cv-accordion>
-                <cv-accordion-item>
+                <cv-accordion-item id="devices_tab">
                   <template slot="title">Devices</template>
                   <template slot="content"> 
                     <h4 id="device_label">Current Device</h4>
@@ -68,34 +90,40 @@
                       <h3>No Devices!</h3> 
                     </div>     
                     <cv-radio-group 
-                    vertical="true"
+                    :vertical="true"
                     @change="deviceChange"
                     aria-labelledby="device_label" id="device_radio">
                     <cv-radio-button v-for="(item, index) in userDevices" :key="'devices' + index" name="group-1" 
                     :label="item.name" 
                     :value="item.id" 
                     :checked="currentDevice === item.id ? true : false"
-                    :label-left="labelLeft" />
+                    />
                     </cv-radio-group>
                   </template>
                 </cv-accordion-item>
-                <cv-accordion-item>
+                <cv-accordion-item id="appearance_tab">
                   <template slot="title">Appearance</template>
                   <template slot="content">
                     <cv-checkbox
                       label="Dark Mode"
                       value="Dark"
                       @change="darkMode"
-                      :checked="checked">
+                      :checked="this.$store.state.darkMode">
                     </cv-checkbox>
                   </template>
                 </cv-accordion-item>
-                <!-- <cv-accordion-item>
+                <cv-accordion-item id="hosting_tab">
                   <template slot="title">Hosting</template>
                   <template slot="content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p>Enable always-hosting</p>
+                    <cv-checkbox
+                      label="Always Host"
+                      value="Host"
+                      @change="hostMode"
+                      :checked="this.$store.state.hostMode">
+                    </cv-checkbox>
                   </template>
-                </cv-accordion-item> -->
+                </cv-accordion-item>
             </cv-accordion>
           </cv-tile>
       </template>
@@ -104,12 +132,19 @@
 </template>
 
 <script>
-import NotificationList from '@/components/NotificationList.vue'
+import NotificationList from '@/components/NotificationList.vue';
+import NotificationAlert from '@/components/NotificationAlert.vue';
 import { focusEle } from '@/utils/focus.js';
 
 export default {
   props: {
-    notifications: Object
+    notifications: Object,
+    hideBar:  {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    user: String
   },
   data() {
     return {
@@ -123,7 +158,7 @@ export default {
   methods: {
     handlePopup(e) {
      const targetValue = e.target.attributes['aria-label'].value;
-     const popupLabels = {'Notifications': 'popupNotify', 'User avatar': 'popupUser'}
+     const popupLabels = {'Notifications': 'popupNotify', 'Settings': 'popupUser'}
      
      this[popupLabels[targetValue]] = this[popupLabels[targetValue]] === false ? true : false;
      
@@ -138,14 +173,42 @@ export default {
         focusEle(toFocus);
       }, 50);
     },
+    arrowLoop(e) {
+      // Ensures that user can loop through menu items with arrow keys
+      const elem = e.target;
+      const arrowTypes = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'];
+      const allItems = this.$el.querySelectorAll('.menu_item');
+
+      if (elem.classList.contains('menu_item') && arrowTypes.indexOf(e.code) >= 0) {
+        const indexElem = Array.from(allItems).indexOf(e.target); 
+        let indexToFocus = 0;
+        
+        if (e.code === 'ArrowRight') {
+          indexToFocus = indexElem >= allItems.length - 1 ? indexToFocus : indexElem + 1;
+          focusEle([allItems[indexToFocus]]);
+        } else if (e.code === 'ArrowLeft') {
+          indexToFocus = indexElem === 0 ? allItems.length - 1 : indexElem - 1;
+          focusEle([allItems[indexToFocus]]);
+        }
+      }
+
+      if (e.code === 'Home') {
+        focusEle([allItems[0]]);
+      } else if (e.code === 'End') {
+        focusEle([allItems[allItems.length - 1]]);
+      }
+    },
     clearNotifications() {
       this.$store.commit('clearNotifications');
     },
     darkMode(value) {
       this.$store.commit('darkMode', {mode: value});
     },
+    hostMode(value) {
+      this.$store.commit('hostMode', {mode: value});
+    },
     closePopup(typePopup) {
-      const labels = {'popupNotify': 'Notifications', 'popupUser': 'User avatar'};
+      const labels = {'popupNotify': 'Notifications', 'popupUser': 'Settings'};
       this[typePopup] = false;
 
       if (typePopup.indexOf('Notifications') >= 0) {
@@ -161,6 +224,7 @@ export default {
       const deviceCurrent = currentDevices.findIndex(current => current.id === e);
       if (deviceCurrent >= 0) {
         this.$emit('change-device', {'id': currentDevices[deviceCurrent].id, 'route': this.$route.params.id});
+        // this.$store.dispatch('changeMainDevice', {'id': currentDevices[deviceCurrent].id, 'route': this.$route.params.id});
       }
     }
   },
@@ -186,12 +250,25 @@ export default {
     }
   },
   components: {
-    NotificationList
+    NotificationList,
+    NotificationAlert
   }
 }
 </script>
 
 <style lang="scss">
+  @media (min-width: 66rem) {
+    .mobile_item {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 66rem) {
+    .bx--header__menu-toggle, .desktop_item {
+      display: none !important;
+    }
+  }
+
   #nav_controls, #nav_controls button {
     height: 100%;
     width: 65px;
@@ -207,15 +284,21 @@ export default {
     }
   }
 
+  #devices_tab.bx--accordion__content {
+    padding-right: 0% !important;
+    padding-left: 0%;
+  }
+
   .navbar {
     height: 60px; 
     padding: 0px;
     font-family: 'IBM Plex Sans', sans-serif;
     background-color: transparent;
+    z-index: 1;
   }
 
   .cv-header.bx--header {
-    background-color: transparent;
+    background-color: #e2d7ca;
   }
 
   .cv-header-name.bx--header__name {

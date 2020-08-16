@@ -5,7 +5,8 @@
   :visible="visible"
   @modal-hidden="closeModal"
     @primary-click="addToQueue"
-  :auto-hide-off="autoHideOff">
+  :auto-hide-off="autoHideOff"
+  id="track_list_modal">
   <template v-if="use_contentWithInput" slot="content">
       <div class="bx--form-item">
         <label for="search-input" class="bx--label" id="search_songs_label">Search Songs<span v-if="this.tracksFound === false" class="warning_msg" role="alert"> - No tracks found!</span></label>
@@ -61,7 +62,10 @@
 <script>
 export default {
   props: {
-    visible: Boolean
+    visible: {
+      type: Boolean,
+      required: true
+    }
   },
   data() {
     return {
@@ -96,7 +100,6 @@ export default {
         });
 
         let res = await response.json();
-        // console.log(res);
 
         try {
           this.tracksFound = res.tracks.items.length > 0;
@@ -105,19 +108,20 @@ export default {
             this.tracks = res.tracks.items;
           }
         } catch(TypeError) {
-          if (i < 2) {
-            let iterationTrys = (i + 1);
-            this.$store.dispatch('handleReAuth', {refreshFromRooms: true});
-
-          this.$store.dispatch('handleReAuth', {refreshFromRooms: true}).then(() => {
-            // console.log('Finished!');
-            // console.log(res);
-
-            this.socketConnect.emit('refreshAccessToken', {'oldAccessToken': '?', 'id': this.$store.state.spotifyAPIData.userID});
+          const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+          this.$store.commit('loadingState', {'status': true});
+          this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
+            this.$emit('refresh-token', oldAccess);
+            if (this.$store.state.spotifyAPIData.accessToken === oldAccess) {
+              Store.dispatch('handleNotification', {
+                timeout: 10000, type: 'error', initialised: true, title: 'Request failed', subtitle: 'Could not request new access token!',
+              });
+              this.$store.commit('loadingState', {'status': false});
+            } else {
+              this.$store.commit('loadingState', {'status': false});
+              this.searchTracks(e);
+            }
           });
-
-            this.searchTracks(e, iterationTrys);
-          }
         }
       }
     },
@@ -125,11 +129,12 @@ export default {
       if (this.selectedTrack) {
         const trackDetails = {
           trackURI: this.tracks[this.selectedTrack].uri,
-          trackName: this.tracks[this.selectedTrack].name,
-          trackArtist: this.tracks[this.selectedTrack].artists,
-          trackDuration: this.tracks[this.selectedTrack]['duration_ms'],
-          trackAlbum: this.tracks[this.selectedTrack].album.name,
-          trackAlbumImage: this.tracks[this.selectedTrack].album.images
+          track: this.tracks[this.selectedTrack].name,
+          artist: this.tracks[this.selectedTrack].artists,
+          duration: this.tracks[this.selectedTrack]['duration_ms'],
+          album: this.tracks[this.selectedTrack].album.name,
+          albumImage: this.tracks[this.selectedTrack].album.images,
+          whoQueued: this.$store.state.spotifyAPIData.user
         }
 
         this.$emit('add-queue', trackDetails);
@@ -194,8 +199,33 @@ export default {
     white-space: nowrap;
   }
 
-  .bx--modal-header__heading {
-    display: none;
+  @media (max-width: $breakpoint--09) {
+    .modal_pane {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+
+  @media (max-width: $breakpoint--03) {
+    .bx--modal-container, .bx--modal-content {
+      overflow: initial !important;
+    }
+
+    #tracks_container {
+      flex-direction: column;
+      #tracks_pane {
+        width: 100%;
+      }
+    }
+
+    #tracks_pane {
+      height: 190px;
+    }
+  }
+  #track_list_modal {
+    .bx--modal-header__heading {
+      display: none;
+    }
   }
 
   #input_search_container {
@@ -280,7 +310,6 @@ export default {
   }
 
   #album_pane {
-
     padding-top: 15px;
     // max-height: 415px;
     max-width: 360px;

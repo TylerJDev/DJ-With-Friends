@@ -45,7 +45,7 @@
           <div id="progress_bar">
             <div id="progress_times">
               <p class="initial">{{currentDuration.join(':')}}</p>
-              <p class="end">{{trackDuration[0]}}</p>
+              <p class="end">{{duration[0]}}</p>
             </div>
             <div id="progress"><div id="progress__innerbar" :style="{'width': currentProgress}"></div></div>
           </div>
@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <div class="col">
+      <div id="side_panel_col" class="col">
         <div id="currently_playing" style="display: none">
           <h1>{{currentTrackPlaying.track}}</h1>
           <h2>By</h2> <a v-for="link in currentTrackPlaying.artist" v-bind:key="link.id" v-bind:href="link.external_urls.spotify" target="_blank" class="artist_name">{{link.name}}</a>
@@ -112,8 +112,10 @@ export default {
     }
   },
   props: {
-    currentTrackPlaying: Object,
-    currentTrackData: Array
+    currentTrackPlaying: {
+      type: Object,
+      default: { track: 'No song playing!', artist: ''} 
+    }
   },
   computed: {
     logStatus: function() {
@@ -122,7 +124,7 @@ export default {
     currentPlaying: function() {
       return this.$store.getters.grabCurrentPlaying;
     },
-    trackDuration: function() {
+    duration: function() {
         let seconds = this.currentPlaying.duration / 1000;
         let result1 = Math.floor(seconds / 60); 
         let result2 = Math.round(seconds - (result1 * 60));
@@ -157,7 +159,7 @@ export default {
     currentProgress: function() {
       let grabCurrent = Math.floor(this.$store.getters.grabCurrentProgress);
 
-      return grabCurrent > 0 ? String(grabCurrent / this.trackDuration[1] * 100) + '%' : '0';
+      return grabCurrent > 0 ? String(grabCurrent / this.duration[1] * 100) + '%' : '0';
     },
     grabCurrentImageAlbum() {
       const currentTrack = this.$store.getters.grabCurrentPlaying;
@@ -201,6 +203,149 @@ export default {
 
 <style lang="scss" scoped>
   @import url(https://fonts.googleapis.com/css?family=Oswald&display=swap);
+
+   @media (max-width: $breakpoint--12) {
+    #track_controls {
+      margin-left: 15px;
+      #add_to_queue_btn {
+        width: 72%;
+        display: block;
+      }
+
+      #host_btn, #skip_btn {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint--09) {
+    #progress_bar {
+      width: 230px !important;
+    } 
+
+    div.controls {
+      width: 300px;
+    }
+
+    #add_to_queue_btn {
+      width: 67% !important;
+    }
+    
+    // #main {
+    //   min-width: 850px !important;
+    // }
+
+    #side_panel .side_panel_active {
+      font-size: 1.5rem;
+    }
+
+    #side_panel #side_panel_tablist {
+      margin-left: 5px !important;
+    }
+
+    #side_panel_col {
+      margin-top: 75px;
+    }
+
+    #current_playing_data h1 {
+      font-size: 2rem;
+    }
+
+    #current_album h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: $breakpoint--03) {
+    #current_track {
+      flex-direction: column !important;
+      margin-top: 15% !important;
+    }
+
+    #artist_container {
+      margin: 0 auto;
+      box-shadow: none !important;
+    }
+
+    #current_playing_data {
+      position: initial !important;
+      margin-top: 20px;
+      h1 {
+        font-size: 1.5rem !important;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.1rem !important;
+      }
+    }
+
+    #controls {
+      display: flex;
+    }
+
+    #progress_times {
+      display: flex !important;
+      flex-direction: row !important;
+      margin-top: 5% !important;
+    }
+
+    #progress_bar {
+      width: 100% !important;
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    #track_controls > .controls {
+      width: 100%;
+      display: flex;
+      #add_to_queue_btn {
+        width: 40% !important;
+        white-space: nowrap;
+      }
+      > button {
+        margin: 0 auto;
+      }
+      & {
+        margin-left: 0px !important;
+      }
+    }
+
+    #side_panel {
+      box-shadow: 3px 10px 0px 2px rgba(0, 0, 0, 0.75) !important;
+    }
+
+    #side_panel_col {
+      margin-top: 25% !important;
+      margin-bottom: 20%;
+    }
+
+    #side_panel_tablist {
+      top: -18% !important;
+    }
+
+    .side_panel_tab {
+      font-size: 1.5rem;
+    }
+
+    .side_panel_tab.side_panel_active {
+      font-size: 2rem !important;
+    }
+
+    #track_controls {
+      margin-left: 0px !important;
+      .controls {
+        justify-content: center !important;
+      }
+      button {
+        margin: 1px !important;
+        border: 1px solid whitesmoke;
+      }
+      #add_to_queue_btn svg {
+        display: none;
+      }
+    }
+  }
 
   h1, h2, h3, h4 {
     font-family: 'IBM Plex Sans', sans-serif;
@@ -268,7 +413,7 @@ export default {
 
     h2 {
       font-weight: 600;
-      font-size: 1.3rem !important;
+      font-size: 1.3rem;
       text-align: center;
     }
   }

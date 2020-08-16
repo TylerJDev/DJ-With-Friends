@@ -2,13 +2,14 @@
   <div id="login">
     <Navbar />
     <div id="cta">
-      <h1 id="loginHeader">Spotify With Friends</h1>
+      <h1 id="loginHeader">DJ With Friends {{user}}</h1>
       <h2>Connect With Spotify</h2>
-      <button id="loginBtn" class="btn btn-primary btn-lg" v-on:click="handleAuthenticate">Login</button>
+      <button id="loginBtn" class="btn btn-primary btn-lg" v-on:click="handleAuthenticate">Connect</button>
       <a href="#" class="help_link" role="button" data-toggle="modal" data-target="#helpModal">How does it work?</a>
     </div>
      <Footer />
      <Modal />
+     <LoginModal />
   </div>
 </template>
 
@@ -16,10 +17,11 @@
 import Navbar from '@/pages/LoginPage/LoginNavbar.vue';
 import Footer from '@/pages/LoginPage/LoginFooter.vue';
 import Modal from '@/pages/LoginPage/HelpModal.vue';
-import { mapGetters } from 'vuex'
+import LoginModal from '@/pages/LoginPage/LoginModal.vue';
 
 export default {
   name: 'login',
+  props: ["user"],
   data() {
     return {
       errorOccurred: false,
@@ -55,10 +57,14 @@ export default {
       this.$store.commit('errorHandle', false);
     }
   },
+  mounted() {
+    this.$store.state.loading = false;
+  },
   components: {
     Navbar,
     Footer,
-    Modal
+    Modal,
+    LoginModal
   }
 }
 </script>

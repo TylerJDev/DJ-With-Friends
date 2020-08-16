@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      roomResults: this.$store.getters.grabPages(),
+      roomResults: this.$store.getters.grabPages({}),
       filter: 'All',
       activeModal: false,
       rooms: this.$store.state.lobby.rooms,
@@ -72,8 +72,8 @@ export default {
   },
   methods: {
     grabUsers: function(idx) {
-      if (this.$store.getters.grabPages()[idx] !== undefined)
-        return this.$store.getters.grabPages()[idx].users;
+      if (this.$store.getters.grabPages({})[idx] !== undefined)
+        return this.$store.getters.grabPages({})[idx].users;
     },
     changePage: function() {
       this.roomResults = this.$store.getters.grabGenres(this.filter === 'All' ? '' : this.filter);
@@ -90,7 +90,7 @@ export default {
       }
 
       if (targetGenre === 'All') {
-        this.roomResults = this.$store.getters.grabPages();
+        this.roomResults = this.$store.getters.grabPages({});
         return true;
       }
       this.roomResults = this.$store.getters.grabGenres(targetGenre);

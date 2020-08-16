@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''">
-    <router-view/>
+    <span id="prefer"></span>
+    <router-view :user="user" @logout="logout"/>
     <cv-toast-notification v-if="grabNotifications.initialised"
       :kind="typeNotify"
       :title="grabNotifications.title"
@@ -9,16 +10,20 @@
       :low-contrast="grabNotifications.lowContrast"
       aria-live="polite">
     </cv-toast-notification>
+    <cv-loading :active="this.$store.state.loading" overlay></cv-loading>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
+import Firebase from 'firebase';
+// import db from './db.js';
 
 export default {
   data() {
     return {
-      typeNotify: this.$store.state.notification.type
+      typeNotify: this.$store.state.notification.type,
+      user: null,
     }
   },
   computed: {
@@ -27,13 +32,22 @@ export default {
       'grabDarkMode'
     ])
   },
+  methods: {
+    logout: function() {
+      Firebase.auth()
+      .signOut()
+      .then(() => {
+        this.user = null;
+        this.$router.push('login');
+      });
+    }
+  },
   beforeCreate() {
     // Check localStorage for login state
     var authCode = localStorage.getItem('access_token');
     if (authCode === null) {
       console.log('No access_token found!');
     } else {
-      //this.$store.dispatch('handleReAuth');
       // // Check if access code has expired
       const expiresAt = JSON.parse(localStorage.getItem('expires'));
       console.log(expiresAt);
@@ -61,6 +75,21 @@ export default {
         console.log(`Access token expires in ${isExpired}`);
       }
     }
+  },
+  mounted() {
+    const bgMode = getComputedStyle(this.$el.querySelector('#prefer')).getPropertyValue('content');
+
+    /* - Not current // Firebase
+    Firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = user.displayName;
+      }
+    }); */
+    
+    if (localStorage.getItem('dark_mode') === null) {
+      let typeMode = bgMode === '"dark"' ? true : false;
+      this.$store.commit('darkMode', {'mode': typeMode});
+    }
   }
 }
 </script>
@@ -70,6 +99,20 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,500,600,700&display=swap');
 
+@media (max-width: 66rem) {
+  #app {
+    height: auto !important;
+  }
+}
+
+body.aboutDark {
+  background-color: $bg--dark !important;
+}
+
+body {
+   background-color: rgb(226, 215, 202) !important;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -77,6 +120,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100vh;
+  background-color: rgb(226, 215, 202);
 }
 
 #nav {
@@ -104,10 +148,117 @@ export default {
   text-align: left !important;
 }
 
+.bx--loading-overlay {
+  z-index: 9000 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  #prefer {
+    content: "light";
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  #prefer {
+    content: "dark";
+  }
+}
+
 #app {
   transition: 1000ms;
   &.dark {
     background-color: $bg--dark;
+    .bx--list-box.bx--list-box--inline, select.bx--select-input {
+      background-color: $bg--dark;
+      border: 1px solid whitesmoke;
+      color: whitesmoke;
+      .bx--text-input::placeholder, .bx--list-box__label {
+        color: whitesmoke !important;
+      }
+    }
+
+    .cv-header.bx--header {
+      background-color: $bg--dark;
+    }
+
+    input.bx--text-input {
+      border-bottom: none;
+    }
+
+    .slider_btn {
+      background-color: #4f4f4f;
+      > svg {
+        fill: white;
+      }
+    }
+
+    #login {
+      a {
+        color: white;
+      }
+
+      #loginBtn {
+        border-radius: 0px;
+        border: 1px solid white;
+      }
+
+      #helpModal {
+        h5, p, li, a {
+          color: black !important;
+        }
+      }
+    }
+
+    .bx--accordion__heading:hover::before {
+      background-color: #4f4f4f !important;
+      border: 2px solid #0f62fe;
+    }
+
+    #room_create_modal {
+      h2, h4, .room_modal_bio, p {
+        color: black !important;
+      }
+
+      .bx--multi-select {
+        background-color: #ffffff !important;
+        input::placeholder {
+          color: black !important;
+        }
+      }
+    }
+
+    #help_modal {
+      h2, h4, p {
+        color: black !important;
+      }
+    }
+
+    button#card_close > svg {
+      fill: white !important;
+    }
+    h1#main_heading, h2#details_heading {
+      background-color: $bg--dark;
+    }
+
+    #back_to_home {
+      color: whitesmoke;
+    }
+
+    .cv-pagination.bx--pagination {
+      background-color: $bg--dark;
+      span {
+        color: white !important;
+      }
+      .bx--pagination__button {
+        background-color: white;
+      }
+      [disabled="disabled"] {
+          background-color: grey !important;
+      }
+      border: 1px solid whitesmoke;
+    }
+
     h1, h2, h3, h4, h5, h6, p, li, [role="tab"], .navbar a   {
       color: $text--light;
     }
@@ -183,8 +334,35 @@ export default {
       color: white;
     }
 
-    #footer_links > a {
+    #footer_links > a, #footer_links button{
       color: white;
+    }
+
+    .room_card .room_link, .room_details_btn {
+      color: whitesmoke;
+      border-color: whitesmoke;
+    }
+    
+    #room_vinyl {
+      #sleeve {
+        background-color: grey;
+        border: 2px solid whitesmoke;
+        box-shadow: 3px 5px 0px 3px black;
+      }
+      #vinyl {
+        border: 2px solid whitesmoke;
+        // border-color: whitesmoke;
+        background-color: transparent;
+        box-shadow: 0px 0px 0px 170px grey, 0px 0px 0px 171px whitesmoke, 8px 8px 0px 172px black;
+      }
+    }
+
+    #users_table {
+      color: white;
+    }
+
+    #tone_arm {
+      filter: contrast(10%);
     }
   }
 }
