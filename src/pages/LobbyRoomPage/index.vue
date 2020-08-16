@@ -38,7 +38,7 @@ import Navbar from '@/components/Navbar.vue';
 import RoomBio from '@/pages/LobbyRoomPage/RoomBio.vue';
 import RoomVinyl from '@/pages/LobbyRoomPage/RoomVinyl.vue';
 import LobbyFooter from '@/pages/LobbyRoomPage/LobbyFooter.vue';
-// import db from '../../db.js';
+import db from '../../db.js';
 
 export default {
   name: 'home',
