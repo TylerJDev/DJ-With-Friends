@@ -43,12 +43,14 @@ export default {
         this.toneArm = false;
         this.toneArmIn = true;  
 
-        //setTimeout(hideTone.bind(this), 2500);
+        // null timeout to pause
+        setTimeout(hideTone.bind(this), 2500);
         function hideTone() {
           this.toneArmLeave = true;
         }
 
-        //setTimeout(change.bind(this), 5000);
+        // null timeout to pause
+        setTimeout(change.bind(this), 5000);
         function change() {
           this.changeVinyl();
         }
