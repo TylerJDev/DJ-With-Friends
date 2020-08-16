@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''">
     <span id="prefer"></span>
-    <router-view/>
+    <router-view :user="user" @logout="logout"/>
     <cv-toast-notification v-if="grabNotifications.initialised"
       :kind="typeNotify"
       :title="grabNotifications.title"
@@ -15,12 +15,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
+import Firebase from 'firebase';
+import db from './db.js';
 
 export default {
   data() {
     return {
-      typeNotify: this.$store.state.notification.type
+      typeNotify: this.$store.state.notification.type,
+      user: null,
     }
   },
   computed: {
@@ -28,6 +31,16 @@ export default {
       'grabNotifications',
       'grabDarkMode'
     ])
+  },
+  methods: {
+    logout: function() {
+      Firebase.auth()
+      .signOut()
+      .then(() => {
+        this.user = null;
+        this.$router.push('login');
+      });
+    }
   },
   beforeCreate() {
     // Check localStorage for login state
@@ -65,6 +78,14 @@ export default {
   },
   mounted() {
     const bgMode = getComputedStyle(this.$el.querySelector('#prefer')).getPropertyValue('content');
+
+    /* - Not current // Firebase
+    Firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = user.displayName;
+      }
+    }); */
+    
     if (localStorage.getItem('dark_mode') === null) {
       let typeMode = bgMode === '"dark"' ? true : false;
       this.$store.commit('darkMode', {'mode': typeMode});
@@ -84,8 +105,12 @@ export default {
   }
 }
 
+body.aboutDark {
+  background-color: $bg--dark !important;
+}
+
 body {
-  background-color: rgb(226, 215, 202) !important;
+   background-color: rgb(226, 215, 202) !important;
 }
 
 #app {
@@ -168,8 +193,30 @@ body {
       }
     }
 
+    #login {
+      a {
+        color: white;
+      }
+
+      #loginBtn {
+        border-radius: 0px;
+        border: 1px solid white;
+      }
+
+      #helpModal {
+        h5, p, li, a {
+          color: black !important;
+        }
+      }
+    }
+
+    .bx--accordion__heading:hover::before {
+      background-color: #4f4f4f !important;
+      border: 2px solid #0f62fe;
+    }
+
     #room_create_modal {
-      h2, h4, .room_modal_bio {
+      h2, h4, .room_modal_bio, p {
         color: black !important;
       }
 
@@ -178,6 +225,12 @@ body {
         input::placeholder {
           color: black !important;
         }
+      }
+    }
+
+    #help_modal {
+      h2, h4, p {
+        color: black !important;
       }
     }
 

@@ -9,14 +9,15 @@
                  <p>
                     DJ With Friends utilizes the Spotify API to allow for group sessions.
 
-                    This means that you'll have to approve <strong>DJ With Friends</strong> for access to your Spotify account.
-                    This allows for the following:
+                    This means that you'll have to approve <strong>DJ With Friends</strong> to access some features from your Spotify account.
+                    <br/>
+                    Approved access allows for the following:
                 </p>
                 <br/>
                 <ol>
                     <li>Allows you to search and add songs to a queue-based system</li>
                     <li>Host via your account, even if you're not the current room owner</li>
-                    <li>Join public rooms, and interact by adding your own songs to the room's queue</li>
+                    <li>Join public rooms, and interact by adding your own songs to queue</li>
                 </ol>
                 <br/>
                 <p>

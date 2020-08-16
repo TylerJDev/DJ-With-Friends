@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <Navbar @change-device="changeMainDevice" />
-    <h1 id="main_heading">DJ WITH FRIENDS</h1>
+    <h1 id="main_heading">DJ WITH FRIENDS {{user}}</h1>
+    
     <div id="main_container" class="container-fluid">
       <div id="left_panel" class="col-md panel-main">
         <div class="panel_container">
@@ -37,6 +38,7 @@ import Navbar from '@/components/Navbar.vue';
 import RoomBio from '@/pages/LobbyRoomPage/RoomBio.vue';
 import RoomVinyl from '@/pages/LobbyRoomPage/RoomVinyl.vue';
 import LobbyFooter from '@/pages/LobbyRoomPage/LobbyFooter.vue';
+import db from '../../db.js';
 
 export default {
   name: 'home',
@@ -46,7 +48,8 @@ export default {
       currentLocation: window.location.href, /* DEV VALUE */
       activeModal: false,
       currentGenres: this.$store.getters.grabGenre(''),
-      detailsActive: false
+      detailsActive: false,
+      user: null,
     }
   },
   methods: {
@@ -81,6 +84,7 @@ export default {
   },
   mounted() {
     const privateSocket = io.connect(this.$store.state.location);
+
     this.$store.state.loading = false;
     // this.$store.state.lobby.rooms.push(...mockData);
     // this.$store.commit('addToRooms', mockData);

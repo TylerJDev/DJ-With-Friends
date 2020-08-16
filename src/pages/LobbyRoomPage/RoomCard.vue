@@ -6,7 +6,7 @@
     </a>
 
     <div class="room_join">
-        <a :href="'/room/' + rooms.name" class="room_link">Join Room</a>
+        <router-link :to="'/room/' + rooms.name" class="room_link">Join Room</router-link>
         <button class="room_details_btn" @click="showDetails" :data-server-id="this.rooms.server_id">View Details</button>
     </div>
   </div>

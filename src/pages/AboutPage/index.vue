@@ -1,17 +1,15 @@
 <template>
   <div id="about">
-    <Navbar :hide-bar="false" />
+    <Navbar @logout="userLogout" :hide-bar="false" :user="user" />
     <h1>About - <span class="name_logo">DJ With Friends</span></h1>
-
+    {{user}}
     <div class="about_body">
       <p>DJ With Friends is a website where you can “DJ” by playing your favorite tracks on Spotify. 
-        <br/>It works by allowing users to enable their Spotify instance to play the current track that is playing in the room. More than one person can “DJ”, and anyone can add to the queue.
+        <br/>More than one person can “DJ”, and anyone can add to the queue.
 
       <br/>
       <br/>
-      To DJ you will need Spotify Premium, whereas, anyone can add to the queue. 
-      <br/>
-      Do you have any questions? Look below for Q&A, or you can contact me by clicking here.
+      To DJ you will need Spotify Premium, whereas anyone can add to the queue. 
       </p>
     </div>
 
@@ -63,11 +61,22 @@ import Navbar from '@/components/Navbar.vue';
 
 export default {
   name: 'about',
+  props: ['user'],
   components: {
     Navbar
   },
   mounted() {
     this.$store.state.loading = false;
+
+    if (this.$store.state.darkMode == true) {
+      /* This was added as it seems that without, the style will not apply based on class > style declaration */
+      document.body.setAttribute('style', 'background-color: #2b2b2b !important');
+    }
+  },
+  methods: {
+    userLogout: function() {
+      this.$emit('logout');
+    }
   }
 }
 </script>
@@ -99,7 +108,7 @@ h1, h2, h3, h4, h5, h6 {
   .about_body {
     margin-top: 20px;
     p {
-      font-size: 1.1rem;
+      font-size: 0.9rem;
     }
   }
   #q_and_a {

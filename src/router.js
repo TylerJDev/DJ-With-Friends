@@ -41,7 +41,6 @@ export default new Router({
 
         // Clear out previous key
         Store.state.roomKey = '';
-
         if (roomIndex === -1) {
           // Assume user went to link without hitting lobby
           // As lobby contains the store
@@ -79,39 +78,6 @@ export default new Router({
             }
           }
 
-
-          // socketConnect.emit('checkLock', { roomID: to.params.id, token: Store.state.spotifyAPIData.refreshToken });
-          // socketConnect.on('lockedRoom', (data) => {
-          //   connectState = true;
-          //   if (Object.prototype.hasOwnProperty.call(data, 'userLimit')) {
-          //     Store.dispatch('handleNotification', {
-          //       timeout: 10000, type: 'error', initialised: true, title: 'Room User Limit Reached', subtitle: 'The current room is full!',
-          //     });
-          //     next('/');
-          //   } else if (data.passwordProtected === false) {
-          //     next();
-          //   } else {
-          //     let passwordInput;
-
-          //     if (Store.state.spotifyAPIData.refreshToken === data.token) {
-          //       next();
-          //     } else {
-          //       passwordInput = prompt('What is the secret secret password?');
-          //       socketConnect.emit('checkLock', { roomID: to.params.id, password: passwordInput });
-          //     }
-
-          //     socketConnect.on('passwordCheck', (res) => {
-          //       if (res) {
-          //         next();
-          //       } else {
-          //         next('/');
-          //         Store.dispatch('handleNotification', {
-          //           timeout: 10000, type: 'error', initialised: true, title: 'Incorrect Password', subtitle: 'The password was incorrect!',
-          //         });
-          //       }
-          //     });
-          //   }
-          // });
           const limit = 5;
           let timerTicker = 0;
 

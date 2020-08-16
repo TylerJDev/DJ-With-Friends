@@ -14,7 +14,7 @@
       <template v-if="use_label" slot="label">DJ With Friends</template>
       <template v-if="use_title" slot="title">Quick Help</template>
       <template v-if="use_content" slot="content">
-        <p id="main_bio_modal">Please refer to the FAQ section below for quick help. If you still need help, <a href="/contact">please contact us here.</a></p>
+        <p id="main_bio_modal">Please refer to the FAQ section below for quick help. If you still need help, <a href="/about#contact">please contact us here.</a></p>
         <cv-accordion>
           <cv-accordion-item>
             <template slot="title">Do I need Spotify Premium?</template>

@@ -4,6 +4,7 @@ node_modules
 notes.txt
 bugs.txt
 .eslintrc.js
+src/db.js
 
 # local env files
 .env.local
