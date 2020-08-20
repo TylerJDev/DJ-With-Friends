@@ -1,4 +1,4 @@
-# spotify_with_friends
+# DJ With Friends 🎵
 
 ## Project setup
 ```
