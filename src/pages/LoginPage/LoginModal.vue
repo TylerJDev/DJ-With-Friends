@@ -127,7 +127,7 @@
 
 <script>
 import { focusEle } from "@/utils/focus.js";
-import Firebase from "firebase";
+// import Firebase from "firebase";
 
 export default {
   name: "LoginModal",
@@ -180,21 +180,21 @@ export default {
         displayName: this.displayName
       }
 
-      if (!this.error) {
-        Firebase.auth()
-          .createUserWithEmailAndPassword(info.email, info.password)
-          .then(
-            userCredentials => {
-              return userCredentials.user.updateProfile({
-                displayName: info.displayName
-              }).then(() => {
-                this.$router.replace('about');
-              });
-            }
-          ), error => {
-            this.errorRegister = error.message;
-          }
-      }
+      // if (!this.error) {
+      //   Firebase.auth()
+      //     .createUserWithEmailAndPassword(info.email, info.password)
+      //     .then(
+      //       userCredentials => {
+      //         return userCredentials.user.updateProfile({
+      //           displayName: info.displayName
+      //         }).then(() => {
+      //           this.$router.replace('about');
+      //         });
+      //       }
+      //     ), error => {
+      //       this.errorRegister = error.message;
+      //     }
+      // }
     },
     login: function () {
       const info = {
@@ -202,16 +202,16 @@ export default {
         password: this.password,
       };
 
-      Firebase.auth()
-        .signInWithEmailAndPassword(info.email, info.password)
-        .then(
-          () => {
-            this.$router.push("about");
-          },
-          (error) => {
-            this.error = error.message;
-          }
-        );
+      // Firebase.auth()
+      //   .signInWithEmailAndPassword(info.email, info.password)
+      //   .then(
+      //     () => {
+      //       this.$router.push("about");
+      //     },
+      //     (error) => {
+      //       this.error = error.message;
+      //     }
+      //   );
     }
   },
 };

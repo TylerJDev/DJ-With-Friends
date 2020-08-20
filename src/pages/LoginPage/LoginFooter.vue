@@ -11,7 +11,7 @@
   @mixin help_link {
     text-decoration: underline;
     color: black;
-    font-size: 0.8rem;
+    font-size: 1.1rem;
   }
 
   #leave_room {

@@ -8,8 +8,6 @@
         <br/>More than one person can “DJ”, and anyone can add to the queue.
 
       <br/>
-      <br/>
-      To DJ you will need Spotify Premium, whereas anyone can add to the queue. 
       </p>
     </div>
 
@@ -43,13 +41,16 @@
         <div class="message_body">
         <p>You can get in contact via the following links. 
           <br/>
-        Please be sure to be informative when writing about an issue or bug. You can also place a ticket on Github.</p>
+        Please be sure to be informative when writing about an issue or bug. You can also place a ticket on GitHub.</p>
         </div>
         <br/>
         <div class="link_body">
-          <a href="https://github.com/TylerJDev/DJ-With-Friends" target="_blank">View on Github</a>
-          <br/>
-          <a href="https://twitter.com/TylerJ_Dev" target="_blank">View on Twitter</a>
+          <div class="link_container">
+          <a href="https://github.com/TylerJDev/DJ-With-Friends" target="_blank" class="social_link"><i class="fab fa-github"></i> View on Github</a>
+          </div>
+          <div class="link_container">
+          <a href="https://twitter.com/DjwithFriends" target="_blank" class="social_link twitter_link"><i class="fab fa-twitter"></i> View on Twitter</a>
+          </div>
         </div>
       </div>
     </div>
@@ -108,7 +109,7 @@ h1, h2, h3, h4, h5, h6 {
   .about_body {
     margin-top: 20px;
     p {
-      font-size: 0.9rem;
+      font-size: 1.1rem;
     }
   }
   #q_and_a {
@@ -132,10 +133,35 @@ h1, h2, h3, h4, h5, h6 {
   #contact {
     @extend .about_body;
     margin-bottom: 30px;
+    .message_body {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
     .link_body {
       font-size: 1.1rem;
+      display: flex;
+      justify-content: space-evenly;
       br {
         margin-bottom: 10px;
+      }
+      .link_container {
+        border: 1px solid black;
+        height: 40px;
+        background-color: #eee;
+        border: 1px solid black;
+        box-shadow: 3px 3px 1px black;
+        display: flex;
+        justify-content: center;
+        a {
+          color: black;
+          padding: 10px;
+          i {
+            color: grey;
+          }
+          &.twitter_link > i {
+            color: #00acee !important;
+          }
+        }
       }
     }
   }
