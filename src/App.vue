@@ -16,7 +16,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Firebase from 'firebase';
+// import Firebase from 'firebase';
 // import db from './db.js';
 
 export default {
@@ -34,12 +34,12 @@ export default {
   },
   methods: {
     logout: function() {
-      Firebase.auth()
-      .signOut()
-      .then(() => {
-        this.user = null;
-        this.$router.push('login');
-      });
+      // Firebase.auth()
+      // .signOut()
+      // .then(() => {
+      //   this.user = null;
+      //   this.$router.push('login');
+      // });
     }
   },
   beforeCreate() {
@@ -186,6 +186,10 @@ body {
       border-bottom: none;
     }
 
+    #back_to_home {
+      color: white !important;
+    }
+
     .slider_btn {
       background-color: #4f4f4f;
       > svg {
@@ -211,7 +215,7 @@ body {
     }
 
     .bx--accordion__heading:hover::before {
-      background-color: #4f4f4f !important;
+      background-color: transparent !important;
       border: 2px solid #0f62fe;
     }
 

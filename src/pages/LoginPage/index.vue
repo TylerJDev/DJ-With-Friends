@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <Navbar />
+    <Navbar v-if="navbarVisible" />
     <div id="cta">
       <h1 id="loginHeader">DJ With Friends {{user}}</h1>
       <h2>Connect With Spotify</h2>
@@ -26,6 +26,7 @@ export default {
     return {
       errorOccurred: false,
       errorType: '',
+      navbarVisible: false
     }
   },
   methods: {
@@ -106,6 +107,7 @@ export default {
     
     .help_link {
       @include help_link;
+      font-size: 1.1rem;
     }
   }
 </style>
