@@ -108,7 +108,7 @@ describe('Testing RoomCard component', () => {
     const displayName = wrapperDesc.find('#card_bio p.bio_host').text();
     expect(displayName).toBe('Host: Tyler Jones');
 
-    const roomLink = wrapper.find('a.room_link').attributes().href;
+    const roomLink = wrapperDesc.find('a#bio_join_btn').attributes().href;
     expect(roomLink).toContain('/room/5692');
 
     const roomLock = wrapper.findAll('.lock').at(0).text();
