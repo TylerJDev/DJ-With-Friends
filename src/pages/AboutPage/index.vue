@@ -146,7 +146,7 @@ h1, h2, h3, h4, h5, h6 {
       }
       .link_container {
         border: 1px solid black;
-        height: 40px;
+        min-height: 40px;
         background-color: #eee;
         border: 1px solid black;
         box-shadow: 3px 3px 1px black;

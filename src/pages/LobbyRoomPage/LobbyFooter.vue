@@ -92,7 +92,7 @@ export default {
   #help_modal {
     .bx--modal-container {
       height: 500px;
-      width: 25% !important;
+      width: 25%; /* important */
       background-color: whitesmoke;
       box-shadow: 3px 5px 0px 0px black;
       .bx--modal-header {

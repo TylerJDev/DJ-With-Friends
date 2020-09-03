@@ -1,8 +1,8 @@
 <template>
   <div id="room_list">
     <div id="sort_by_container">
-      <cv-multi-select theme="light" id="select_genre" label="Genre" @change="genreChange" :options="getAllGenres" :inline="true" :filterable="true" :auto-filter="true" :auto-highlight="true"></cv-multi-select>
-      <cv-multi-select label="Users" @change="userLimitChange" :options="sortByUsers" :inline="true" :filterable="false" :auto-filter="true" :auto-highlight="true"></cv-multi-select>            
+      <cv-multi-select theme="light" id="select_genre" aria-label="Genre" label="Genre" @change="genreChange" :options="getAllGenres" :inline="true" :filterable="true" :auto-filter="true" :auto-highlight="true"></cv-multi-select>
+      <cv-multi-select label="Users" aria-label="Users" @change="userLimitChange" :options="sortByUsers" :inline="true" :filterable="false" :auto-filter="true" :auto-highlight="true"></cv-multi-select>            
       
       <div class="bx--select-input__wrapper">
         <select
@@ -225,6 +225,16 @@ export default {
     },
     showDetails: function(type) {
       this.$emit('show-details', type);
+    }
+  },
+  mounted() {
+    const inputElem = this.$el.querySelector('div[role="listbox"] input.bx--text-input');
+
+    if (inputElem !== null) {
+      inputElem.setAttribute('aria-label', 'Genre');
+
+      // Assume that select is also present
+      this.$el.querySelector('#sort_by_select').setAttribute('aria-label', 'Select');
     }
   },
   components: {
