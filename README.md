@@ -1,4 +1,5 @@
 # DJ With Friends 🎵
+![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/CI/badge.svg)
 
 ## Project setup
 ```
