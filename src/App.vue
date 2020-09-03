@@ -103,6 +103,15 @@ export default {
   #app {
     height: auto !important;
   }
+
+  div.bx--modal-container {
+    height: 90% !important;
+    width: 90% !important;
+  }
+}
+
+@media (max-width: 50rem) {
+
 }
 
 body.aboutDark {
