@@ -15,7 +15,7 @@ To build
 
 
 ## Tests
-![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/CI/badge.svg)
+![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/build/badge.svg)
 
 ```
 npm run test
