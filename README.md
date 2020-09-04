@@ -1,35 +1,28 @@
 # DJ With Friends 🎵
-![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/CI/badge.svg)
+DJ with Friends is a social music listening website. Using a queue-based system, users can listen to music together through Spotify.
+
+[See it here, at djwithfriends.com](https://djwithfriends.com/)
 
 ## Project setup
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+To build
 
-### Run your tests
+```npm run build```
+
+
+## Tests
+![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/CI/badge.svg)
+
 ```
 npm run test
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+* Utilizes Jest for testing
+* [Status of current build](https://github.com/TylerJDev/DJ-With-Friends/actions)
 
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Roadmap
+There are many features which are planned for DJ With Friends, [some of which can be found on GitHub Projects](https://github.com/TylerJDev/DJ-With-Friends/projects/1)
