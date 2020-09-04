@@ -25,4 +25,4 @@ npm run test
 * [Status of current build](https://github.com/TylerJDev/DJ-With-Friends/actions)
 
 ## Roadmap
-There are many features which are planned for DJ With Friends, [some of which can be found on GitHub Projects](https://github.com/TylerJDev/DJ-With-Friends/projects/1)
+There are many features which are planned for DJ With Friends, [some of which can be found on GitHub Projects](https://github.com/TylerJDev/DJ-With-Friends/projects/1).
