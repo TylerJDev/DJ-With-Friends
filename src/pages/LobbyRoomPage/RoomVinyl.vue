@@ -6,7 +6,7 @@
         <div id="vinyl">
           <img v-if="toneArm || toneArmIn" id="tone_arm" :class="[toneArm ? 'tone_arm_in' : toneArmLeave ? 'tone_arm_out' : '']" alt="" src="../../../public/tonearm.svg" />
         </div>
-        <div id="sleeve" :class="[sleeveOut ? 'sleeve_out' : sleeveLeave ? 'sleeve_leave' : '']"></div>
+        <div id="sleeve" :class="[sleeveOut ? 'sleeve_out' : sleeveLeave ? 'sleeve_leave' : '']" v-bind:style="{'backgroundImage': 'url(' + this.albumSleeve + ')'}"></div>
       </div>
     </transition>
   </div>
@@ -25,7 +25,8 @@ export default {
       sleeveLeave: false,
       toneArm: false,
       toneArmLeave: false,
-      toneArmIn: false
+      toneArmIn: false,
+      albumSleeve: '',
     };
   },
   methods: {
@@ -74,11 +75,22 @@ export default {
         this.toneArmLeave = false;
         this.toneArmIn = false;
 
+        this.changeAlbumArt();
         setTimeout(runNewAnimation.bind(this), 2500);
 
         function runNewAnimation() {
           this.sleeveIn = true;
         }
+      }
+    },
+    changeAlbumArt() {
+      if (this.$store.state.spotifyAPIData.topTrackData !== null) {
+        const albumTop = JSON.parse(this.$store.state.spotifyAPIData.topTrackData);
+        let trackGrab = Math.floor(Math.random() * albumTop.items.length);
+        let trackAlbumArt = albumTop.items[trackGrab].album;
+
+        trackAlbumArt = (trackAlbumArt.images.length || trackAlbumArt.images !== undefined) ? trackAlbumArt.images[0].url : '';
+        this.albumSleeve = trackAlbumArt;
       }
     }
   },
@@ -88,6 +100,8 @@ export default {
     function runAnimation() {
        this.sleeveIn = true;
     }
+
+    this.changeAlbumArt();
   }
 };
 </script>

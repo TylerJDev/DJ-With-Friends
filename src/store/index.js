@@ -28,6 +28,7 @@ export default new Vuex.Store({
       premium: localStorage.getItem('premium'),
       images: localStorage.getItem('images'),
       mainDevice: localStorage.getItem('main_device'),
+      topTrackData: localStorage.getItem('topTrackData'),
     },
     roomID: '',
     errorOccurred: false,
@@ -234,6 +235,32 @@ export default new Vuex.Store({
         dispatch('handleNotification', {
           type: 'success', initialised: true, title: 'Device has changed', subtitle: 'The main device has changed! Playback from that device will start when the next track is played.',
         });
+      }
+    },
+    async specialTrackData({
+      commit,
+      state,
+    }, payload) {
+      const callAPI = payload.callToAPI;
+      const data = {
+        access_token: state.spotifyAPIData.accessToken,
+      };
+
+      const response = await fetch(`${state.location}${callAPI}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const res = await response.json();
+      
+      if (Object.prototype.hasOwnProperty.call(res, 'items') && res.items.length >= 1) {
+        const trackItems = res.items;
+
+        localStorage.setItem('topTrackData', JSON.stringify(res));
+        commit('addTopTrackData', JSON.stringify(res));
       }
     },
   },

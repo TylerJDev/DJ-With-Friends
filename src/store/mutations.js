@@ -49,3 +49,7 @@ export const loadingState = (state, payload) => {
     state.loading = payload.status;
   }
 };
+
+export const addTopTrackData = (state, payload) => {
+  state.spotifyAPIData.topTrackData = payload;
+};
