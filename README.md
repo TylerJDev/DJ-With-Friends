@@ -1,7 +1,7 @@
 # DJ With Friends 🎵
 DJ with Friends is a social music listening website. Using a queue-based system, users can listen to music together through Spotify.
 
-[See it here, at djwithfriends.com](https://djwithfriends.com/)
+[See it here, at djwithfriends](https://djwithfriends.com/)
 
 ## Project setup
 ```
