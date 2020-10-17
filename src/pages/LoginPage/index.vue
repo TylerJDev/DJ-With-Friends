@@ -1,5 +1,3 @@
-//@ts-check
-
 <template>
   <div id="login">
     <Navbar v-if="navbarVisible" />

@@ -11,10 +11,10 @@
       </div>
       <div class="col connect">
         <h2>Connect:</h2>
-        <a href="#" aria-label="Twitter">
+        <a href="https://twitter.com/DjwithFriends" aria-label="Twitter" target="_blank">
           <i class="fab fa-twitter-square"></i>
         </a>
-        <a href="#" aria-label="Github">
+        <a href="https://github.com/TylerJDev/DJ-With-Friends" aria-label="Github" target="_blank">
           <i class="fab fa-github-square"></i>
         </a>
       </div>
