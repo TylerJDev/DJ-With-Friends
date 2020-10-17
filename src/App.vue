@@ -16,8 +16,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-// import Firebase from 'firebase';
-// import db from './db.js';
+import Firebase from 'firebase';
+import db from './db.js';
 
 export default {
   data() {
@@ -34,12 +34,12 @@ export default {
   },
   methods: {
     logout: function() {
-      // Firebase.auth()
-      // .signOut()
-      // .then(() => {
-      //   this.user = null;
-      //   this.$router.push('login');
-      // });
+      Firebase.auth()
+      .signOut()
+      .then(() => {
+        this.user = null;
+        this.$router.push('login');
+      });
     }
   },
   beforeCreate() {
@@ -78,14 +78,13 @@ export default {
   },
   mounted() {
     const bgMode = getComputedStyle(this.$el.querySelector('#prefer')).getPropertyValue('content');
-
-    /* - Not current // Firebase
     Firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+      if ((user && this.$store.state.spotifyAPIData.firebaseActive === false) || (user && this.$store.state.spotifyAPIData.firebaseActive === 'guest')) {
         this.user = user.displayName;
+        this.$store.commit('addFirebaseData', false);
       }
-    }); */
-    
+    });
+  
     if (localStorage.getItem('dark_mode') === null) {
       let typeMode = bgMode === '"dark"' ? true : false;
       this.$store.commit('darkMode', {'mode': typeMode});
@@ -98,6 +97,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap');
 
 @media (max-width: 66rem) {
   #app {
@@ -365,7 +365,7 @@ body {
       #vinyl {
         border: 2px solid whitesmoke;
         // border-color: whitesmoke;
-        background-color: transparent;
+        background-color: royalblue;
         box-shadow: 0px 0px 0px 170px grey, 0px 0px 0px 171px whitesmoke, 8px 8px 0px 172px black;
       }
     }
@@ -375,7 +375,7 @@ body {
     }
 
     #tone_arm {
-      filter: contrast(10%);
+      filter: contrast(35%);
     }
   }
 }

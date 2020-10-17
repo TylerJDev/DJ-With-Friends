@@ -89,6 +89,8 @@
 
 <script>
 import { focusEle } from '@/utils/focus.js';
+import Firebase from "firebase";
+import db from '@/db.js';
 
 export default {
   props: {
@@ -205,7 +207,22 @@ export default {
       if (focusToError.length) {
         focusEle(focusToError[0]);
       } else {
-        this.$emit('createRoom', formData);
+        db.collection('rooms').add({
+          hostUID: this.$store.state.spotifyAPIData.uid,
+          roomQueue: [],
+          roomHistory: [],
+          roomChat: [],
+          roomPrivate: Boolean(formData['room-private_']),
+          roomDescription: String(formData['message-text']),
+          roomPassword: null,
+          roomLimit: null,
+          roomID: null,
+        }).then((docRef) => {
+          formData.docID = docRef.id;
+          this.$emit('createRoom', formData);
+        }).catch((error) => {
+          console.error('Error has occurred! ', error); // eslint-disable-line
+        });
       }
     }, 
     giveLimit: function() {

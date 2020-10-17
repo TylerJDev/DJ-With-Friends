@@ -47,6 +47,7 @@
           @click="handlePopup"
           class="menu_item" >
           <Notification20 />
+          <p v-if="this.$store.state.activeNotify" class="notifyCount" aria-live="polite">{{this.$store.state.activeNotifyCount}} <span class="sr_only">New Notification(s)</span></p>
         </cv-header-global-action>
         <cv-tile v-if="popupNotify"
           kind="standard"
@@ -77,7 +78,7 @@
               <Close16 role="presentation"/>
               <span class="sr_only">Close</span>
             </button>
-            <h3 id="user_name">{{this.$store.state.spotifyAPIData.user}}</h3>
+            <h3 id="user_name">{{this.$store.state.spotifyAPIData.user}} <span id="account_type" v-if="guestState">(Guest)</span></h3>
             <div id="user_icon" :style="{backgroundImage: 'url(' + userAvatar + ')'}"><span v-if="userAvatar === false"><i class="far fa-user"></i></span></div>
             <h3>Settings</h3>     
             <cv-accordion>
@@ -125,6 +126,16 @@
                   </template>
                 </cv-accordion-item>
             </cv-accordion>
+              <div id="log_settings">
+                <cv-button
+                :kind="kind"
+                :size="size"
+                :disabled="disabled"
+                @click="logout"
+                :icon="false">
+                Log out
+                </cv-button>
+            </div>
           </cv-tile>
       </template>
     </cv-header>
@@ -152,7 +163,7 @@ export default {
       popupUser: false,
       notifyIndex: 0,
       userIndex: 0,
-      checked: this.$store.state.darkMode
+      checked: this.$store.state.darkMode,
     }
   },
   methods: {
@@ -164,6 +175,10 @@ export default {
      
       if (popupLabels[targetValue] === 'popupNotify') {
         this.notifyIndex = this.userIndex + 1;
+
+        // If there are active notifications which haven't been seen
+        // Then clear, as the user has seen once clicked
+        this.$store.commit('modifyNotifyActiveState', {notifyState: false});
       } else if (popupLabels[targetValue] === 'popupUser') {
         this.userIndex = this.notifyIndex + 1;
       }
@@ -226,6 +241,9 @@ export default {
         this.$emit('change-device', {'id': currentDevices[deviceCurrent].id, 'route': this.$route.params.id});
         // this.$store.dispatch('changeMainDevice', {'id': currentDevices[deviceCurrent].id, 'route': this.$route.params.id});
       }
+    },
+    logout() {
+      this.$store.dispatch('handleLogout');
     }
   },
   computed: {
@@ -247,6 +265,13 @@ export default {
     currentDevice() {
       const deviceOf = this.$store.state.spotifyAPIData.mainDevice;
       return deviceOf == null ? this.userDevices[0].id : deviceOf;
+    },
+    guestState() {
+      if (this.$store.state.spotifyAPIData.firebaseActive === 'guest') {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   components: {
@@ -294,7 +319,7 @@ export default {
     padding: 0px;
     font-family: 'IBM Plex Sans', sans-serif;
     background-color: transparent;
-    z-index: 1;
+    z-index: 5;
   }
 
   .cv-header.bx--header {
@@ -456,5 +481,33 @@ export default {
         fill: grey;
       }   
     }
+  }
+
+  #account_type {
+    font-size: 0.8rem;
+    color: #afafaf;
+    font-style: italic;
+  }
+
+  #log_settings {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    > button {
+      margin-top: 15px;
+      border: 1px solid white;
+    }
+  }
+
+  .notifyCount {
+    background-color: blue;
+    padding: 3px;
+    border-radius: 3px;
+    color: white;
+    border: 1px solid white;
+    position: relative;
+    bottom: 8px;
+    display: inline;
+    font-size: 0.6rem;
   }
 </style>

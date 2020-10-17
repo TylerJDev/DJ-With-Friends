@@ -38,7 +38,6 @@ export default {
         this.sleeveOut = true;
         this.toneArm = true;
       }
-
       setTimeout(runTone.bind(this), 10000);
       function runTone() {
         this.toneArm = false;
@@ -204,6 +203,8 @@ export default {
   #vinyl {
     width: 100px;
     height: 100px;
+    // width: 50px;
+    // height: 50px;
     border: 1px solid #707070;
     border-radius: 50%;
     background-color: rosybrown;
@@ -216,7 +217,7 @@ export default {
 
   #sleeve {
     width: 450px;
-    height: 400px;
+    height: 440px;
     border: 1px solid black;
     margin: 0 auto;
     background-color: white;

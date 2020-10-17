@@ -4,6 +4,9 @@ import userListStore from '@/store/modules/rooms.js';
 import LobbyStore from '@/store/modules/lobby.js';
 import * as getters from './getters';
 import * as mutations from './mutations';
+import Firebase from "firebase";
+import router from '@/router.js';
+import db from '../db.js';
 
 Vue.use(Vuex);
 
@@ -29,6 +32,9 @@ export default new Vuex.Store({
       images: localStorage.getItem('images'),
       mainDevice: localStorage.getItem('main_device'),
       topTrackData: localStorage.getItem('topTrackData'),
+      email: '',
+      uid: '',
+      firebaseActive: false, // states => false, true, 'guest'
     },
     roomID: '',
     errorOccurred: false,
@@ -51,6 +57,8 @@ export default new Vuex.Store({
     location: window.location.hostname.indexOf('localhost') >= 0 ? 'http://localhost:3000/' : location.hostname.replace('.com', '').split('.').length === 2 ? 'https://dj-with-friends-dev.herokuapp.com/' : 'https://dj-with-friends.herokuapp.com/',
     loading: true,
     roomKey: '',
+    activeNotify: false,
+    activeNotifyCount: 0,
   },
   mutations,
   getters,
@@ -181,6 +189,42 @@ export default new Vuex.Store({
       commit('checkLoggedIn', {
         status: true,
       });
+
+      const userFire = {};
+      // Check current state of user via firebase
+      Firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // If user is already logged in - ?
+          if (user.displayName !== null && user.displayName !== undefined) {
+            userFire.displayName = user.displayName;
+            userFire.email = user.email;
+          }
+
+          db.collection('users').doc(user.uid).set({
+            displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : USER,
+            spotifyUserID: ID,
+            email: user.email !== null && user.email !== undefined ? user.email : '',
+            devices: DEVICES,
+            premium: PREMIUM,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: ACCESS_TOKEN,
+            topTracks: state.spotifyAPIData.topTrackData,
+            timestamp: Firebase.firestore.FieldValue.serverTimestamp(),
+          }).catch((error) => {
+            console.error('Error has occurred! ', error); // eslint-disable-line
+          });
+
+          userFire.uniqueID = user.uid;
+
+          commit('addSpotifyAPIData', {
+            user: userFire.displayName || USER,
+            email: userFire.email,
+            uid: userFire.uniqueID,
+            firebaseActive: true,
+          });
+        }
+      });
+
       return returnTo;
     },
     handleNotification({
@@ -255,12 +299,36 @@ export default new Vuex.Store({
       });
 
       const res = await response.json();
-      
       if (Object.prototype.hasOwnProperty.call(res, 'items') && res.items.length >= 1) {
         const trackItems = res.items;
 
         localStorage.setItem('topTrackData', JSON.stringify(res));
         commit('addTopTrackData', JSON.stringify(res));
+      }
+    },
+    handleLogout({state, commit}) {
+      // Check firebaseActive value
+      console.log(`Firebase State: ${state.spotifyAPIData.firebaseActive}`);
+      if (state.spotifyAPIData.firebaseActive === 'guest' || state.spotifyAPIData.firebaseActive === true) {
+        Firebase.auth().signOut().then(() => {
+          // Clear our localstorage
+          // NOTE: Should we clear all, or by item? Incase of 3rd parties utilizing localstorage, or some other edge case?
+          localStorage.clear();
+          commit('addSpotifyAPIData', {
+            accessToken: '',
+            refreshToken: '',
+            user: '',
+            expiresIn: '',
+          });
+
+          router.push({path: '/login'});
+        }, (error) => {
+          console.error(`Error has occurred! Please make note of the error stated below.`);
+          console.error(error);
+        });
+
+      } else {
+        console.error(`Unexpected Firebase state: ${state.spotifyAPIData.firebaseActive}`);
       }
     },
   },

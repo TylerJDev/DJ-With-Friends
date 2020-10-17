@@ -1,8 +1,23 @@
 <template>
   <footer>
     <div id="footer_controls">
-      <router-link to="/about">About</router-link>
-      <router-link to="/about#contact">Need Help?</router-link>
+      <div class="col">
+        <h2>DJ WITH FRIENDS</h2>
+      </div>
+      <div class="col">
+        <router-link to="/about">About</router-link>
+        <router-link to="/about#contact">FAQs</router-link>
+        <router-link to="/about#contact">Support</router-link>
+      </div>
+      <div class="col connect">
+        <h2>Connect:</h2>
+        <a href="#" aria-label="Twitter">
+          <i class="fab fa-twitter-square"></i>
+        </a>
+        <a href="#" aria-label="Github">
+          <i class="fab fa-github-square"></i>
+        </a>
+      </div>
     </div>
   </footer>
 </template>
@@ -10,7 +25,7 @@
 <style scoped lang="scss">
   @mixin help_link {
     text-decoration: underline;
-    color: black;
+    color: white;
     font-size: 1.1rem;
   }
 
@@ -18,7 +33,7 @@
     margin-top: 10px;
     display: block;
     text-decoration: none;
-    color: black;
+    color: white;
     font-size: 1.5rem;
   }
 
@@ -32,13 +47,30 @@
     height: 10%;
     right: 0;
     padding: 20px;
+    background-color: black;
+    color: white !important;
+    display: flex;
+    flex-direction: column;
+    h2 {
+      float: left;
+      font-size: 1.5rem;
+    }
     #footer_controls {
       display: flex;
       justify-content: space-around;
+      .col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.connect a {
+          font-size: 1.5rem;
+        }
+      }
       a {
         color: black;
         text-decoration: none;
         @include help_link;
+        margin: 10px;
       }
     }
   }
