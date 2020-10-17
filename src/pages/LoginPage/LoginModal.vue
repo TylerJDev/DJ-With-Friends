@@ -159,8 +159,9 @@ export default {
     modalActive: function(v) {
       this.modalVisible = v;
 
-      // If active, assume modalEventType is present
-      this.userState = this.modalEventType;
+      // If active, assume modalEventType is present && modal is active
+      if (this.modalVisible)
+        this.userState = this.modalEventType;
     },
   },
   methods: {
