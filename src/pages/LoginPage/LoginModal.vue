@@ -10,7 +10,7 @@
     <template v-if="use_label" slot="label">DJ With Friends</template>
     <template v-if="use_content" slot="content">
       <div>
-        <form class="mt-3" @submit.prevent="register">
+        <form class="mt-3" :data-modal-auth-type="userState === 'register' ? 'register' : 'login'" @submit.prevent="handleModalAuthType">
           <div class="container">
             <div>
               <div>
@@ -196,6 +196,15 @@ export default {
           ), error => {
             this.errorRegister = error.message;
           }
+      }
+    },
+    handleModalAuthType(e) {
+      const authType = e.target.dataset.modalAuthType;
+
+      if (authType === 'login') {
+        return this.login();
+      } else if (authType === 'register') {
+        return this.register();
       }
     },
     login: function () {
