@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''">
+  <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''" :data-current-route="this.$route.name">
     <span id="prefer"></span>
     <router-view :user="user" @logout="logout"/>
     <cv-toast-notification v-if="grabNotifications.initialised"
@@ -84,7 +84,7 @@ export default {
         this.$store.commit('addFirebaseData', false);
       }
     });
-  
+    console.log(this.$route)
     if (localStorage.getItem('dark_mode') === null) {
       let typeMode = bgMode === '"dark"' ? true : false;
       this.$store.commit('darkMode', {'mode': typeMode});
@@ -130,6 +130,9 @@ body {
   color: #2c3e50;
   height: 100vh;
   background-color: rgb(226, 215, 202);
+  &[data-current-route="login"] {
+    height: 200vh !important; /* fix for body height issue */
+  }
 }
 
 #nav {
@@ -184,6 +187,14 @@ body {
       color: whitesmoke;
       .bx--text-input::placeholder, .bx--list-box__label {
         color: whitesmoke !important;
+      }
+    }
+
+    .room_name {
+      background-color: $bg--dark !important;
+      border: 1px solid white !important;
+      h3 {
+        background-color: blue;
       }
     }
 

@@ -32,6 +32,7 @@
                             name="displayName"
                             required
                             v-model="displayName"
+                            autocomplete="username"
                           />
                         </section>
                       </div>
@@ -45,6 +46,7 @@
                           required
                           name="email"
                           v-model="emailRegister"
+                          autocomplete="email"
                         />
                       </section>
                       <div class="form-row">
@@ -54,6 +56,7 @@
                             type="password"
                             placeholder="Password"
                             v-model="passOne"
+                            autocomplete="off"
                           />
                         </section>
                         <section class="col-sm-6 form-group">
@@ -63,6 +66,7 @@
                             required
                             placeholder="Repeat Password"
                             v-model="passTwo"
+                            autocomplete="off"
                           />
                         </section>
                       </div>
@@ -83,6 +87,7 @@
                           id="email"
                           placeholder="Email"
                           v-model="email"
+                          autocomplete="email"
                         />
                       </section>
                       <section class="form-group">
@@ -92,6 +97,7 @@
                           type="password"
                           placeholder="Password"
                           v-model="password"
+                          autocomplete="current-password"
                         />
                       </section>
                       <div class="form-group justify-content-center mb-0">
@@ -247,6 +253,17 @@ export default {
     color: white;
 
     @include help_link;
+  }
+}
+
+.dark #login_modal .bx--modal-container {
+  background-color: $bg--dark;
+  h3, h4 { 
+    color: white !important;
+  }
+
+  .bx--modal-close > svg {
+    fill: white !important;
   }
 }
 
