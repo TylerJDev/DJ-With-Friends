@@ -19,8 +19,10 @@
                     <h3 class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</h3>
                     <template v-if="userState === 'register'">
                       <div class="form-row">
-                        <div v-if="errorRegister" class="col-12 alert alert-danger px-3">{{ errorRegister }}</div>
-                        <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                        <div class="error_container">
+                          <div v-if="errorRegister" class="col-12 alert alert-danger px-3">{{ errorRegister }}</div>
+                          <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                        </div>
 
                         <section class="col-sm-12 form-group">
                           <label class="form-control-label sr-only" for="displayName">Display Name</label>
@@ -33,6 +35,7 @@
                             required
                             v-model="displayName"
                             autocomplete="username"
+                            v-on:blur="handleDisplayInput"
                           />
                         </section>
                       </div>
@@ -169,6 +172,15 @@ export default {
       if (this.modalVisible)
         this.userState = this.modalEventType;
     },
+    displayName: function() {
+      const alphaNum = RegExp('^[a-zA-Z0-9_]*$', 'g');
+
+      if (!alphaNum.test(this.displayName)) {
+        this.errorRegister = 'Display Name must only contain alphanumeric characters!'
+      } else {
+        this.errorRegister = null;
+      }
+    },
   },
   methods: {
     closeModal: function () {
@@ -187,24 +199,14 @@ export default {
         password: this.passOne,
         displayName: this.displayName
       }
-
-      if (!this.error) {
-        Firebase.auth()
-          .createUserWithEmailAndPassword(info.email, info.password)
-          .then(
-            userCredentials => {
-              return userCredentials.user.updateProfile({
-                displayName: info.displayName
-              }).then(() => {
-                this.$router.replace('callback');
-              });
-            }
-          ), error => {
-            this.errorRegister = error.message;
-          }
+      
+      if (!this.error && this.errorRegister === null) {
+        this.$store.dispatch('registerNewUser', info);
+      } else {
+        this.errorRegister = this.error.length ? this.error : 'Display Name must only contain alphanumeric characters!';
       }
     },
-    handleModalAuthType(e) {
+    handleModalAuthType: function(e) {
       const authType = e.target.dataset.modalAuthType;
 
       if (authType === 'login') {
@@ -231,6 +233,13 @@ export default {
             this.error = error.message;
           }
         );
+    },
+    handleDisplayInput: function(e) {
+      const inputVal = e.target.value.trim();
+
+      if (inputVal.length <= 3) {
+        this.errorRegister = 'Display Name must be more than 3 characters!';
+      }
     }
   }
 };
@@ -268,6 +277,12 @@ export default {
 }
 
 #login_modal {
+  .error_container {
+    height: 50px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
   .blu-btn {
     @include blu_btn;
     font-family: "IBM Plex Sans", sans-serif; 
@@ -284,7 +299,7 @@ export default {
   }
 
   .bx--modal-container {
-    height: 500px;
+    height: 600px;
     width: 100% !important;
     background-color: #e2d7ca;
     box-shadow: 3px 5px 0px 0px black;
@@ -327,7 +342,7 @@ export default {
     }
 
     .type-auth_title {
-      margin-bottom: 15px;
+      margin-bottom: 5px;
       // border: 1px solid white;
       display: inline-block;
       padding: 5px;

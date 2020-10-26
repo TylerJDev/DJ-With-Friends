@@ -323,12 +323,46 @@ export default new Vuex.Store({
 
           router.push({path: '/login'});
         }, (error) => {
-          console.error(`Error has occurred! Please make note of the error stated below.`);
+          console.error('Error has occurred! Please make note of the error stated below.');
           console.error(error);
         });
 
       } else {
         console.error(`Unexpected Firebase state: ${state.spotifyAPIData.firebaseActive}`);
+      }
+    },
+    async registerNewUser({
+      state,
+    }, payload) {
+      const response = await fetch(`${state.location}${'register'}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: String(payload.email),
+          password: String(payload.password),
+          displayName: String(payload.displayName),
+        }),
+      });
+
+      const res = await response.json();
+
+      if (res.error !== undefined) {
+        console.error(res.error);
+      } else {
+        Firebase.auth().signInWithCustomToken(res.token).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+
+          if (errorCode === 'auth/invalid-custom-token') {
+            console.error('The token you provided is not valid!');
+          } else {
+            console.error(error);
+            console.error(errorMessage);
+          }
+
+        }); 
       }
     },
   },

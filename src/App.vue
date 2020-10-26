@@ -84,7 +84,6 @@ export default {
         this.$store.commit('addFirebaseData', false);
       }
     });
-    console.log(this.$route)
     if (localStorage.getItem('dark_mode') === null) {
       let typeMode = bgMode === '"dark"' ? true : false;
       this.$store.commit('darkMode', {'mode': typeMode});
