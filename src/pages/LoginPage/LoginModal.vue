@@ -15,99 +15,101 @@
             <div>
               <div>
                 <div class="modal-card">
-                  <div class="modal-body">
-                    <h3 class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</h3>
-                    <template v-if="userState === 'register'">
-                      <div class="form-row">
-                        <div class="error_container">
-                          <div v-if="errorRegister" class="col-12 alert alert-danger px-3">{{ errorRegister }}</div>
-                          <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
-                        </div>
+                  <form class="modal-body" v-on:submit.prevent>
+                    <fieldset>
+                      <legend class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</legend>
+                      <template v-if="userState === 'register'">
+                        <div class="form-row">
+                          <div class="error_container">
+                            <div v-if="errorRegister" class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister }}</div>
+                            <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                          </div>
 
-                        <section class="col-sm-12 form-group">
-                          <label class="form-control-label sr-only" for="displayName">Display Name</label>
+                          <section class="col-sm-12 form-group">
+                            <label class="form-control-label sr-only" for="displayName">Display Name</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="displayName"
+                              placeholder="Display Name"
+                              name="displayName"
+                              required
+                              v-model="displayName"
+                              autocomplete="username"
+                              v-on:blur="handleDisplayInput"
+                            />
+                          </section>
+                        </div>
+                        <section class="form-group">
+                          <label class="form-control-label sr-only" for="emailRegister">Email</label>
                           <input
                             class="form-control"
-                            type="text"
-                            id="displayName"
-                            placeholder="Display Name"
-                            name="displayName"
+                            type="email"
+                            id="emailRegister"
+                            placeholder="Email Address"
                             required
-                            v-model="displayName"
-                            autocomplete="username"
-                            v-on:blur="handleDisplayInput"
+                            name="email"
+                            v-model="emailRegister"
+                            autocomplete="email"
                           />
                         </section>
-                      </div>
-                      <section class="form-group">
-                        <label class="form-control-label sr-only" for="emailRegister">Email</label>
-                        <input
-                          class="form-control"
-                          type="email"
-                          id="emailRegister"
-                          placeholder="Email Address"
-                          required
-                          name="email"
-                          v-model="emailRegister"
-                          autocomplete="email"
-                        />
-                      </section>
-                      <div class="form-row">
-                        <section class="col-sm-6 form-group">
+                        <div class="form-row">
+                          <section class="col-sm-6 form-group">
+                            <input
+                              class="form-control"
+                              type="password"
+                              placeholder="Password"
+                              v-model="passOne"
+                              autocomplete="off"
+                            />
+                          </section>
+                          <section class="col-sm-6 form-group">
+                            <input
+                              class="form-control"
+                              type="password"
+                              required
+                              placeholder="Repeat Password"
+                              v-model="passTwo"
+                              autocomplete="off"
+                            />
+                          </section>
+                        </div>
+                        
+                        <div class="form-group justify-content-center mb-0">
+                          <button class="btn btn-primary blu-btn" type="submit">Register</button>
+                        </div>
+                      </template>
+
+                      <template v-if="userState === 'login'">
+                        <section class="form-group">
+                          <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                          <label class="form-control-label sr-only" for="Email">Email</label>
                           <input
+                            required
+                            class="form-control"
+                            type="email"
+                            id="email"
+                            placeholder="Email"
+                            v-model="email"
+                            autocomplete="email"
+                          />
+                        </section>
+                        <section class="form-group">
+                          <input
+                            required
                             class="form-control"
                             type="password"
                             placeholder="Password"
-                            v-model="passOne"
-                            autocomplete="off"
+                            v-model="password"
+                            autocomplete="current-password"
                           />
                         </section>
-                        <section class="col-sm-6 form-group">
-                          <input
-                            class="form-control"
-                            type="password"
-                            required
-                            placeholder="Repeat Password"
-                            v-model="passTwo"
-                            autocomplete="off"
-                          />
-                        </section>
-                      </div>
-                      
-                      <div class="form-group justify-content-center mb-0">
-                        <button class="btn btn-primary blu-btn" type="submit">Register</button>
-                      </div>
-                    </template>
-
-                    <template v-if="userState === 'login'">
-                      <section class="form-group">
-                        <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
-                        <label class="form-control-label sr-only" for="Email">Email</label>
-                        <input
-                          required
-                          class="form-control"
-                          type="email"
-                          id="email"
-                          placeholder="Email"
-                          v-model="email"
-                          autocomplete="email"
-                        />
-                      </section>
-                      <section class="form-group">
-                        <input
-                          required
-                          class="form-control"
-                          type="password"
-                          placeholder="Password"
-                          v-model="password"
-                          autocomplete="current-password"
-                        />
-                      </section>
-                      <div class="form-group justify-content-center mb-0">
-                        <button class="btn btn-primary blu-btn" type="submit">Log in</button>
-                      </div>
-                    </template>
-                  </div>
+                        <div class="form-group justify-content-center mb-0">
+                          <button class="btn btn-primary blu-btn" type="submit">Log in</button>
+                        </div>
+                      </template>
+                    </fieldset>
+                  </form>
                 </div>
               </div>
             </div>
@@ -267,7 +269,7 @@ export default {
 
 .dark #login_modal .bx--modal-container {
   background-color: $bg--dark;
-  h3, h4 { 
+  h3, h4, legend { 
     color: white !important;
   }
 
@@ -281,6 +283,22 @@ export default {
     height: 50px;
     width: 100%;
     margin-bottom: 15px;
+  }
+
+  input:focus {
+    outline: blue auto 2px;
+  }
+
+
+  button[type="submit"] {
+    &:focus {
+      border: 1px dashed white !important;
+      text-decoration: underline;
+    }
+  }
+
+  .alert-danger {
+    font-weight: bold;
   }
 
   .blu-btn {
@@ -299,7 +317,7 @@ export default {
   }
 
   .bx--modal-container {
-    height: 600px;
+    height: 550px;
     width: 100% !important;
     background-color: #e2d7ca;
     box-shadow: 3px 5px 0px 0px black;
@@ -335,7 +353,7 @@ export default {
       }
     }
 
-    h2, h3, h4 {
+    h2, h3, h4, .type-auth_title {
       color: black !important;
       font-family: "IBM Plex Sans", sans-serif;
       font-weight: 600;
@@ -346,6 +364,8 @@ export default {
       // border: 1px solid white;
       display: inline-block;
       padding: 5px;
+      color: white;
+      font-size: 1.5rem;
       // box-shadow: 3px 5px 0px 0px black;
       // background-color: black;
       // color: white !important;
