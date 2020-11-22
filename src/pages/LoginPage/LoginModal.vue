@@ -15,14 +15,13 @@
             <div>
               <div>
                 <div class="modal-card">
-                  <form class="modal-body" v-on:submit.prevent>
+                  <div class="modal-body">
                     <fieldset>
                       <legend class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</legend>
                       <template v-if="userState === 'register'">
                         <div class="form-row">
                           <div class="error_container">
                             <div v-if="errorRegister" class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister }}</div>
-                            <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
                           </div>
 
                           <section class="col-sm-12 form-group">
@@ -82,7 +81,9 @@
 
                       <template v-if="userState === 'login'">
                         <section class="form-group">
-                          <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                          <div class="error_container">
+                            <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                          </div>
                           <label class="form-control-label sr-only" for="Email">Email</label>
                           <input
                             required
@@ -109,7 +110,7 @@
                         </div>
                       </template>
                     </fieldset>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -202,10 +203,13 @@ export default {
         displayName: this.displayName
       }
       
+      this.$store.state.loading = true;
+
       if (!this.error && this.errorRegister === null) {
         this.$store.dispatch('registerNewUser', info);
       } else {
         this.errorRegister = this.error.length ? this.error : 'Display Name must only contain alphanumeric characters!';
+        this.$store.state.loading = false;
       }
     },
     handleModalAuthType: function(e) {
@@ -223,6 +227,8 @@ export default {
         password: this.password,
       };
 
+      this.$store.state.loading = true;
+
       Firebase.auth()
         .signInWithEmailAndPassword(info.email, info.password)
         .then(
@@ -234,7 +240,9 @@ export default {
           (error) => {
             this.error = error.message;
           }
-        );
+        ).finally(() => {
+          this.$store.state.loading = false;
+        });
     },
     handleDisplayInput: function(e) {
       const inputVal = e.target.value.trim();
@@ -299,6 +307,10 @@ export default {
 
   .alert-danger {
     font-weight: bold;
+  }
+
+  section.form-group {
+    flex-direction: column;
   }
 
   .blu-btn {

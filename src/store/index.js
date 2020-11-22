@@ -346,8 +346,9 @@ export default new Vuex.Store({
         }),
       });
 
-      const res = await response.json();
+      const res = await response.json();;
 
+      state.loading = false;
       if (res.error !== undefined) {
         console.error(res.error);
       } else {

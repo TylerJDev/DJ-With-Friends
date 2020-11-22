@@ -73,7 +73,9 @@ export default {
   },
   created() {
     // Send user details to the socket
-    this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice, 'premium': this.$store.state.spotifyAPIData.premium, 'hostMode': this.$store.state.hostMode, 'images': this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {}});
+    // this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice, 'premium': this.$store.state.spotifyAPIData.premium, 'hostMode': this.$store.state.hostMode, 'images': this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {}});
+    this.socketConnect.emit('userDetails', {uid: this.$store.state.spotifyAPIData.uid, mainDevice: this.$store.state.spotifyAPIData.mainDevice, hostMode: this.$store.state.hostMode, images: this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {}});
+
     this.socketConnect.on('currentTrack', (data) => {
       if (data.track.length) {
         // Get current progress from server
@@ -87,15 +89,16 @@ export default {
       this.$store.commit('addCurrentTrack', data);
     });
 
-    this.socketConnect.on('addedQueue', (data) => {
-      this.currentTrackData = data;
+    this.socketConnect.on('addedQueue', (queueData) => {
+      this.currentTrackData = JSON.parse(JSON.stringify(queueData));
 
-      data.forEach((current, index) => {
+      this.currentTrackData.queueData.forEach((current, index) => {
+        console.log(current);
         let prefix = Object.prototype.hasOwnProperty.call(current, 'track') === true ? current.track.substring(0, 3) : '___';
         current.keyID = String(Math.floor(Math.random() * (10000 * 1000))) + '-' + prefix;
       });
 
-      this.$store.commit('addToQueue', data);
+      this.$store.commit('addToQueue', JSON.parse(JSON.stringify(queueData)));
 
       this.socketConnect.on('timeUpdate', (data) => {
         this.$store.commit('setCurrentProgress', data.seconds);

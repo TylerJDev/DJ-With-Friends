@@ -19,11 +19,11 @@ const userListStore = {
     addCurrentTrack: (state, payload) => {
       if (payload.hasOwnProperty('track') && payload.hasOwnProperty('album')) {
         try { // Issue with Jest/Vue Testing Utils, throws improper error, this keeps tests running, return statement should never be hit in prod
-          if (payload.queue.length) {
+          //if (payload.queue.length) { REFACTOR:
             state.maxTime = payload.duration;
             state.currentTrack = payload;
             state.trackPlaying = payload.currentlyPlaying;
-          }
+          //}
 
           if (!state.currentQueue.length) {
             payload.queue.shift();
@@ -84,10 +84,9 @@ const userListStore = {
       }
     },
     addToQueue: (state, payload) => {
-      if (payload.length) {
-        payload.shift();
-        state.currentQueue = payload;
-        state.sliderQueue = payload;
+      if (payload.queueData.length >= 0) {
+        state.currentQueue = payload.queueData;
+        state.sliderQueue = payload.queueData;
       }
     },
     setHosting: (state, payload) => {

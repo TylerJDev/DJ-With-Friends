@@ -82,7 +82,7 @@
             <div id="user_icon" :style="{backgroundImage: 'url(' + userAvatar + ')'}"><span v-if="userAvatar === false"><i class="far fa-user"></i></span></div>
             <h3>Settings</h3>     
             <cv-accordion>
-                <cv-accordion-item id="devices_tab">
+                <cv-accordion-item id="devices_tab"  v-if="this.$route.name !== 'login'">
                   <template slot="title">Devices</template>
                   <template slot="content"> 
                     <h4 id="device_label">Current Device</h4>
@@ -103,7 +103,7 @@
                   </template>
                 </cv-accordion-item>
                 <cv-accordion-item id="appearance_tab">
-                  <template slot="title">Appearance</template>
+                  <template slot="title" >Appearance</template>
                   <template slot="content">
                     <cv-checkbox
                       label="Dark Mode"
@@ -113,7 +113,7 @@
                     </cv-checkbox>
                   </template>
                 </cv-accordion-item>
-                <cv-accordion-item id="hosting_tab">
+                <cv-accordion-item id="hosting_tab" v-if="this.$route.name !== 'login'">
                   <template slot="title">Hosting</template>
                   <template slot="content">
                     <p>Enable always-hosting</p>
@@ -132,9 +132,7 @@
                 :size="size"
                 :disabled="disabled"
                 @click="logout"
-                :icon="false">
-                Log out
-                </cv-button>
+                :icon="false"  v-if="this.$route.name !== 'login'">Sign Out</cv-button>
             </div>
           </cv-tile>
       </template>
@@ -424,13 +422,14 @@ export default {
     height: 50px;
     border-radius: 50%;
     margin: auto;
+    margin-top: 5px;
     background-size: cover;
     display: flex;
     background-color: #eee;
     span {
       margin: 0 auto;
       .fa-user {
-        padding-top: 5px;
+        padding-top: 10px;
         font-size: 2rem;
       }
     }
@@ -496,6 +495,9 @@ export default {
     > button {
       margin-top: 15px;
       border: 1px solid white;
+      text-align: center;
+      padding-left: 25px;
+      padding-right: 25px;
     }
   }
 

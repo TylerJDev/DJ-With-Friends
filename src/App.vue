@@ -369,13 +369,13 @@ body {
     #room_vinyl {
       #sleeve {
         background-color: grey;
-        border: 2px solid whitesmoke;
+        border: 2px solid grey;
         box-shadow: 3px 5px 0px 3px black;
       }
       #vinyl {
         border: 2px solid whitesmoke;
         // border-color: whitesmoke;
-        background-color: royalblue;
+        background-color: darkgray;
         box-shadow: 0px 0px 0px 170px grey, 0px 0px 0px 171px whitesmoke, 8px 8px 0px 172px black;
       }
     }

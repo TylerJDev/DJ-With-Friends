@@ -33,7 +33,7 @@
 
       <div id="rooms">
         <div class="room_feat">
-          <div class="room_body">
+          <div class="room_body" :style="{backgroundImage: 'url(./placeholder_1.png)'}">
             <div class="room_name">
               <h3>Tyler's Room</h3>
             </div>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="room_feat">
-          <div class="room_body">
+          <div class="room_body" :style="{backgroundImage: 'url(./placeholder_2.png)'}">
             <div class="room_name">
               <h3>Jazzy Hop</h3>
             </div>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="room_feat">
-          <div class="room_body">
+          <div class="room_body" :style="{backgroundImage: 'url(./placeholder_3.png)'}">
             <div class="room_name">
               <h3>West Coast</h3>
             </div>
@@ -98,9 +98,9 @@
       </div>
 
       <div class="c-8">
-        <div class="site_container" :style="{backgroundImage: 'url(./DJWF_1.png)'}">
+        <div class="site_container" :style="[this.$store.state.darkMode ? {backgroundImage: 'url(./DJWF_3.png)'} : {backgroundImage: 'url(./DJWF_1.png)'}]">
         </div>
-        <div class="site_container" :style="{backgroundImage: 'url(./DJWF_2.png)'}">
+        <div class="site_container" :style="[this.$store.state.darkMode ? {backgroundImage: 'url(./DJWF_4.png)'} : {backgroundImage: 'url(./DJWF_2.png)'}]">
         </div>
       </div>
     </div>
@@ -114,9 +114,9 @@
       <div class="section">
         <div class="c-4">
           <h3 role="presentation" aria-hidden="true">DJ With Friends</h3>
-          <div class="web_container">
+          <div class="web_container" :style="{backgroundImage: 'url(./album2.png)'}">
           </div>
-          <div class="web_container">
+          <div class="web_container" :style="{backgroundImage: 'url(./album3.png)'}">
           </div>
         </div>
       </div>
@@ -355,6 +355,7 @@ export default {
         margin-top: 50px;
         .room_body {
           height: 50%;
+          background-size: cover;
           .room_name {
             border: 1px solid black;
             position: relative;
@@ -410,7 +411,7 @@ export default {
       height: 240px;
       width: 600px;
       border: 1px solid black;
-      background-size: contain;
+      background-size: cover;
       background-repeat: no-repeat;
       box-shadow: 3px 3px 0px black;
     }
@@ -418,7 +419,7 @@ export default {
 
   #join-us {
     background-color: white;
-    padding-top: 150px;
+    padding-top: 50px;
     padding-bottom: 150px;
     margin-bottom: 0px;
     .section {
