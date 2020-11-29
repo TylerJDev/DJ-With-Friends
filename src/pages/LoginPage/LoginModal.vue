@@ -7,7 +7,8 @@
     @modal-hidden="closeModal"
     id="login_modal"
   >
-    <template v-if="use_label" slot="label">DJ With Friends</template>
+    <template v-if="use_title" slot="title">DJ <br/><span class="logo-color">With</span> <br/>Friends</template>
+    <template v-if="use_label" slot="label">Let's DJ!</template>
     <template v-if="use_content" slot="content">
       <div>
         <form class="mt-3" :data-modal-auth-type="userState === 'register' ? 'register' : 'login'" @submit.prevent="handleModalAuthType">
@@ -20,8 +21,8 @@
                       <legend class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</legend>
                       <template v-if="userState === 'register'">
                         <div class="form-row">
-                          <div class="error_container">
-                            <div v-if="errorRegister" class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister }}</div>
+                          <div class="error_container" v-if="errorRegister">
+                            <div class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister }}</div>
                           </div>
 
                           <section class="col-sm-12 form-group">
@@ -60,6 +61,7 @@
                               placeholder="Password"
                               v-model="passOne"
                               autocomplete="off"
+                              id="password-1"
                             />
                           </section>
                           <section class="col-sm-6 form-group">
@@ -70,43 +72,46 @@
                               placeholder="Repeat Password"
                               v-model="passTwo"
                               autocomplete="off"
+                              id="password-2"
                             />
                           </section>
                         </div>
                         
                         <div class="form-group justify-content-center mb-0">
-                          <button class="btn btn-primary blu-btn" type="submit">Register</button>
+                          <button class="btn btn-primary blu-btn submit-auth" type="submit">Register</button>
                         </div>
                       </template>
 
                       <template v-if="userState === 'login'">
                         <section class="form-group">
-                          <div class="error_container">
-                            <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
+                          <div class="error_container" v-if="error">
+                            <div class="col-12 alert alert-danger px-3">{{error}}</div>
                           </div>
-                          <label class="form-control-label sr-only" for="Email">Email</label>
+                          <label class="form-control-label sr-only" for="loginEmail">Email</label>
                           <input
                             required
                             class="form-control"
                             type="email"
-                            id="email"
+                            id="loginEmail"
                             placeholder="Email"
                             v-model="email"
                             autocomplete="email"
                           />
                         </section>
                         <section class="form-group">
+                          <label class="form-control-label sr-only" for="loginPassword">Password</label>
                           <input
                             required
                             class="form-control"
                             type="password"
+                            id="loginPassword"
                             placeholder="Password"
                             v-model="password"
                             autocomplete="current-password"
                           />
                         </section>
                         <div class="form-group justify-content-center mb-0">
-                          <button class="btn btn-primary blu-btn" type="submit">Log in</button>
+                          <button class="btn btn-primary blu-btn submit-auth" type="submit">Log in</button>
                         </div>
                       </template>
                     </fieldset>
@@ -119,6 +124,10 @@
         <p class="text-center mt-2 modal-or">
           {{userState === 'register' ? 'Already have an account?' : userState === 'login' ? 'Don\'t have an account yet?' : ''}}
           <button v-on:click="changeUserState" class="modal-or_btn" :data-auth-type="userState === 'register' ? 'login' : 'register'">{{userState === 'register' ? 'Login' : 'Register'}}</button>
+        </p>
+        <p class="text-center mt-2 modal-or">
+          Want to try DJ With Friends as a guest?
+          <a href="#">Continue as guest</a>
         </p>
       </div>
     </template>
@@ -143,8 +152,8 @@ export default {
   data() {
     return {
       closeAriaLabel: "Close",
-      use_label: true,
-      use_title: false,
+      use_label: false,
+      use_title: true,
       use_content: true,
       size: "small",
       autoHideOff: false,
@@ -238,7 +247,8 @@ export default {
             this.$emit('handle-auth');
           },
           (error) => {
-            this.error = error.message;
+            const errorMsg = error.message.includes('or the user does not') ? 'The password is invalid or the email/username is incorrect!' : error.message;
+            this.error = errorMsg;
           }
         ).finally(() => {
           this.$store.state.loading = false;
@@ -276,21 +286,46 @@ export default {
 }
 
 .dark #login_modal .bx--modal-container {
-  background-color: $bg--dark;
+  background-color: white;
   h3, h4, legend { 
-    color: white !important;
+    color: black !important;
   }
 
-  .bx--modal-close > svg {
-    fill: white !important;
+  .bx--modal-close {
+    box-shadow: 2px 3px 0px black;
+    margin: 15px;
+    border: 2px solid black;
+    > svg {
+      fill: black !important;
+    }
   }
+}
+
+.bx--modal-header__heading {
+  text-align: left;
+  font-family: 'Syncopate', sans-serif !important;
+  font-size: 1.5rem !important;
+  .logo-color {
+    color: $logo--color;
+  }
+}
+
+.mt-3 {
+  margin-top: 0px !important;
 }
 
 #login_modal {
   .error_container {
-    height: 50px;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
+    margin-top: 10px;
+    div {
+      border-radius: 0%;
+      border: 1px solid black;
+      box-shadow: 2px 3px 0px 0px black;
+      font-family: "IBM Plex Sans", sans-serif; 
+      font-weight: 500;
+    }
   }
 
   input:focus {
@@ -316,6 +351,8 @@ export default {
   .blu-btn {
     @include blu_btn;
     font-family: "IBM Plex Sans", sans-serif; 
+    width: 100%;
+    font-weight: 700;
   }
 
   h4 {
@@ -324,16 +361,12 @@ export default {
     margin-top: 10px;
   }
 
-  .bx--modal-header__heading {
-    display: none;
-  }
-
   .bx--modal-container {
-    height: 550px;
-    width: 100% !important;
+    height: 620px;
+    width: 470px !important;
     background-color: #e2d7ca;
-    box-shadow: 3px 5px 0px 0px black;
-    border: 1px solid black;
+    box-shadow: 9px 12px 0px 0px black;
+    border: 2px solid black;
 
     .card.bg-light {
       border: none;
@@ -343,6 +376,12 @@ export default {
     .modal-or {
       font-family: "IBM Plex Sans", sans-serif;
       font-weight: 300;
+      color: #0e0e0e !important;
+      a {
+        color: $logo--color;
+        font-weight: normal;
+        text-decoration: underline;
+      }
     }
 
     .modal-or_btn {
@@ -355,7 +394,7 @@ export default {
 
     input {
       border-radius: 0%;
-      box-shadow: -3px 3px 0px 0px black;
+      border: 1px solid black;
     }
 
     .bx--modal-header {
@@ -369,15 +408,18 @@ export default {
       color: black !important;
       font-family: "IBM Plex Sans", sans-serif;
       font-weight: 600;
+      margin-bottom: 10px;
     }
 
     .type-auth_title {
-      margin-bottom: 5px;
+      margin-bottom: 15px;
       // border: 1px solid white;
       display: inline-block;
       padding: 5px;
       color: white;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: left;
       // box-shadow: 3px 5px 0px 0px black;
       // background-color: black;
       // color: white !important;

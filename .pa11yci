@@ -1,0 +1,9 @@
+{
+    "defaults": {
+        "timeout": 10000
+    },
+    "urls": [
+        "http://localhost:8080/login",
+        "http://localhost:8080/about"
+    ]
+}

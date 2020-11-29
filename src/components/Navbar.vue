@@ -23,7 +23,7 @@
         About
       </a>
 
-      <cv-header-nav aria-label="Sub">
+    <cv-header-nav aria-label="Sub">
       <li class="cv-header-menu-item nav_item" role="presentation">
         <a href="/" class="nav_item bx--header__menu-item menu_item" role="menuitem">
           Home
@@ -45,7 +45,8 @@
           aria-haspopup="true"
           aria-label="Notifications"
           @click="handlePopup"
-          class="menu_item" >
+          class="menu_item" 
+          v-if="this.$route.name !== 'login'">
           <Notification20 />
           <p v-if="this.$store.state.activeNotify" class="notifyCount" aria-live="polite">{{this.$store.state.activeNotifyCount}} <span class="sr_only">New Notification(s)</span></p>
         </cv-header-global-action>
@@ -67,7 +68,13 @@
             <hr/>
             <NotificationList/>
         </cv-tile>
-        <cv-header-global-action aria-label="Settings"  aria-haspopup="true" :aria-expanded="popupUser === true ? 'true' : 'false'" @click="handlePopup" aria-controls="user-panel" class="menu_item">
+        <cv-header-global-action aria-label="Settings" 
+          aria-haspopup="true" 
+          :aria-expanded="popupUser === true ? 'true' : 'false'" 
+          @click="handlePopup" 
+          aria-controls="user-panel" 
+          class="menu_item"
+          v-if="this.$route.name !== 'login'">
           <UserAvatar20 />
         </cv-header-global-action>
         <cv-tile v-if="popupUser"
@@ -135,6 +142,12 @@
                 :icon="false"  v-if="this.$route.name !== 'login'">Sign Out</cv-button>
             </div>
           </cv-tile>
+
+          <div id="login-sign-nav" v-if="this.$route.name === 'login'">
+            <div class="login-nav-container nav-container">
+              <button id="loginNav" @click="handleAuth">Log In</button>
+            </div>
+          </div>
       </template>
     </cv-header>
   </nav>
@@ -242,6 +255,9 @@ export default {
     },
     logout() {
       this.$store.dispatch('handleLogout');
+    },
+    handleAuth() {
+      this.$emit('handle-modal', {'event': 'login'});
     }
   },
   computed: {
@@ -326,8 +342,10 @@ export default {
 
   .cv-header-name.bx--header__name {
     color: white;
-    background-color: black;
+    background-color: #0000cc;
     margin-right: -5px;
+    text-transform: uppercase;
+    font-weight: 300;
     &:hover, &:focus, &:active {
       background-color: white;
       color: black;
@@ -511,5 +529,22 @@ export default {
     bottom: 8px;
     display: inline;
     font-size: 0.6rem;
+  }
+
+  #login-sign-nav {
+    display: flex;
+    height: 100%;
+    .nav-container, .nav-container button {
+      height: 100%;
+      button {
+        border: none;
+        color: white;
+        background-color: blue;
+        padding: 0px 10px 0px 10px;
+        width: 80px;
+        font-weight: 300;
+        font-size: 1rem;
+      }
+    }
   }
 </style>

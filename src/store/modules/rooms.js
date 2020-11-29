@@ -72,7 +72,17 @@ const userListStore = {
       }
     },
     setCurrentProgress: (state, payload) => {
-      if (payload.hasOwnProperty('seconds')) { state.currentProgress = payload.seconds; }
+      if (payload.userID) {
+        /* Since we can't access rootState in a mutation
+        We'll utilize localStorage to grab the userID.
+        We should be cautious on this method, as we may change
+        how we use local storage in the future. */
+        if (payload.userID === localStorage.getItem('userID')) {
+          state.currentProgress = payload.seconds;
+        }
+      } else if (payload.hasOwnProperty('seconds')) {
+        state.currentProgress = payload.seconds;
+      }
     },
     addSkipVotes: (state, payload) => {
       state.toSkip.votes = payload.currentVotes;

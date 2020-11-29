@@ -74,35 +74,54 @@ export default {
   created() {
     // Send user details to the socket
     // this.socketConnect.emit('userDetails', {'display_name': this.$store.state.spotifyAPIData.user, 'id': this.$store.state.spotifyAPIData.userID, 'access_token': this.$store.state.spotifyAPIData.accessToken, 'devices': this.$store.state.spotifyAPIData.devices, 'mainDevice': this.$store.state.spotifyAPIData.mainDevice, 'premium': this.$store.state.spotifyAPIData.premium, 'hostMode': this.$store.state.hostMode, 'images': this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {}});
-    this.socketConnect.emit('userDetails', {uid: this.$store.state.spotifyAPIData.uid, mainDevice: this.$store.state.spotifyAPIData.mainDevice, hostMode: this.$store.state.hostMode, images: this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {}});
+    this.socketConnect.emit('userDetails', {
+      userID: this.$store.state.spotifyAPIData.userID, 
+      uid: this.$store.state.spotifyAPIData.uid, 
+      mainDevice: this.$store.state.spotifyAPIData.mainDevice, 
+      hostMode: this.$store.state.hostMode, 
+      images: this.$store.state.spotifyAPIData.images !== false ? this.$store.state.spotifyAPIData.images : {},
+      roomID: this.$store.state.roomID,
+    });
 
     this.socketConnect.on('currentTrack', (data) => {
-      if (data.track.length) {
-        // Get current progress from server
-        this.$store.dispatch('handleProgression', {'maxTime': data.duration});
-        this.$store.commit('setCurrentProgress', {'seconds': Math.floor((Date.now() - data.timeStarted) / 1000)});
-      } else {
-        this.$store.commit('setProgression', {'increment': false});
-      }
+      if ((data.userID && this.$store.state.spotifyAPIData.userID === data.userID) 
+      || !data.userID) {
 
-      this.currentTrackPlaying = data;
-      this.$store.commit('addCurrentTrack', data);
+        if (data.userID) {
+          delete data.userID;
+        }
+
+        if (data.track.length) {
+          this.$store.dispatch('handleProgression', {'maxTime': data.duration});
+          this.$store.commit('setCurrentProgress', {'seconds': Math.floor((Date.now() - data.timeStarted) / 1000)});
+        } else {
+          this.$store.commit('setProgression', {'increment': false});
+        }
+        this.currentTrackPlaying = data;
+        this.$store.commit('addCurrentTrack', data);
+      }
     });
 
     this.socketConnect.on('addedQueue', (queueData) => {
-      this.currentTrackData = JSON.parse(JSON.stringify(queueData));
+      if ((queueData.userID && this.$store.state.spotifyAPIData.userID === queueData.userID) 
+      || !queueData.userID) {
+        if (queueData.userID) {
+          delete queueData.userID;
+        }
 
-      this.currentTrackData.queueData.forEach((current, index) => {
-        console.log(current);
-        let prefix = Object.prototype.hasOwnProperty.call(current, 'track') === true ? current.track.substring(0, 3) : '___';
-        current.keyID = String(Math.floor(Math.random() * (10000 * 1000))) + '-' + prefix;
-      });
+        this.currentTrackData = JSON.parse(JSON.stringify(queueData));
 
-      this.$store.commit('addToQueue', JSON.parse(JSON.stringify(queueData)));
+        this.currentTrackData.queueData.forEach((current, index) => {
+          let prefix = Object.prototype.hasOwnProperty.call(current, 'track') === true ? current.track.substring(0, 3) : '___';
+          current.keyID = String(Math.floor(Math.random() * (10000 * 1000))) + '-' + prefix;
+        });
 
-      this.socketConnect.on('timeUpdate', (data) => {
-        this.$store.commit('setCurrentProgress', data.seconds);
-      });
+        this.$store.commit('addToQueue', JSON.parse(JSON.stringify(queueData)));
+
+        this.socketConnect.on('timeUpdate', (data) => {
+          this.$store.commit('setCurrentProgress', data);
+        });
+      }
     });
 
     this.socketConnect.on('votedSkip', (data) => {
@@ -145,8 +164,11 @@ export default {
     this.socketConnect.on('reAuth', (data) => {
       if (data.user === this.$store.state.spotifyAPIData.userID) {
         const oldAccess = this.$store.state.spotifyAPIData.accessToken;
+        console.log(`old access token: ${oldAccess}`);
 
         this.$store.commit('loadingState', {'status': true});
+
+
         this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
           this.refreshToken(oldAccess);
             if (this.$store.state.spotifyAPIData.accessToken === oldAccess) {
@@ -158,6 +180,8 @@ export default {
               this.$store.commit('loadingState', {'status': false});
             }
         });
+
+
       }
     });
   },

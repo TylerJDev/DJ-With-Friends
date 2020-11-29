@@ -59,6 +59,7 @@ export default new Vuex.Store({
     roomKey: '',
     activeNotify: false,
     activeNotifyCount: 0,
+    isRequesting: false,
   },
   mutations,
   getters,
@@ -200,6 +201,10 @@ export default new Vuex.Store({
             userFire.email = user.email;
           }
 
+          // REFACTOR: This might be getting called every (?)
+          // Could we change it to reduce wrties to db?
+          console.log('userFire');
+
           db.collection('users').doc(user.uid).set({
             displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : USER,
             spotifyUserID: ID,
@@ -209,10 +214,14 @@ export default new Vuex.Store({
             refreshToken: REFRESH_TOKEN,
             accessToken: ACCESS_TOKEN,
             topTracks: state.spotifyAPIData.topTrackData,
-            timestamp: Firebase.firestore.FieldValue.serverTimestamp(),
+            // timestamp: Firebase.firestore.FieldValue.serverTimestamp(),
+            mainDevice: (MAIN_DEVICE || state.spotifyAPIData.mainDevice || null),
+            userID: (ID || state.spotifyAPIData.userID),
           }).catch((error) => {
             console.error('Error has occurred! ', error); // eslint-disable-line
           });
+
+          console.log('hit2');
 
           userFire.uniqueID = user.uid;
 

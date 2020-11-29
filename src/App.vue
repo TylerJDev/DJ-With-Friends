@@ -57,11 +57,14 @@ export default {
 
         // Request a new token
         const refreshToken = this.$store.state.spotifyAPIData.refreshToken
-        if (refreshToken) {
+        if (refreshToken && !this.$store.state.isRequesting) {
           console.log('Request new token!');
+          this.$store.state.isRequesting = true; // Refactor: add action || mutation
+          
           this.$store.dispatch('auth', {callbackURL: '/', refresh: refreshToken, callToAPI: 'callback'}).then(res => {
-            console.log('Request of new token successful')
-            this.$router.push(res.redirect); // Go to homepage
+            console.log('Request of new token successful');
+            //this.$router.push(res.redirect);
+            this.$store.state.isRequesting = false;
           });
 
         } else {
@@ -109,16 +112,12 @@ export default {
   }
 }
 
-@media (max-width: 50rem) {
-
-}
-
 body.aboutDark {
   background-color: $bg--dark !important;
 }
 
 body {
-   background-color: rgb(226, 215, 202) !important;
+   background-color: #2b2b2b !important; // rgb(226, 215, 202) !important;
 }
 
 #app {
