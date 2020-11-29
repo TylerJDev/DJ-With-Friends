@@ -90,7 +90,7 @@
 <script>
 import { focusEle } from '@/utils/focus.js';
 import Firebase from "firebase";
-import db from '@/db.js';
+import db from '../../../db.js';
 
 export default {
   props: {

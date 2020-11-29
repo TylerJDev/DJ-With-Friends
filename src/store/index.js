@@ -6,7 +6,7 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 import Firebase from "firebase";
 import router from '@/router.js';
-import db from '../db.js';
+import db from '../../db.js';
 
 Vue.use(Vuex);
 
