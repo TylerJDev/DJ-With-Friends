@@ -108,8 +108,9 @@ export default {
   }
 
   div.bx--modal-container {
-    height: 90% !important;
+    height: 100% !important;
     width: 90% !important;
+    max-height: 600px;
   }
 }
 
