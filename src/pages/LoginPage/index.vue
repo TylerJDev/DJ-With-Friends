@@ -365,8 +365,52 @@ export default {
     justify-content: space-evenly;
     flex-direction: row;
   }
+  
+  @media (max-width: $breakpoint--laptop-lg) and (min-width: $breakpoint--09) {
+    #cta {
+      margin-top: 12% !important;
+      .avatar-icon {
+        min-height: 40px;
+        min-width: 40px;
+      }
+      
+      .vinyl-container {
+        width: 300px;
+        height: 300px;
+      }
+    }
 
-  @media (max-width: $breakpoint--03) {
+    #quick-preview {
+      #block {
+        width: 50% !important;
+      }
+      .example-user {
+        width: 210px !important;
+      }
+      #example-block {
+        width: 220px !important;
+        min-width: 220px;
+        #current-playing, #time-of {
+          width: 200px !important;
+        }
+        #playing-time {
+          width: 180px !important;
+        }
+      }
+
+      .bio_block {
+        width: 45% !important;
+        p:last-of-type {
+          line-height: 2.5rem;
+          strong {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint--09) {
     .vinyl-main {
       display: none !important;
     }
@@ -381,7 +425,8 @@ export default {
           margin-bottom: 10px;
         }
         .avatar-icon {
-          width: 60px;
+          min-width: 40px;
+          min-height: 40px;
         }
       }
 
@@ -826,8 +871,9 @@ export default {
   }
 
   #quick-preview {
-    height: 90vh;
+    // height: 90vh;
     background-color:#2b2b2b;
+    padding-bottom: 8% !important;
     #block {
       display: flex;
       flex-direction: row;

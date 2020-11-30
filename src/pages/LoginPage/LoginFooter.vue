@@ -27,7 +27,7 @@
     font-size: 1.1rem;
   }
 
-  @media (max-width: $breakpoint--03) {
+  @media (max-width: $breakpoint--09) {
     footer {
       border-top: 1px solid #3c3c3c;
       border-style: dotted;
