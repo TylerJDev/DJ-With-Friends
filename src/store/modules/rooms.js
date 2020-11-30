@@ -19,11 +19,11 @@ const userListStore = {
     addCurrentTrack: (state, payload) => {
       if (payload.hasOwnProperty('track') && payload.hasOwnProperty('album')) {
         try { // Issue with Jest/Vue Testing Utils, throws improper error, this keeps tests running, return statement should never be hit in prod
-          if (payload.queue.length) {
+          //if (payload.queue.length) { REFACTOR:
             state.maxTime = payload.duration;
             state.currentTrack = payload;
             state.trackPlaying = payload.currentlyPlaying;
-          }
+          //}
 
           if (!state.currentQueue.length) {
             payload.queue.shift();
@@ -72,7 +72,17 @@ const userListStore = {
       }
     },
     setCurrentProgress: (state, payload) => {
-      if (payload.hasOwnProperty('seconds')) { state.currentProgress = payload.seconds; }
+      if (payload.userID) {
+        /* Since we can't access rootState in a mutation
+        We'll utilize localStorage to grab the userID.
+        We should be cautious on this method, as we may change
+        how we use local storage in the future. */
+        if (payload.userID === localStorage.getItem('userID')) {
+          state.currentProgress = payload.seconds;
+        }
+      } else if (payload.hasOwnProperty('seconds')) {
+        state.currentProgress = payload.seconds;
+      }
     },
     addSkipVotes: (state, payload) => {
       state.toSkip.votes = payload.currentVotes;
@@ -84,10 +94,9 @@ const userListStore = {
       }
     },
     addToQueue: (state, payload) => {
-      if (payload.length) {
-        payload.shift();
-        state.currentQueue = payload;
-        state.sliderQueue = payload;
+      if (payload.queueData.length >= 0) {
+        state.currentQueue = payload.queueData;
+        state.sliderQueue = payload.queueData;
       }
     },
     setHosting: (state, payload) => {

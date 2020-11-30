@@ -23,7 +23,7 @@
         About
       </a>
 
-      <cv-header-nav aria-label="Sub">
+    <cv-header-nav aria-label="Sub">
       <li class="cv-header-menu-item nav_item" role="presentation">
         <a href="/" class="nav_item bx--header__menu-item menu_item" role="menuitem">
           Home
@@ -45,8 +45,10 @@
           aria-haspopup="true"
           aria-label="Notifications"
           @click="handlePopup"
-          class="menu_item" >
+          class="menu_item" 
+          v-if="this.$route.name !== 'login'">
           <Notification20 />
+          <p v-if="this.$store.state.activeNotify" class="notifyCount" aria-live="polite">{{this.$store.state.activeNotifyCount}} <span class="sr_only">New Notification(s)</span></p>
         </cv-header-global-action>
         <cv-tile v-if="popupNotify"
           kind="standard"
@@ -66,7 +68,13 @@
             <hr/>
             <NotificationList/>
         </cv-tile>
-        <cv-header-global-action aria-label="Settings"  aria-haspopup="true" :aria-expanded="popupUser === true ? 'true' : 'false'" @click="handlePopup" aria-controls="user-panel" class="menu_item">
+        <cv-header-global-action aria-label="Settings" 
+          aria-haspopup="true" 
+          :aria-expanded="popupUser === true ? 'true' : 'false'" 
+          @click="handlePopup" 
+          aria-controls="user-panel" 
+          class="menu_item"
+          v-if="this.$route.name !== 'login'">
           <UserAvatar20 />
         </cv-header-global-action>
         <cv-tile v-if="popupUser"
@@ -77,11 +85,11 @@
               <Close16 role="presentation"/>
               <span class="sr_only">Close</span>
             </button>
-            <h3 id="user_name">{{this.$store.state.spotifyAPIData.user}}</h3>
+            <h3 id="user_name">{{this.$store.state.spotifyAPIData.user}} <span id="account_type" v-if="guestState">(Guest)</span></h3>
             <div id="user_icon" :style="{backgroundImage: 'url(' + userAvatar + ')'}"><span v-if="userAvatar === false"><i class="far fa-user"></i></span></div>
             <h3>Settings</h3>     
             <cv-accordion>
-                <cv-accordion-item id="devices_tab">
+                <cv-accordion-item id="devices_tab"  v-if="this.$route.name !== 'login'">
                   <template slot="title">Devices</template>
                   <template slot="content"> 
                     <h4 id="device_label">Current Device</h4>
@@ -102,7 +110,7 @@
                   </template>
                 </cv-accordion-item>
                 <cv-accordion-item id="appearance_tab">
-                  <template slot="title">Appearance</template>
+                  <template slot="title" >Appearance</template>
                   <template slot="content">
                     <cv-checkbox
                       label="Dark Mode"
@@ -112,7 +120,7 @@
                     </cv-checkbox>
                   </template>
                 </cv-accordion-item>
-                <cv-accordion-item id="hosting_tab">
+                <cv-accordion-item id="hosting_tab" v-if="this.$route.name !== 'login'">
                   <template slot="title">Hosting</template>
                   <template slot="content">
                     <p>Enable always-hosting</p>
@@ -125,7 +133,21 @@
                   </template>
                 </cv-accordion-item>
             </cv-accordion>
+              <div id="log_settings">
+                <cv-button
+                :kind="kind"
+                :size="size"
+                :disabled="disabled"
+                @click="logout"
+                :icon="false"  v-if="this.$route.name !== 'login'">Sign Out</cv-button>
+            </div>
           </cv-tile>
+
+          <div id="login-sign-nav" v-if="this.$route.name === 'login'">
+            <div class="login-nav-container nav-container">
+              <button id="loginNav" @click="handleAuth">Log In</button>
+            </div>
+          </div>
       </template>
     </cv-header>
   </nav>
@@ -152,7 +174,7 @@ export default {
       popupUser: false,
       notifyIndex: 0,
       userIndex: 0,
-      checked: this.$store.state.darkMode
+      checked: this.$store.state.darkMode,
     }
   },
   methods: {
@@ -164,6 +186,10 @@ export default {
      
       if (popupLabels[targetValue] === 'popupNotify') {
         this.notifyIndex = this.userIndex + 1;
+
+        // If there are active notifications which haven't been seen
+        // Then clear, as the user has seen once clicked
+        this.$store.commit('modifyNotifyActiveState', {notifyState: false});
       } else if (popupLabels[targetValue] === 'popupUser') {
         this.userIndex = this.notifyIndex + 1;
       }
@@ -226,6 +252,12 @@ export default {
         this.$emit('change-device', {'id': currentDevices[deviceCurrent].id, 'route': this.$route.params.id});
         // this.$store.dispatch('changeMainDevice', {'id': currentDevices[deviceCurrent].id, 'route': this.$route.params.id});
       }
+    },
+    logout() {
+      this.$store.dispatch('handleLogout');
+    },
+    handleAuth() {
+      this.$emit('handle-modal', {'event': 'login'});
     }
   },
   computed: {
@@ -247,6 +279,13 @@ export default {
     currentDevice() {
       const deviceOf = this.$store.state.spotifyAPIData.mainDevice;
       return deviceOf == null ? this.userDevices[0].id : deviceOf;
+    },
+    guestState() {
+      if (this.$store.state.spotifyAPIData.firebaseActive === 'guest') {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   components: {
@@ -294,7 +333,7 @@ export default {
     padding: 0px;
     font-family: 'IBM Plex Sans', sans-serif;
     background-color: transparent;
-    z-index: 1;
+    z-index: 5;
   }
 
   .cv-header.bx--header {
@@ -303,8 +342,10 @@ export default {
 
   .cv-header-name.bx--header__name {
     color: white;
-    background-color: black;
+    background-color: #0000cc;
     margin-right: -5px;
+    text-transform: uppercase;
+    font-weight: 300;
     &:hover, &:focus, &:active {
       background-color: white;
       color: black;
@@ -399,13 +440,14 @@ export default {
     height: 50px;
     border-radius: 50%;
     margin: auto;
+    margin-top: 5px;
     background-size: cover;
     display: flex;
     background-color: #eee;
     span {
       margin: 0 auto;
       .fa-user {
-        padding-top: 5px;
+        padding-top: 10px;
         font-size: 2rem;
       }
     }
@@ -455,6 +497,54 @@ export default {
         height: 30px;
         fill: grey;
       }   
+    }
+  }
+
+  #account_type {
+    font-size: 0.8rem;
+    color: #afafaf;
+    font-style: italic;
+  }
+
+  #log_settings {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    > button {
+      margin-top: 15px;
+      border: 1px solid white;
+      text-align: center;
+      padding-left: 25px;
+      padding-right: 25px;
+    }
+  }
+
+  .notifyCount {
+    background-color: blue;
+    padding: 3px;
+    border-radius: 3px;
+    color: white;
+    border: 1px solid white;
+    position: relative;
+    bottom: 8px;
+    display: inline;
+    font-size: 0.6rem;
+  }
+
+  #login-sign-nav {
+    display: flex;
+    height: 100%;
+    .nav-container, .nav-container button {
+      height: 100%;
+      button {
+        border: none;
+        color: white;
+        background-color: blue;
+        padding: 0px 10px 0px 10px;
+        width: 80px;
+        font-weight: 300;
+        font-size: 1rem;
+      }
     }
   }
 </style>
