@@ -127,7 +127,7 @@
         </p>
         <p class="text-center mt-2 modal-or">
           Want to try DJ With Friends as a guest?
-          <a href="#">Continue as guest</a>
+          <a href="#" @click="handleGuestAuth">Continue as guest</a>
         </p>
       </div>
     </template>
@@ -260,6 +260,9 @@ export default {
       if (inputVal.length <= 3) {
         this.errorRegister = 'Display Name must be more than 3 characters!';
       }
+    },
+    handleGuestAuth() {
+      this.$emit('handle-guest');
     }
   }
 };
