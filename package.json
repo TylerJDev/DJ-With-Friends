@@ -9,7 +9,7 @@
     "test": "vue-cli-service test:unit",
     "test-pa11y": "./node_modules/.bin/pa11y-ci",
     "cypress:open": "cypress open",
-    "ci": "start-server-and-test serve http://localhost:8080/login test-pa11y"
+    "ci": "start-server-and-test serve http://localhost:8080/ test-pa11y"
   },
   "dependencies": {
     "@carbon/icons-vue": "^10.8.1",
