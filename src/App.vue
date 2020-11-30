@@ -89,7 +89,8 @@ export default {
     });
     if (localStorage.getItem('dark_mode') === null) {
       let typeMode = bgMode === '"dark"' ? true : false;
-      this.$store.commit('darkMode', {'mode': typeMode});
+      // this.$store.commit('darkMode', {'mode': typeMode});
+      this.$store.commit('darkMode', {'mode': true});
     }
   }
 }

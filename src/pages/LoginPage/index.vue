@@ -23,12 +23,12 @@
         </div>
         <!-- <a href="#" class="help_link" role="button" data-toggle="modal" data-target="#helpModal">How does it work?</a> -->
       </div>
-      <div class="c-8 vinyl-main">
+      <div class="c-8 vinyl-main" >
         <div class="vinyl" style="display: none;">
           <div class="vinyl-inner">
           </div>
         </div>
-        <div class="vinyl-container">
+        <div class="vinyl-container" :style="{backgroundImage: 'url(./album3.png)'}">
         </div>
       </div>
     </div>
@@ -131,12 +131,12 @@
             <h2>Lo-Fi & Low Vocals</h2>
             <h3>Tyler Jones.</h3>
             <p>
-              Music Composed,
-              Orchestrated and
-              Conducted by TJD
+              A playlist crafted around Lo-Fi and Low Vocals.
+              <br/><br/>
+              Chill beats 24/7.
             </p>
 
-            <h4>EMMY AWARD NOMINATIONS 2020</h4>
+            <h4>COLLABORATION ENABLED</h4>
           </div>
 
           <div class="room-feat">
@@ -145,9 +145,9 @@
             </div>
             <div class="room-footer">
               <p>Now Playing</p>
-              <h3>Igor's Theme</h3>
+              <h3>lo</h3>
 
-              <p>0:39 / 3:20</p>
+              <p>0:39 / 2:29</p>
 
               <button class="btn btn-primary btn-lg btn-auth auth-type" v-on:click="authModal({'event': 'login'})">Join Room</button>
             </div>
@@ -233,7 +233,7 @@
     </div>
      <Footer />
      <Modal />
-     <LoginModal @handle-auth="handleAuthenticate" @handle-modal="authModal" v-bind:modal-active="modalActive" v-bind:modal-event-type="modalEventType"/>
+     <LoginModal @handle-auth="handleAuthenticate" @handle-modal="authModal" @handle-guest="handleGuest" v-bind:modal-active="modalActive" v-bind:modal-event-type="modalEventType"/>
   </div>
 </template>
 
@@ -803,6 +803,9 @@ export default {
         strong {
           color: #0f62fe;
         }
+      }
+      > div {
+        margin-top: 50px;
       }
     }
   }
