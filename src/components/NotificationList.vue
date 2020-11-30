@@ -46,7 +46,6 @@ export default {
 
   .time_added {
     @include extra_text;
-    margin-left: 15px;
   }
 
   .notification_none {

@@ -7,118 +7,127 @@
     @modal-hidden="closeModal"
     id="login_modal"
   >
-    <template v-if="use_label" slot="label">DJ With Friends</template>
-    <template v-if="use_title" slot="title">Quick Help</template>
+    <template v-if="use_title" slot="title">DJ <br/><span class="logo-color">With</span> <br/>Friends</template>
+    <template v-if="use_label" slot="label">Let's DJ!</template>
     <template v-if="use_content" slot="content">
-      <div v-if="userState.toLowerCase() === 'log in'">
-        <form class="mt-3" @submit.prevent="login">
+      <div>
+        <form class="mt-3" :data-modal-auth-type="userState === 'register' ? 'register' : 'login'" @submit.prevent="handleModalAuthType">
           <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-lg-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h3 class="font-weight-light mb-3">Log in</h3>
-                    <section class="form-group">
-                      <div class="col-12 alert alert-danger px-3" v-if="error">{{error}}</div>
-                      <label class="form-control-label sr-only" for="Email">Email</label>
-                      <input
-                        required
-                        class="form-control"
-                        type="email"
-                        id="email"
-                        placeholder="Email"
-                        v-model="email"
-                      />
-                    </section>
-                    <section class="form-group">
-                      <input
-                        required
-                        class="form-control"
-                        type="password"
-                        placeholder="Password"
-                        v-model="password"
-                      />
-                    </section>
-                    <div class="form-group text-right mb-0">
-                      <button class="btn btn-primary" type="submit">Log in</button>
-                    </div>
+            <div>
+              <div>
+                <div class="modal-card">
+                  <div class="modal-body">
+                    <fieldset>
+                      <legend class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</legend>
+                      <template v-if="userState === 'register'">
+                        <div class="form-row">
+                          <div class="error_container" v-if="errorRegister">
+                            <div class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister }}</div>
+                          </div>
+
+                          <section class="col-sm-12 form-group">
+                            <label class="form-control-label sr-only" for="displayName">Display Name</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="displayName"
+                              placeholder="Display Name"
+                              name="displayName"
+                              required
+                              v-model="displayName"
+                              autocomplete="username"
+                              v-on:blur="handleDisplayInput"
+                            />
+                          </section>
+                        </div>
+                        <section class="form-group">
+                          <label class="form-control-label sr-only" for="emailRegister">Email</label>
+                          <input
+                            class="form-control"
+                            type="email"
+                            id="emailRegister"
+                            placeholder="Email Address"
+                            required
+                            name="email"
+                            v-model="emailRegister"
+                            autocomplete="email"
+                          />
+                        </section>
+                        <div class="form-row">
+                          <section class="col-sm-6 form-group">
+                            <input
+                              class="form-control"
+                              type="password"
+                              placeholder="Password"
+                              v-model="passOne"
+                              autocomplete="off"
+                              id="password-1"
+                            />
+                          </section>
+                          <section class="col-sm-6 form-group">
+                            <input
+                              class="form-control"
+                              type="password"
+                              required
+                              placeholder="Repeat Password"
+                              v-model="passTwo"
+                              autocomplete="off"
+                              id="password-2"
+                            />
+                          </section>
+                        </div>
+                        
+                        <div class="form-group justify-content-center mb-0">
+                          <button class="btn btn-primary blu-btn submit-auth" type="submit">Register</button>
+                        </div>
+                      </template>
+
+                      <template v-if="userState === 'login'">
+                        <section class="form-group">
+                          <div class="error_container" v-if="error">
+                            <div class="col-12 alert alert-danger px-3">{{error}}</div>
+                          </div>
+                          <label class="form-control-label sr-only" for="loginEmail">Email</label>
+                          <input
+                            required
+                            class="form-control"
+                            type="email"
+                            id="loginEmail"
+                            placeholder="Email"
+                            v-model="email"
+                            autocomplete="email"
+                          />
+                        </section>
+                        <section class="form-group">
+                          <label class="form-control-label sr-only" for="loginPassword">Password</label>
+                          <input
+                            required
+                            class="form-control"
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Password"
+                            v-model="password"
+                            autocomplete="current-password"
+                          />
+                        </section>
+                        <div class="form-group justify-content-center mb-0">
+                          <button class="btn btn-primary blu-btn submit-auth" type="submit">Log in</button>
+                        </div>
+                      </template>
+                    </fieldset>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </form>
-        <p class="text-center mt-2">
-          or
-          <button v-on:click="changeUserState">register</button>
+        <p class="text-center mt-2 modal-or">
+          {{userState === 'register' ? 'Already have an account?' : userState === 'login' ? 'Don\'t have an account yet?' : ''}}
+          <button v-on:click="changeUserState" class="modal-or_btn" :data-auth-type="userState === 'register' ? 'login' : 'register'">{{userState === 'register' ? 'Login' : 'Register'}}</button>
         </p>
-      </div>
-      <div v-if="userState.toLowerCase() === 'register'">
-        <form class="mt-3" @submit.prevent="register">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-lg-8">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h3 class="font-weight-light mb-3">Register</h3>
-                    <div class="form-row">
-                      <div v-if="errorRegister" class="col-12 alert alert-danger px-3">{{ errorRegister }}</div>
-                      <section class="col-sm-12 form-group">
-                        <label class="form-control-label sr-only" for="displayName">Display Name</label>
-                        <input
-                          class="form-control"
-                          type="text"
-                          id="displayName"
-                          placeholder="Display Name"
-                          name="displayName"
-                          required
-                          v-model="displayName"
-                        />
-                      </section>
-                    </div>
-                    <section class="form-group">
-                      <label class="form-control-label sr-only" for="emailRegister">Email</label>
-                      <input
-                        class="form-control"
-                        type="email"
-                        id="emailRegister"
-                        placeholder="Email Address"
-                        required
-                        name="email"
-                        v-model="emailRegister"
-                      />
-                    </section>
-                    <div class="form-row">
-                      <section class="col-sm-6 form-group">
-                        <input
-                          class="form-control"
-                          type="password"
-                          placeholder="Password"
-                          v-model="passOne"
-                        />
-                      </section>
-                      <section class="col-sm-6 form-group">
-                        <input
-                          class="form-control"
-                          type="password"
-                          required
-                          placeholder="Repeat Password"
-                          v-model="passTwo"
-                        />
-                      </section>
-                    </div>
-                    <div class="form-group text-right mb-0">
-                      <button class="btn btn-primary" type="submit">Register</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-        <p class="text-center mt-2">
-          or
-          <button v-on:click="changeUserState">login</button>
+        <p class="text-center mt-2 modal-or">
+          Want to try DJ With Friends as a guest?
+          <a href="#" @click="handleGuestAuth">Continue as guest</a>
         </p>
       </div>
     </template>
@@ -127,14 +136,23 @@
 
 <script>
 import { focusEle } from "@/utils/focus.js";
-// import Firebase from "firebase";
+import Firebase from "firebase";
 
 export default {
   name: "LoginModal",
+  props: {
+    modalActive: {
+      type: Boolean,
+      default: false,
+    },
+    modalEventType: {
+      type: String
+    }
+  },
   data() {
     return {
       closeAriaLabel: "Close",
-      use_label: true,
+      use_label: false,
       use_title: true,
       use_content: true,
       size: "small",
@@ -143,7 +161,7 @@ export default {
       email: '',
       password: '',
       error: '',
-      userState: 'log in',
+      userState: 'login',
       displayName: null,
       passOne: null,
       passTwo: null,
@@ -158,19 +176,33 @@ export default {
       } else {
         this.errorRegister = null;
       }
-    }
+    },
+    modalActive: function(v) {
+      this.modalVisible = v;
+
+      // If active, assume modalEventType is present && modal is active
+      if (this.modalVisible)
+        this.userState = this.modalEventType;
+    },
+    displayName: function() {
+      const alphaNum = RegExp('^[a-zA-Z0-9_]*$', 'g');
+
+      if (!alphaNum.test(this.displayName)) {
+        this.errorRegister = 'Display Name must only contain alphanumeric characters!'
+      } else {
+        this.errorRegister = null;
+      }
+    },
   },
   methods: {
-    showModal: function () {
-      this.modalVisible = this.modalVisible === true ? false : true;
-    },
     closeModal: function () {
       this.modalVisible = false;
+      this.$emit('handle-modal', {'state': false});
       // focusEle("#need_help");
     },
     changeUserState: function(e) {
       if (e.target !== undefined || e.target !== null) {
-        this.userState = e.target.textContent.trim();
+        this.userState = e.target.dataset.authType;
       }
     },
     register: function() {
@@ -179,22 +211,24 @@ export default {
         password: this.passOne,
         displayName: this.displayName
       }
+      
+      this.$store.state.loading = true;
 
-      // if (!this.error) {
-      //   Firebase.auth()
-      //     .createUserWithEmailAndPassword(info.email, info.password)
-      //     .then(
-      //       userCredentials => {
-      //         return userCredentials.user.updateProfile({
-      //           displayName: info.displayName
-      //         }).then(() => {
-      //           this.$router.replace('about');
-      //         });
-      //       }
-      //     ), error => {
-      //       this.errorRegister = error.message;
-      //     }
-      // }
+      if (!this.error && this.errorRegister === null) {
+        this.$store.dispatch('registerNewUser', info);
+      } else {
+        this.errorRegister = this.error.length ? this.error : 'Display Name must only contain alphanumeric characters!';
+        this.$store.state.loading = false;
+      }
+    },
+    handleModalAuthType: function(e) {
+      const authType = e.target.dataset.modalAuthType;
+
+      if (authType === 'login') {
+        return this.login();
+      } else if (authType === 'register') {
+        return this.register();
+      }
     },
     login: function () {
       const info = {
@@ -202,18 +236,35 @@ export default {
         password: this.password,
       };
 
-      // Firebase.auth()
-      //   .signInWithEmailAndPassword(info.email, info.password)
-      //   .then(
-      //     () => {
-      //       this.$router.push("about");
-      //     },
-      //     (error) => {
-      //       this.error = error.message;
-      //     }
-      //   );
+      this.$store.state.loading = true;
+
+      Firebase.auth()
+        .signInWithEmailAndPassword(info.email, info.password)
+        .then(
+          () => {
+            // Run handleAuthenticate function via parent component
+            // Unique identifier should be saved
+            this.$emit('handle-auth');
+          },
+          (error) => {
+            const errorMsg = error.message.includes('or the user does not') ? 'The password is invalid or the email/username is incorrect!' : error.message;
+            this.error = errorMsg;
+          }
+        ).finally(() => {
+          this.$store.state.loading = false;
+        });
+    },
+    handleDisplayInput: function(e) {
+      const inputVal = e.target.value.trim();
+
+      if (inputVal.length <= 3) {
+        this.errorRegister = 'Display Name must be more than 3 characters!';
+      }
+    },
+    handleGuestAuth() {
+      this.$emit('handle-guest');
     }
-  },
+  }
 };
 </script>
 
@@ -237,17 +288,144 @@ export default {
   }
 }
 
+.dark #login_modal .bx--modal-container {
+  background-color: white;
+  h3, h4, legend { 
+    color: black !important;
+  }
+
+  .bx--modal-close {
+    box-shadow: 2px 3px 0px black;
+    margin: 15px;
+    border: 2px solid black;
+    > svg {
+      fill: black !important;
+    }
+  }
+}
+
+.bx--modal-header__heading {
+  text-align: left;
+  font-family: 'Syncopate', sans-serif !important;
+  font-size: 1.5rem !important;
+  .logo-color {
+    color: $logo--color;
+  }
+}
+
+.mt-3 {
+  margin-top: 0px !important;
+}
+
 #login_modal {
+  .error_container {
+    width: 100%;
+    margin-bottom: 0px;
+    margin-top: 10px;
+    div {
+      border-radius: 0%;
+      border: 1px solid black;
+      box-shadow: 2px 3px 0px 0px black;
+      font-family: "IBM Plex Sans", sans-serif; 
+      font-weight: 500;
+    }
+  }
+
+  input:focus {
+    outline: blue auto 2px;
+  }
+
+
+  button[type="submit"] {
+    &:focus {
+      border: 1px dashed white !important;
+      text-decoration: underline;
+    }
+  }
+
+  .alert-danger {
+    font-weight: bold;
+  }
+
+  section.form-group {
+    flex-direction: column;
+  }
+
+  .blu-btn {
+    @include blu_btn;
+    font-family: "IBM Plex Sans", sans-serif; 
+    width: 100%;
+    font-weight: 700;
+  }
+
+  h4 {
+    font-family: 'Syncopate', sans-serif !important;
+    font-size: 1.5rem;
+    margin-top: 10px;
+  }
+
   .bx--modal-container {
-    height: 500px;
-    width: 100% !important;
-    background-color: whitesmoke;
-    box-shadow: 3px 5px 0px 0px black;
+    height: 620px;
+    width: 470px !important;
+    background-color: #e2d7ca;
+    box-shadow: 9px 12px 0px 0px black;
+    border: 2px solid black;
+
+    .card.bg-light {
+      border: none;
+      background-color: transparent !important;
+    }
+
+    .modal-or {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-weight: 300;
+      color: #0e0e0e !important;
+      a {
+        color: $logo--color;
+        font-weight: normal;
+        text-decoration: underline;
+      }
+    }
+
+    .modal-or_btn {
+      @include blu_btn;
+      font-size: 1rem;
+      margin: 5px;
+      background-color: black;
+      box-shadow: -2px 3px 0px 0px black;
+    }
+
+    input {
+      border-radius: 0%;
+      border: 1px solid black;
+    }
+
     .bx--modal-header {
       h2,
-      h4 {
+      h4, h3 {
         font-family: "IBM Plex Sans", sans-serif;
       }
+    }
+
+    h2, h3, h4, .type-auth_title {
+      color: black !important;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .type-auth_title {
+      margin-bottom: 15px;
+      // border: 1px solid white;
+      display: inline-block;
+      padding: 5px;
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: left;
+      // box-shadow: 3px 5px 0px 0px black;
+      // background-color: black;
+      // color: white !important;
     }
 
     #main_bio_modal {

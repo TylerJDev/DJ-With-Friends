@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''">
+  <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''" :data-current-route="this.$route.name">
     <span id="prefer"></span>
     <router-view :user="user" @logout="logout"/>
     <cv-toast-notification v-if="grabNotifications.initialised"
@@ -16,8 +16,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-// import Firebase from 'firebase';
-// import db from './db.js';
+import Firebase from 'firebase';
+import db from '../db.js';
 
 export default {
   data() {
@@ -34,12 +34,12 @@ export default {
   },
   methods: {
     logout: function() {
-      // Firebase.auth()
-      // .signOut()
-      // .then(() => {
-      //   this.user = null;
-      //   this.$router.push('login');
-      // });
+      Firebase.auth()
+      .signOut()
+      .then(() => {
+        this.user = null;
+        this.$router.push('login');
+      });
     }
   },
   beforeCreate() {
@@ -57,11 +57,14 @@ export default {
 
         // Request a new token
         const refreshToken = this.$store.state.spotifyAPIData.refreshToken
-        if (refreshToken) {
+        if (refreshToken && !this.$store.state.isRequesting) {
           console.log('Request new token!');
+          this.$store.state.isRequesting = true; // Refactor: add action || mutation
+          
           this.$store.dispatch('auth', {callbackURL: '/', refresh: refreshToken, callToAPI: 'callback'}).then(res => {
-            console.log('Request of new token successful')
-            this.$router.push(res.redirect); // Go to homepage
+            console.log('Request of new token successful');
+            //this.$router.push(res.redirect);
+            this.$store.state.isRequesting = false;
           });
 
         } else {
@@ -78,17 +81,16 @@ export default {
   },
   mounted() {
     const bgMode = getComputedStyle(this.$el.querySelector('#prefer')).getPropertyValue('content');
-
-    /* - Not current // Firebase
     Firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+      if ((user && this.$store.state.spotifyAPIData.firebaseActive === false) || (user && this.$store.state.spotifyAPIData.firebaseActive === 'guest')) {
         this.user = user.displayName;
+        this.$store.commit('addFirebaseData', false);
       }
-    }); */
-    
+    });
     if (localStorage.getItem('dark_mode') === null) {
       let typeMode = bgMode === '"dark"' ? true : false;
-      this.$store.commit('darkMode', {'mode': typeMode});
+      // this.$store.commit('darkMode', {'mode': typeMode});
+      this.$store.commit('darkMode', {'mode': true});
     }
   }
 }
@@ -98,6 +100,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap');
 
 @media (max-width: 66rem) {
   #app {
@@ -110,16 +113,12 @@ export default {
   }
 }
 
-@media (max-width: 50rem) {
-
-}
-
 body.aboutDark {
   background-color: $bg--dark !important;
 }
 
 body {
-   background-color: rgb(226, 215, 202) !important;
+   background-color: #2b2b2b !important; // rgb(226, 215, 202) !important;
 }
 
 #app {
@@ -130,6 +129,9 @@ body {
   color: #2c3e50;
   height: 100vh;
   background-color: rgb(226, 215, 202);
+  &[data-current-route="login"] {
+    height: 200vh !important; /* fix for body height issue */
+  }
 }
 
 #nav {
@@ -184,6 +186,14 @@ body {
       color: whitesmoke;
       .bx--text-input::placeholder, .bx--list-box__label {
         color: whitesmoke !important;
+      }
+    }
+
+    .room_name {
+      background-color: $bg--dark !important;
+      border: 1px solid white !important;
+      h3 {
+        background-color: blue;
       }
     }
 
@@ -359,13 +369,13 @@ body {
     #room_vinyl {
       #sleeve {
         background-color: grey;
-        border: 2px solid whitesmoke;
+        border: 2px solid grey;
         box-shadow: 3px 5px 0px 3px black;
       }
       #vinyl {
         border: 2px solid whitesmoke;
         // border-color: whitesmoke;
-        background-color: transparent;
+        background-color: darkgray;
         box-shadow: 0px 0px 0px 170px grey, 0px 0px 0px 171px whitesmoke, 8px 8px 0px 172px black;
       }
     }
@@ -375,7 +385,7 @@ body {
     }
 
     #tone_arm {
-      filter: contrast(10%);
+      filter: contrast(35%);
     }
   }
 }

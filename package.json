@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "vue-cli-service test:unit"
+    "test": "vue-cli-service test:unit",
+    "test-pa11y": "./node_modules/.bin/pa11y-ci",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@carbon/icons-vue": "^10.8.1",
@@ -32,6 +34,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "bootstrap": "^4.3.1",
+    "cypress": "^6.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
@@ -40,6 +43,7 @@
     "jest-fetch-mock": "^2.1.2",
     "jquery": "^3.4.1",
     "node-fetch": "^2.6.0",
+    "pa11y-ci": "^2.4.0",
     "popper.js": "^1.15.0",
     "sass": "^1.24.0",
     "sass-loader": "^8.0.0",

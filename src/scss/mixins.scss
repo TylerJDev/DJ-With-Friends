@@ -36,3 +36,14 @@
     position: absolute;
     width: 1px;
 }
+
+@mixin blu_btn {
+    margin-top: 15px;
+    background-color: blue;
+    color: white;
+    border: 1px solid white;
+    border-radius: 0%;
+    margin-right: 10px;
+    box-shadow: -4px 4px 0px black;
+    font-size: 1.5rem;
+}
