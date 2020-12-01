@@ -8,8 +8,9 @@
     "lint": "vue-cli-service lint",
     "test": "vue-cli-service test:unit",
     "test-pa11y": "./node_modules/.bin/pa11y-ci",
+    "test-pa11y:local": "./node_modules/.bin/pa11y-ci --config .pa11yci_local",
     "cypress:open": "cypress open",
-    "ci": "start-server-and-test serve http://localhost:8080/ test-pa11y"
+    "local-pa11y": "start-server-and-test serve http://localhost:8080/ test-pa11y:local"
   },
   "dependencies": {
     "@carbon/icons-vue": "^10.8.1",
