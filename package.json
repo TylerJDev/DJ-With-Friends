@@ -12,6 +12,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --config video=false,screenshotOnRunFailure=false",
     "local-pa11y": "start-server-and-test serve http://localhost:8080/ test-pa11y:local",
+    "ci-pa11y": "start-server-and-test serve http://localhost:8080/ test-pa11y",
     "cypress-ci": "start-server-and-test serve http://localhost:8080/ cypress:run"
   },
   "dependencies": {

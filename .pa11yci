@@ -3,7 +3,7 @@
         "timeout": 60000
     },
     "urls": [
-        "https://dev.djwithfriends.com/",
-        "https://dev.djwithfriends.com/about"
+        "http://localhost:8080/",
+        "http://localhost:8080/about"
     ]
 }
