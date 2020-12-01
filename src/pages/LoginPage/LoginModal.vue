@@ -288,6 +288,26 @@ export default {
   }
 }
 
+@media (max-width: $breakpoint--03) {
+  .bx--modal-container {
+    margin: 5px;
+    height: 100% !important;
+    .bx--modal-header > h2 {
+      font-size: 1.3rem !important;
+    }
+    .bx--modal-content {
+      .type-auth_title {
+        font-size: 1.3rem !important;
+        margin-bottom: 5px !important;
+      }
+    }
+    .submit-auth {
+      margin-top: 0px !important;
+      font-size: 1.3rem !important;
+    }
+  }
+}
+
 .dark #login_modal .bx--modal-container {
   background-color: white;
   h3, h4, legend { 
