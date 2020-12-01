@@ -43,7 +43,7 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
-    "firebase": "^7.17.1",
+    "firebase": "^7.24.0",
     "jest-fetch-mock": "^2.1.2",
     "jquery": "^3.4.1",
     "node-fetch": "^2.6.0",
