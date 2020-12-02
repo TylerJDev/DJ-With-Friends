@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="this.$store.state.darkMode == true ? 'dark' : ''" :data-current-route="this.$route.name">
+  <div id="app" class="dark" :data-current-route="this.$route.name"> <!-- :class="this.$store.state.darkMode == true ? 'dark' : ''" -->
     <span id="prefer"></span>
     <router-view :user="user" @logout="logout"/>
     <cv-toast-notification v-if="grabNotifications.initialised"
