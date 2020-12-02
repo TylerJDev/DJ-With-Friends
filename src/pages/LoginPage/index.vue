@@ -69,37 +69,70 @@
             </div>
           </div>
 
-          <div id="example-user-container">
-            <div class="user-banner">
-              Host
-            </div>
-            <div class="example-user">
-              <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_1.png)'}"></div>
-              <div class="user-container">
-                <h3>Tyler</h3>
-                <p>Listening to: <span class="logo-color">Eye</span></p>
+          <div id="example-user-container">    
+            <transition name="fade-in-user">
+              <div v-if="userShow[0]">
+                <div class="user-banner">
+                  Host
+                </div>
+                <div class="example-user">
+                  <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_1.png)'}"></div>
+                  <div class="user-container">
+                    <h3>Tyler</h3>
+                    <p>Listening to: <span class="logo-color">Eye</span></p>
+                  </div>
+                </div>
+              </div>
+            </transition>
+            <transition name="fade-in-user">
+              <div v-if="userShow[1]">
+                <div class="user-banner">
+                  Co-Host
+                </div>
+                <div class="example-user">
+                  <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_2.png)'}"></div>
+                  <div class="user-container">
+                    <h3>Tanya</h3>
+                    <p>Listening to: <span class="logo-color">Eye</span></p>
+                  </div>
+                </div>
+              </div>
+            </transition>
+
+            <transition name="fade-in-user">
+              <div v-if="userShow[2]">
+                <div class="user-banner" >
+                  Co-Host
+                </div>
+                <div class="example-user">
+                  <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_3.png)'}"></div>
+                  <div class="user-container">
+                    <h3>Anna</h3>
+                    <p>Listening to: <span class="logo-color">Eye</span></p>
+                  </div>
+                </div>
+              </div>
+            </transition>
+            
+            <div v-if="userShow[0] === false" aria-hidden="true" style="visibility: hidden">
+              <div class="user-banner">
+                null
+              </div>
+              <div class="example-user">
               </div>
             </div>
-
-            <div class="user-banner">
-              Co-Host
-            </div>
-            <div class="example-user">
-              <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_2.png)'}"></div>
-              <div class="user-container">
-                <h3>Tanya</h3>
-                <p>Listening to: <span class="logo-color">Eye</span></p>
+            <div v-if="userShow[1] === false" aria-hidden="true" style="visibility: hidden">
+              <div class="user-banner">
+                null
+              </div>
+              <div class="example-user">
               </div>
             </div>
-
-            <div class="user-banner">
-              Co-Host
-            </div>
-            <div class="example-user">
-              <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_3.png)'}"></div>
-              <div class="user-container">
-                <h3>Anna</h3>
-                <p>Listening to: <span class="logo-color">Eye</span></p>
+            <div v-if="userShow[2] === false" aria-hidden="true" style="visibility: hidden">
+              <div class="user-banner">
+                null
+              </div>
+              <div class="example-user">
               </div>
             </div>
           </div>
@@ -259,6 +292,7 @@ export default {
       modalEventType: '',
       trackData: null,
       progressCount: 40,
+      userShow: [false, false, false]
     }
   },
   methods: {
@@ -337,9 +371,14 @@ export default {
 
         /* Play animation */
         const progress = setInterval(() => {
+          if ((this.progressCount - 40) <= 2) { 
+            this.userShow[this.progressCount - 40] = true;
+          }
+
           this.progressCount = (this.progressCount + 1);
           if (this.progressCount >= 50) {
             clearInterval(progress);
+           
           }
         }, 1000);
       }
@@ -366,7 +405,65 @@ export default {
     flex-direction: row;
   }
 
-  @media (max-width: $breakpoint--03) {
+  .fade-in-user-enter-active {
+    transition: all .3s ease;
+  }
+
+  .fade-in-user-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+
+  .fade-in-user-enter, .fade-in-user-leave-to
+    /* .slide-fade-leave-active below version 2.1.8 */ {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  
+  @media (max-width: $breakpoint--laptop-lg) and (min-width: $breakpoint--09) {
+    #cta {
+      margin-top: 12% !important;
+      .avatar-icon {
+        min-height: 40px;
+        min-width: 40px;
+      }
+      
+      .vinyl-container {
+        width: 300px;
+        height: 300px;
+      }
+    }
+
+    #quick-preview {
+      #block {
+        width: 50% !important;
+      }
+      .example-user {
+        width: 210px !important;
+      }
+      #example-block {
+        width: 220px !important;
+        min-width: 220px;
+        #current-playing, #time-of {
+          width: 200px !important;
+        }
+        #playing-time {
+          width: 180px !important;
+        }
+      }
+
+      .bio_block {
+        width: 45% !important;
+        p:last-of-type {
+          line-height: 2.5rem;
+          strong {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint--09) {
     .vinyl-main {
       display: none !important;
     }
@@ -381,7 +478,8 @@ export default {
           margin-bottom: 10px;
         }
         .avatar-icon {
-          width: 60px;
+          min-width: 40px;
+          min-height: 40px;
         }
       }
 
@@ -416,7 +514,7 @@ export default {
           #example-block {
             width: 250px;
           }
-          #example-user-container > div {
+          #example-user-container > div > div {
             margin-left: 0px !important;
           }
         }
@@ -826,8 +924,9 @@ export default {
   }
 
   #quick-preview {
-    height: 90vh;
+    // height: 90vh;
     background-color:#2b2b2b;
+    padding-bottom: 8% !important;
     #block {
       display: flex;
       flex-direction: row;

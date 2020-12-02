@@ -41,6 +41,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: $breakpoint--laptop-lg) and (min-width: $breakpoint--09) {
+    .playlist-track {
+        width: 60% !important;
+    }
+
+    .hidden-track {
+        width: 60% !important;
+    }
+}
+
+
 @media (max-width: $breakpoint--03) {
   #room-playlist {
       .playlist-track {
