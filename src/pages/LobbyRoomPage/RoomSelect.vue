@@ -274,7 +274,7 @@ export default {
     margin-bottom: 10px;
     display: flex;
     justify-content: space-around;
-    align-items: flex-end;
+    align-items: center;
     .bx--select-input {
       height: 2.01rem;
       background-color: transparent;
@@ -298,7 +298,8 @@ export default {
     }
 
     #sort_by_select {
-      padding-bottom: 0px;
+      height: 40px;
+      margin-bottom: 3px ;
     }
   }
 
