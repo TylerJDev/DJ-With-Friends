@@ -238,21 +238,27 @@ export default {
 
       this.$store.state.loading = true;
 
-      Firebase.auth()
-        .signInWithEmailAndPassword(info.email, info.password)
-        .then(
-          () => {
-            // Run handleAuthenticate function via parent component
-            // Unique identifier should be saved
-            this.$emit('handle-auth');
-          },
-          (error) => {
-            const errorMsg = error.message.includes('or the user does not') ? 'The password is invalid or the email/username is incorrect!' : error.message;
-            this.error = errorMsg;
-          }
-        ).finally(() => {
-          this.$store.state.loading = false;
-        });
+      try {
+        Firebase.auth()
+          .signInWithEmailAndPassword(info.email, info.password)
+          .then(
+            () => {
+              // Run handleAuthenticate function via parent component
+              // Unique identifier should be saved
+              this.$emit('handle-auth');
+            },
+            (error) => {
+              const errorMsg = error.message.includes('or the user does not') ? 'The password is invalid or the email/username is incorrect!' : error.message;
+              this.error = errorMsg;
+            }
+          ).finally(() => {
+            this.$store.state.loading = false;
+          });
+      } catch (error) {
+        console.error(error);
+        this.$store.state.loading = false;
+        this.error = error.message || 'An error has occurred! Please make note of the logged error in the console.'
+      }
     },
     handleDisplayInput: function(e) {
       const inputVal = e.target.value.trim();

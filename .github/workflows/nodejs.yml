@@ -23,7 +23,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm run ci
+    - run: npm run cypress-ci
+    - run: npm run ci-pa11y
     - run: npm run test
       env:
         CI: true
