@@ -164,11 +164,7 @@ export default {
     this.socketConnect.on('reAuth', (data) => {
       if (data.user === this.$store.state.spotifyAPIData.userID) {
         const oldAccess = this.$store.state.spotifyAPIData.accessToken;
-        console.log(`old access token: ${oldAccess}`);
-
         this.$store.commit('loadingState', {'status': true});
-
-
         this.$store.dispatch('handleReAuth', {refreshFromRooms: true, forceAuth: true}).then(() => {
           this.refreshToken(oldAccess);
             if (this.$store.state.spotifyAPIData.accessToken === oldAccess) {
