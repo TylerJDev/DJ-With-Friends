@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <Navbar v-if="navbarVisible" @handle-modal="authModal"/>
-    <div id="cta" class="container-row">
+    <main id="cta" class="container-row">
       <div class="c-4">
         <h1 id="loginHeader">DJ <br><span class="logo-color">With</span> <br>Friends</h1>
         <p>Join the fun, DJ with your friends!
@@ -31,7 +31,7 @@
         <div class="vinyl-container" :style="{backgroundImage: 'url(./album3.png)'}">
         </div>
       </div>
-    </div>
+    </main>
 
     <section id="quick-sum" class="container-row">
       <div id="summary">
@@ -65,7 +65,7 @@
             
             <div class="btn-container">
               <div id="mock-button"><button disabled>Add to Queue</button></div> <!-- REFACTOR: Change into real button with disabled? -->
-              <div id="mock-heart"><button disabled><i class="far fa-heart"></i></button></div>
+              <div id="mock-heart"><button disabled aria-label="Favorite"><i class="far fa-heart"></i></button></div>
             </div>
           </div>
 
@@ -556,6 +556,10 @@ export default {
             margin-bottom: 20px;
             h2 {
               font-size: 1rem !important;
+            }
+
+            h4 {
+              color: #387dff !important;
             }
           }
           
