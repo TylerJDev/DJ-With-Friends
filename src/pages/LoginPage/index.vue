@@ -819,7 +819,7 @@ export default {
 
         h4 {
           font-size: 0.9rem;
-          color: $logo--color;
+          color: #3c80ff !important;
         }
       }
       
