@@ -294,7 +294,6 @@ export default {
       padding-right: 0px !important;
     }
     :last-child {
-      padding-bottom: 4.5px;
       line-height: 1.65rem;
     }
 

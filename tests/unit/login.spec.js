@@ -1,8 +1,18 @@
 import { shallowMount } from '@vue/test-utils';
 import Login from '@/pages/LoginPage/index.vue';
+import Firebase from "firebase";
+import db from '../../db.js';
+
+// Ignores non-issues i.e, console.error logs
+console.error = jest.fn();
+
+window.IntersectionObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+}));
 
 describe('Login page for auth', () => {
-  const $store = { state: { errorOccurred: { route: 'route' } }, dispatch: jest.fn() };
+  const $store = { state: { errorOccurred: { route: 'route' } }, dispatch: jest.fn(), commit: jest.fn() };
   const $route = { route: 'route' };
 
   const wrapper = shallowMount(Login, {
@@ -19,7 +29,7 @@ describe('Login page for auth', () => {
     expect(wrapper.find('h1').text()).toMatch(welcomeLoginMsg);
 
     // Ensure login button is displayed
-    expect(wrapper.find('#loginBtn').isVisible()).toBe(true);
+    expect(wrapper.find('#registerBtn').isVisible()).toBe(true);
   });
 
   it('Check if fetch is success', () => {

@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <Navbar v-if="navbarVisible" @handle-modal="authModal"/>
-    <div id="cta" class="container-row">
+    <main id="cta" class="container-row">
       <div class="c-4">
         <h1 id="loginHeader">DJ <br><span class="logo-color">With</span> <br>Friends</h1>
         <p>Join the fun, DJ with your friends!
@@ -11,9 +11,6 @@
         <!-- <button id="loginBtn" class="btn btn-primary btn-lg" v-on:click="handleAuthenticate">Connect</button> -->
         <div id="auth-container">
           <button id="registerBtn" class="btn btn-primary btn-lg btn-auth auth-type" v-on:click="authModal({'event': 'register'})">Get Started</button>
-          <button id="loginBtn" class="btn btn-primary btn-lg btn-auth" v-on:click="authModal({'event': 'login'})" style="display: none;">Login</button>
-          
-          <button id="guestLogin" class="btn btn-primary btn-lg btn-auth" v-on:click="handleGuest" style="display: none;">Continue As Guest</button>
         </div>
         <div class="community-div">
           <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_1.png)'}"></div>
@@ -31,7 +28,7 @@
         <div class="vinyl-container" :style="{backgroundImage: 'url(./album3.png)'}">
         </div>
       </div>
-    </div>
+    </main>
 
     <section id="quick-sum" class="container-row">
       <div id="summary">
@@ -65,7 +62,7 @@
             
             <div class="btn-container">
               <div id="mock-button"><button disabled>Add to Queue</button></div> <!-- REFACTOR: Change into real button with disabled? -->
-              <div id="mock-heart"><button disabled><i class="far fa-heart"></i></button></div>
+              <div id="mock-heart"><button disabled aria-label="Favorite"><i class="far fa-heart"></i></button></div>
             </div>
           </div>
 
@@ -346,7 +343,7 @@ export default {
   },
   mounted() {
     this.$store.state.loading = false;
-    const handleEmit = () => { this.handleAuthenticate(); }
+    const handleEmit = () => this.handleAuthenticate();
     Firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         handleEmit();
@@ -556,6 +553,10 @@ export default {
             margin-bottom: 20px;
             h2 {
               font-size: 1rem !important;
+            }
+
+            h4 {
+              color: #387dff !important;
             }
           }
           
@@ -815,7 +816,7 @@ export default {
 
         h4 {
           font-size: 0.9rem;
-          color: $logo--color;
+          color: #3c80ff !important;
         }
       }
       
