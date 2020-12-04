@@ -11,9 +11,6 @@
         <!-- <button id="loginBtn" class="btn btn-primary btn-lg" v-on:click="handleAuthenticate">Connect</button> -->
         <div id="auth-container">
           <button id="registerBtn" class="btn btn-primary btn-lg btn-auth auth-type" v-on:click="authModal({'event': 'register'})">Get Started</button>
-          <button id="loginBtn" class="btn btn-primary btn-lg btn-auth" v-on:click="authModal({'event': 'login'})" style="display: none;">Login</button>
-          
-          <button id="guestLogin" class="btn btn-primary btn-lg btn-auth" v-on:click="handleGuest" style="display: none;">Continue As Guest</button>
         </div>
         <div class="community-div">
           <div class="avatar-icon" :style="{backgroundImage: 'url(./avatar_1.png)'}"></div>
@@ -346,7 +343,7 @@ export default {
   },
   mounted() {
     this.$store.state.loading = false;
-    const handleEmit = () => { this.handleAuthenticate(); }
+    const handleEmit = () => this.handleAuthenticate();
     Firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         handleEmit();
