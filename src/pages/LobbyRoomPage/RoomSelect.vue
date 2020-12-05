@@ -270,11 +270,19 @@ export default {
     height: 300px;
   }
 
+  .bx--list-box__menu-icon > svg {
+    fill: white !important;
+  }
+
+  .bx--pagination__button > svg {
+    fill: white !important;
+  }
+
   #sort_by_container {
     margin-bottom: 10px;
     display: flex;
     justify-content: space-around;
-    align-items: flex-end;
+    align-items: center;
     .bx--select-input {
       height: 2.01rem;
       background-color: transparent;
@@ -294,12 +302,12 @@ export default {
       padding-right: 0px !important;
     }
     :last-child {
-      padding-bottom: 4.5px;
       line-height: 1.65rem;
     }
 
     #sort_by_select {
-      padding-bottom: 0px;
+      height: 40px;
+      margin-bottom: 3px ;
     }
   }
 

@@ -1,6 +1,7 @@
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueRouter from 'vue-router'
 import Home from '@/pages/LobbyRoomPage/index.vue';
 import RoomList from '@/pages/LobbyRoomPage/RoomList.vue';
 import RoomSelect from '@/pages/LobbyRoomPage/RoomSelect.vue';
@@ -10,6 +11,11 @@ import storeConfig from '@/store/index.js';
 import LobbyStore from '@/store/modules/lobby.js';
 import { mockData } from '@/utils/mocks/RoomList.js';
 
+// Ignores non-issues i.e, console.error logs
+console.error = jest.fn();
+
+const localVue = createLocalVue()
+localVue.use(VueRouter);
 
 /** TO-DO
  * TEST: RoomBio => Proper amount of users in table
@@ -18,11 +24,17 @@ import { mockData } from '@/utils/mocks/RoomList.js';
  * TEST: RoomSelect => Proper pagination
  */
 
+const routes = [{ path: '/foo', component: Home }]
+const router = new VueRouter({
+  routes,
+});
+
 describe('Lobby rendering and functionality', () => {
   const store = storeConfig;
-
   it('Renders page successfully', () => {
     const wrapper = mount(Home, {
+      localVue,
+      router,
       mocks: {
         $store: store,
       },

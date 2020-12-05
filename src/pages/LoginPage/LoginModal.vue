@@ -238,21 +238,27 @@ export default {
 
       this.$store.state.loading = true;
 
-      Firebase.auth()
-        .signInWithEmailAndPassword(info.email, info.password)
-        .then(
-          () => {
-            // Run handleAuthenticate function via parent component
-            // Unique identifier should be saved
-            this.$emit('handle-auth');
-          },
-          (error) => {
-            const errorMsg = error.message.includes('or the user does not') ? 'The password is invalid or the email/username is incorrect!' : error.message;
-            this.error = errorMsg;
-          }
-        ).finally(() => {
-          this.$store.state.loading = false;
-        });
+      try {
+        Firebase.auth()
+          .signInWithEmailAndPassword(info.email, info.password)
+          .then(
+            () => {
+              // Run handleAuthenticate function via parent component
+              // Unique identifier should be saved
+              this.$emit('handle-auth');
+            },
+            (error) => {
+              const errorMsg = error.message.includes('or the user does not') ? 'The password is invalid or the email/username is incorrect!' : error.message;
+              this.error = errorMsg;
+            }
+          ).finally(() => {
+            this.$store.state.loading = false;
+          });
+      } catch (error) {
+        console.error(error);
+        this.$store.state.loading = false;
+        this.error = error.message || 'An error has occurred! Please make note of the logged error in the console.'
+      }
     },
     handleDisplayInput: function(e) {
       const inputVal = e.target.value.trim();
@@ -289,9 +295,10 @@ export default {
 }
 
 @media (max-width: $breakpoint--03) {
-  .bx--modal-container {
+  #login_modal .bx--modal-container {
     margin: 5px;
     height: 100% !important;
+    width: 90% !important;
     .bx--modal-header > h2 {
       font-size: 1.3rem !important;
     }
@@ -324,10 +331,11 @@ export default {
   }
 }
 
-.bx--modal-header__heading {
+#login_modal p.bx--modal-header__heading {
   text-align: left;
   font-family: 'Syncopate', sans-serif !important;
   font-size: 1.5rem !important;
+  color: black !important;
   .logo-color {
     color: $logo--color;
   }
@@ -386,7 +394,7 @@ export default {
 
   .bx--modal-container {
     height: 620px;
-    width: 470px !important;
+    width: 470px;
     background-color: #e2d7ca;
     box-shadow: 9px 12px 0px 0px black;
     border: 2px solid black;

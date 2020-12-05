@@ -1,15 +1,15 @@
 <template>
   <div id="about">
     <Navbar @logout="userLogout" :hide-bar="false" :user="user" />
-    <h1>About - <span class="name_logo">DJ With Friends</span></h1>
-    {{user}}
-    <div class="about_body">
-      <p>DJ With Friends is a website where you can “DJ” by playing your favorite tracks on Spotify. 
-        <br/>More than one person can “DJ”, and anyone can add to the queue.
-
-      <br/>
-      </p>
-    </div>
+    <main id="main-content">
+      <h1>About - <span class="name_logo">DJ With Friends</span></h1>
+      <div class="about_body">
+        <p>DJ With Friends is a website where you can “DJ” by playing your favorite tracks on Spotify. 
+          <br/>More than one person can “DJ”, and anyone can add to the queue.
+        <br/>
+        </p>
+      </div>
+    </main>
 
     <div id="q_and_a">  
       <h2>Q&A</h2>
@@ -123,6 +123,10 @@ h1, h2, h3, h4, h5, h6 {
       &:last-child {
         border-bottom: 1px solid gray;
       }
+    }
+
+    .bx--accordion__heading > svg {
+      fill: white !important;
     }
     
     p {

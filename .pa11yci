@@ -3,7 +3,7 @@
         "timeout": 60000
     },
     "urls": [
-        "http://localhost:8080/login",
+        "http://localhost:8080/",
         "http://localhost:8080/about"
     ]
 }
