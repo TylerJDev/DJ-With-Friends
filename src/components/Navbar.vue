@@ -34,10 +34,6 @@
           About
         </a>
       </li>
-      <li v-if="user" role="presentation">
-        Hello {{user}}
-        <button @click="$emit('logout')">Log out</button>
-      </li>
     </cv-header-nav>
       <template v-if="hideBar" slot="header-global">
         <cv-header-global-action

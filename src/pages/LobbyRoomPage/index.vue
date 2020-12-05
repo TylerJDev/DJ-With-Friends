@@ -3,7 +3,7 @@
     <Navbar @change-device="changeMainDevice" />
     <h1 id="main_heading">DJ WITH FRIENDS {{user}}</h1>
     
-    <div id="main_container" class="container-fluid">
+    <main id="main-content" class="container-fluid">
       <div id="left_panel" class="col-md panel-main">
         <div class="panel_container">
           <h2>Rooms</h2>
@@ -22,7 +22,7 @@
       <div id="right_panel" class="col-md panel-main">
         <RoomBio @hide-details="hideDetails"/>
       </div>
-    </div>
+    </main>
 
     <RoomCreationModal @createRoom="createRoom" :modalActive="activeModal" @closeModal="closeModal"/>
     <LobbyFooter />
@@ -125,7 +125,7 @@ export default {
 
 <style lang="scss" scoped>
   @media (max-width: 66rem) {
-    #main_container {
+    #main-content {
       flex-direction: column;
     }
 
@@ -195,7 +195,7 @@ export default {
       padding-top: 30px;
     }
 
-    #main_container {
+    #main-content {
       display: flex;
       padding: 0px !important;
       height: 80%;
