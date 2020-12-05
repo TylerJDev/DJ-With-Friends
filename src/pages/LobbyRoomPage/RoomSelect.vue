@@ -270,6 +270,14 @@ export default {
     height: 300px;
   }
 
+  .bx--list-box__menu-icon > svg {
+    fill: white !important;
+  }
+
+  .bx--pagination__button > svg {
+    fill: white !important;
+  }
+
   #sort_by_container {
     margin-bottom: 10px;
     display: flex;
