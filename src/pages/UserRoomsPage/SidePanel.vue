@@ -3,17 +3,18 @@
     <ol id="tracklist_panel" v-if="currentPanel === 'Next Up'">
 
       <li v-for="(item, index) in getQueue" :key="'track_item_' + index">
-        <span>{{item.track}} 
+        <h3 class="panel-heading">{{item.trackTitle}}</h3>
+        <span>
           <cv-interactive-tooltip :alignment="alignment" :direction="direction"
           :visible="visible">
             <template v-if="use_label" slot="label">
-              Added by {{item.track}}
+              <span class="sr_hide">More info about {{item.trackTitle}}</span>
             </template>
             <template v-if="use_trigger" slot="trigger"><InformationFilled16 class="bx--overflow-menu__icon bx--toolbar-filter-icon" />
             </template>
             <template v-if="use_content" slot="content">
-              <h3 class="tooltip_heading">{{item.track}}</h3>
-              <p>Album: <em>{{item.album}}</em></p>
+              <h3 class="tooltip_heading">{{item.trackTitle}}</h3>
+              <p>Album: <em>{{item.albumTitle}}</em></p>
               <p>Track Duration: <em>{{getDuration[0][index]}}</em></p>
               <p>Track Artists: <em>{{getArtists[0][index].join(' ')}}</em></p>
 
@@ -24,7 +25,7 @@
           </cv-interactive-tooltip>
         </span>
         <br>
-        <span>{{item.album}}</span>
+        <h4 class="panel-sub-heading">{{item.albumTitle}}</h4>
         <!-- <button class="heart_track" :aria-label="'Favorite Track ' + 'Track_name'" @click="favoriteTrack"><Favorite16/></button> -->
 
         <span class="added_by bx--tooltip__label" v-if="users.indexOf(item.whoQueued) >= 0">Added by {{item.whoQueued}}</span>
@@ -33,11 +34,12 @@
 
     <ol id="history_panel" v-if="currentPanel === 'History'">
       <li v-for="(item, index) in getHistory" :key="'history_item_' + index">
-        <span>{{item.track}}
+        <h3 class="panel-heading">{{item.track}}</h3>
+        <span>
           <cv-interactive-tooltip :alignment="alignment" :direction="direction"
           :visible="visible">
             <template v-if="use_label" slot="label">
-              Added by {{item.track}}
+              <span class="sr_hide">More info about {{item.track}}</span>
             </template>
             <template v-if="use_trigger" slot="trigger"><InformationFilled16 class="bx--overflow-menu__icon bx--toolbar-filter-icon" />
             </template>
@@ -54,7 +56,7 @@
           </cv-interactive-tooltip>
         </span>
         <br>
-        <span>{{item.album}}</span>
+        <h4 class="panel-sub-heading">{{item.album}}</h4>
         <!-- <button class="heart_track" :aria-label="'Favorite Track ' + 'Track_name'" @click="favoriteTrack"><Favorite16/></button> -->
         <span class="added_by bx--tooltip__label" v-if="users.indexOf(item.whoQueued) >= 0">Added by {{item.whoQueued}}</span>
       </li>
@@ -80,7 +82,7 @@ export default {
     return {
       alignment: 'center',
       direction: 'right',
-      use_label: false,
+      use_label: true,
       use_trigger: true,
       use_content: true,
       visible: false,
@@ -171,16 +173,34 @@ export default {
     ol {
       list-style-type: decimal;
       list-style-position: inside;
+      h3.panel-heading {
+        font-size: 0.9rem !important;
+        display: inline;
+      }
+
+      .sr_hide {
+        @include sr_only;
+      }
+
+      h4.panel-sub-heading {
+        font-size: 0.8rem;
+        color: #e4e4e4;
+      }
     }
 
     .cv-interactive-tooltip {
       display: inline;
+      .bx--tooltip__trigger {
+        margin-left: 0px;
+      }
     }
 
     .added_by {
       font-weight: normal !important;
       font-style: italic;
       display: block;
+      color: #e4e4e4;
+      margin-left: 0px !important;
     }
 
     li {

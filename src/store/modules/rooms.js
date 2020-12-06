@@ -18,13 +18,14 @@ const userListStore = {
   mutations: {
     addCurrentTrack: (state, payload) => {
       if (payload.hasOwnProperty('track') && payload.hasOwnProperty('album')) {
-        try { // Issue with Jest/Vue Testing Utils, throws improper error, this keeps tests running, return statement should never be hit in prod
-          //if (payload.queue.length) { REFACTOR:
-            state.maxTime = payload.duration;
-            state.currentTrack = payload;
-            state.trackPlaying = payload.currentlyPlaying;
-          //}
+        try {
+          if (state.currentTrack.timeStarted !== payload.timeStarted && state.currentTrack.duration > 0) {
+            state.history.push(state.currentTrack);
+          }
 
+          state.maxTime = payload.duration;
+          state.currentTrack = payload;
+          state.trackPlaying = payload.currentlyPlaying;
           if (!state.currentQueue.length) {
             payload.queue.shift();
             state.currentQueue = payload.queue;
@@ -35,9 +36,11 @@ const userListStore = {
             state.trackPlaying = payload.currentlyPlaying;
           }
 
+          /* Until we add history from our server to "emit" -
+          this should be left alone.
           if (payload.hasOwnProperty('history')) {
             state.history = payload.history.map((current) => current[0]);
-          }
+          } */
         } catch (e) {
           return false;
         }
@@ -61,10 +64,6 @@ const userListStore = {
 
         // Add currentTrack to history
         if (Object.prototype.hasOwnProperty.call(state.currentTrack, 'albumImage')) {
-          if (!Object.prototype.hasOwnProperty.call(state.currentTrack, 'whoQueued')) {
-            state.currentTrack.whoQueued = '';
-          }
-
           state.history.push(state.currentTrack);
         }
 
