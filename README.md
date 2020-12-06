@@ -70,3 +70,10 @@ We utilize Jest & Cypress to run tests, both locally and in our CI/CD. We also u
 
 * To run Pa11y
 `npm run test-pa11y`
+
+## Accessibility
+When building new features or addressing bugs, it's best to always do so with accessibility in mind. When developing DJ With Friends, I wanted to make sure that we're creating an accessible community so that *anyone* can use DJ With Friends. 
+
+We currently utilize [Pa11y](https://github.com/pa11y/pa11y-ci) in both our CI/CD and to test locally, but with any automated accessibility testing service, it won't catch everything that you could manually. This means that manual testing is *necessary* for any new features. 
+
+Depending on the size and scope of the feature, you can utilize an [accessibility checklist](https://www.a11yproject.com/checklist/) which is based on the [Web Content Accessibility Guidelines](https://www.w3.org/TR/WCAG21/).
