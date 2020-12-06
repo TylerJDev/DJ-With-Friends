@@ -105,6 +105,12 @@ export default {
       return this.$store.state.rooms.history.reverse();
     },
     queueItems: function() {
+      const copyQueue = [...this.$store.state.rooms.currentQueue]
+      for (let i = 0; i < copyQueue.length; i++) {
+        copyQueue[i].track = copyQueue[i].trackTitle;
+        copyQueue[i].album = copyQueue[i].albumTitle;
+      }
+
       return this.$store.state.rooms.currentQueue;
     }
   },
