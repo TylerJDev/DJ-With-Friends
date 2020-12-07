@@ -59,6 +59,7 @@ This project utilizes [Vue CLI](https://cli.vuejs.org/guide/), so anything out o
 ## Contributions
 Thinking about contributing? Contributions are more than welcome. There are only a few steps that need to be taken in order to submit a PR.
 
+Check out our [contribution guide](https://github.com/TylerJDev/DJ-With-Friends/blob/master/CONTRIBUTING.md) to get started.
 ## Tests
 We utilize Jest & Cypress to run tests, both locally and in our CI/CD. We also utilize Pa11y to scan for any risks for accessibility.
 
