@@ -56,6 +56,11 @@ VUE_APP_appId='<APP_ID>'
 With that, DJ With Friends should be running on a local server.
 This project utilizes [Vue CLI](https://cli.vuejs.org/guide/), so anything out of scope for this readme can probably be found there.
 
+### Server
+For the time being, our server is separate. You can still run the application without, but in order to utilize the server capabilities, the server will be needed.
+
+You can check out the [server's repository](https://github.com/TylerJDev/DJ-With-Friends-Server) to run alongside the frontend.
+
 ## Contributions
 Thinking about contributing? Contributions are more than welcome. There are only a few steps that need to be taken in order to submit a PR.
 
