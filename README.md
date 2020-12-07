@@ -1,4 +1,4 @@
-# DJ With Friends ![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/build/badge.svg)
+# DJ With Friends ![Image of build status](https://github.com/TylerJDev/DJ-With-Friends/workflows/build/badge.svg) [![Netlify Status](https://api.netlify.com/api/v1/badges/b3f6a255-5836-44ac-81da-00a9fe300a5a/deploy-status)](https://app.netlify.com/sites/djwithfriends/deploys)
 [DJ with Friends](https://djwithfriends.com/) is a way to listen to music together with others! It utilizes the Spotify API to allow users to host songs. We're always growing, and future features are mapped out within our [projects](https://github.com/TylerJDev/DJ-With-Friends/projects/1).
 
 ## Getting started
