@@ -14,7 +14,7 @@ Go to [Firebase](https://firebase.google.com/) and create a new project. You can
 * Create a new "Web" app, pick any nickname & register the app
 * Copy the contents of your `Firebase SDK snippet`, we'll only utilize the keys
 
-**Note:** Your config snippet should look like this but without the <placeholder> values.
+**Note:** Your config snippet should look like this but without the placeholder values.
 ```
 const firebaseConfig = {
   apiKey: "<API_KEY>",
@@ -36,7 +36,7 @@ const firebaseConfig = {
 * Enable both Email/Password and "Anonymous"
 
 Inside the root of the project, create a `.env` file and add the API keys/IDs that we copied from our Firebase SDK config snippet.
-Your `.env` file should look something like this, but instead of the <placeholder> values, it'll be your Firebase keys.
+Your `.env` file should look something like this, but instead of the placeholder values, it'll be your Firebase keys.
   
 ```
 VUE_APP_apiKey='<API_KEY>'
