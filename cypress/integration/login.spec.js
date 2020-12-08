@@ -113,4 +113,45 @@ describe('Test - All login/sign up triggers', () => {
     // Assert correct route
     cy.url().should('include', '/login');
   });
+
+  it('Accessibility checks', () => {
+    cy.get('#loginNav').click();
+    cy.get('@modal').should('be.visible');
+
+    // We should be focused on the close button
+    cy.focused()
+      .should('be.visible')
+      .should('have.attr', 'class', 'bx--modal-close');
+
+    cy.get('legend.type-auth_title')
+      .should('be.visible')
+      .contains('Login');
+
+    cy.get('input#loginEmail')
+      .should('have.attr', 'required');
+
+    cy.get('input#loginPassword')
+      .should('have.attr', 'required');
+
+    cy.get('button[data-auth-type="register"]').click();
+
+    // Focus should stay on button
+    cy.get('button[data-auth-type="login"]').should('have.focus');
+
+    cy.get('legend.type-auth_title')
+      .should('be.visible')
+      .contains('Create Account');
+
+    cy.get('input#displayName')
+      .should('have.attr', 'required');
+
+    cy.get('input#emailRegister')
+      .should('have.attr', 'required');
+
+    cy.get('input#password-1')
+      .should('have.attr', 'required');
+
+    cy.get('input#password-2')
+      .should('have.attr', 'required');
+  });
 });

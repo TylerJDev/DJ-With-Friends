@@ -16,7 +16,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 import db from '../db.js';
 
 export default {
@@ -34,7 +36,7 @@ export default {
   },
   methods: {
     logout: function() {
-      Firebase.auth()
+      firebase.auth()
       .signOut()
       .then(() => {
         this.user = null;
@@ -81,7 +83,7 @@ export default {
   },
   mounted() {
     const bgMode = getComputedStyle(this.$el.querySelector('#prefer')).getPropertyValue('content');
-    Firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if ((user && this.$store.state.spotifyAPIData.firebaseActive === false) || (user && this.$store.state.spotifyAPIData.firebaseActive === 'guest')) {
         this.user = user.displayName;
         this.$store.commit('addFirebaseData', false);
