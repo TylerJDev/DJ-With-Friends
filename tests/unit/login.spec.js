@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
 import Login from '@/pages/LoginPage/index.vue';
-import Firebase from "firebase";
 import db from '../../db.js';
 
 // Ignores non-issues i.e, console.error logs

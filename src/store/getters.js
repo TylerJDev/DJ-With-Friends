@@ -28,3 +28,5 @@ export const timeAgo = (state) => {
 
   return items;
 };
+
+export const errorAtStore = (state) => state.errorToStore;

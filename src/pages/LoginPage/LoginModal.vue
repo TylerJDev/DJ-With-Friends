@@ -21,8 +21,8 @@
                       <legend class="type-auth_title">{{userState === 'register' ? 'Create Account' : userState === 'login' ? 'Login' : ''}}</legend>
                       <template v-if="userState === 'register'">
                         <div class="form-row">
-                          <div class="error_container" v-if="errorRegister">
-                            <div class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister }}</div>
+                          <div class="error_container" v-if="errorRegister || errorAuth">
+                            <div class="col-12 alert alert-danger px-3" role="alert">{{ errorRegister || errorAuth }}</div>
                           </div>
 
                           <section class="col-sm-12 form-group">
@@ -58,6 +58,7 @@
                             <input
                               class="form-control"
                               type="password"
+                              required
                               placeholder="Password"
                               v-model="passOne"
                               autocomplete="off"
@@ -84,8 +85,8 @@
 
                       <template v-if="userState === 'login'">
                         <section class="form-group">
-                          <div class="error_container" v-if="error">
-                            <div class="col-12 alert alert-danger px-3">{{error}}</div>
+                          <div class="error_container" v-if="error || errorAuth">
+                            <div class="col-12 alert alert-danger px-3">{{error || errorAuth}}</div>
                           </div>
                           <label class="form-control-label sr-only" for="loginEmail">Email</label>
                           <input
@@ -127,7 +128,7 @@
         </p>
         <p class="text-center mt-2 modal-or">
           Want to try DJ With Friends as a guest?
-          <a href="#" @click="handleGuestAuth">Continue as guest</a>
+          <a class="continue-guest-link" href="#" @click="handleGuestAuth">Continue as guest</a>
         </p>
       </div>
     </template>
@@ -136,7 +137,9 @@
 
 <script>
 import { focusEle } from "@/utils/focus.js";
-import Firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 
 export default {
   name: "LoginModal",
@@ -161,6 +164,7 @@ export default {
       email: '',
       password: '',
       error: '',
+      errorAuth: '',
       userState: 'login',
       displayName: null,
       passOne: null,
@@ -192,6 +196,16 @@ export default {
       } else {
         this.errorRegister = null;
       }
+    },
+    errorFromStore(newErr, oldErr) {
+      if (newErr) {
+        this.errorAuth = newErr;
+      }
+    },
+  },
+  computed: {
+    errorFromStore() {
+      return this.$store.getters.errorAtStore;
     },
   },
   methods: {
@@ -239,7 +253,7 @@ export default {
       this.$store.state.loading = true;
 
       try {
-        Firebase.auth()
+        firebase.auth()
           .signInWithEmailAndPassword(info.email, info.password)
           .then(
             () => {
