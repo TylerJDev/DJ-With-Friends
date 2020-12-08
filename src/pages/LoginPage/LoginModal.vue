@@ -407,7 +407,7 @@ export default {
   }
 
   .bx--modal-container {
-    height: 620px;
+    height: 640px;
     width: 470px;
     background-color: #e2d7ca;
     box-shadow: 9px 12px 0px 0px black;
@@ -457,7 +457,7 @@ export default {
     }
 
     .type-auth_title {
-      margin-bottom: 15px;
+      margin-bottom: 0px;
       // border: 1px solid white;
       display: inline-block;
       padding: 5px;
@@ -473,6 +473,7 @@ export default {
     #main_bio_modal {
       margin-bottom: 20px;
     }
+
     .bx--modal-content,
     .bx--modal-header,
     .bx--accordion__content {
@@ -483,5 +484,10 @@ export default {
   .alert {
     display: block;
   }
+}
+
+#login_modal .bx--modal-content {
+  max-height: unset !important;
+  margin-bottom: 0px !important;
 }
 </style>
