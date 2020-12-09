@@ -144,7 +144,13 @@
         text-decoration: none;
         margin: 10px;
         font-size: 1.2rem;
+        border: 2px solid transparent;
       }
     }
+  }
+
+  a:focus, a:active, a:hover {
+    border: 2px dashed white !important;
+    outline: none !important
   }
 </style>

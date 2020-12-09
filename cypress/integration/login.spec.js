@@ -4,32 +4,30 @@
 describe('Test - All login/sign up triggers', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8080/login');
-    cy.get('#login_modal').as('modal');
-    cy.get('#login_modal .bx--modal-close').as('close');
     cy.get('nav a.bx--header__name.menu_item[href="/"]').as('home');
   });
 
   it('Activates and closes each trigger', () => {
     // Confirm modal is hidden
-    cy.get('@modal').should('be.hidden');
+    cy.get('#login_modal').should('not.exist');
     // Click all login / sign up triggers
     cy.get('.auth-type').each(($el, index) => {
       cy.get($el).click();
       // Assert that each one is visible at the time
-      cy.get('@modal').should('be.visible');
+      cy.get('#login_modal').should('be.visible');
       // Close modal and confirm that it is hidden
-      cy.get('@close').click();
-      cy.get('@modal').should('be.hidden');
+      cy.get('#login_modal .bx--modal-close').click();
+      cy.get('#login_modal').should('not.exist');
     });
   });
 
   it('Modal switches between login and sign up', () => {
     // Confirm modal is hidden
-    cy.get('@modal').should('be.hidden');
+    cy.get('#login_modal').should('not.exist');
     // Click initial "log in" button in navbar
     cy.get('#loginNav').click();
     // Assert that modal is visible at the time
-    cy.get('@modal').should('be.visible');
+    cy.get('#login_modal').should('be.visible');
 
     // Switch to "register" state
     cy.get('button[data-auth-type="register"]').click();
@@ -38,17 +36,17 @@ describe('Test - All login/sign up triggers', () => {
     cy.get('form[data-modal-auth-type="register"]').should('exist');
     
     // Close modal & confirm it's closed
-    cy.get('@close').click();
-    cy.get('@modal').should('be.hidden');
+    cy.get('#login_modal .bx--modal-close').click();
+    cy.get('#login_modal').should('not.exist');
   });
 
   it('Test form error handling', () => {
     // Confirm modal is hidden
-    cy.get('@modal').should('be.hidden');
+    cy.get('#login_modal').should('not.exist');
 
     // Activate register modal
     cy.get('#registerBtn').click();
-    cy.get('@modal').should('be.visible');
+    cy.get('#login_modal').should('be.visible');
 
     // Type in first input display name, "foo"
     cy.get('#displayName').type('foo');
@@ -99,8 +97,8 @@ describe('Test - All login/sign up triggers', () => {
     cy.get('.error_container').should('be.visible');
 
     // Close modal & confirm it's closed
-    cy.get('@close').click();
-    cy.get('@modal').should('be.hidden');
+    cy.get('#login_modal .bx--modal-close').click();
+    cy.get('#login_modal').should('not.exist');
   });
 
   it('Try and test different routes', () => {
@@ -116,7 +114,7 @@ describe('Test - All login/sign up triggers', () => {
 
   it('Accessibility checks', () => {
     cy.get('#loginNav').click();
-    cy.get('@modal').should('be.visible');
+    cy.get('#login_modal').should('be.visible');
 
     // We should be focused on the close button
     cy.focused()
@@ -153,5 +151,18 @@ describe('Test - All login/sign up triggers', () => {
 
     cy.get('input#password-2')
       .should('have.attr', 'required');
+
+    cy.get('head > title')
+      .should('have.text', 'DJ With Friends');
+
+    cy.visit('http://localhost:8080/about');
+
+    cy.get('head > title')
+      .should('have.text', 'DJ With Friends - About');
+
+    cy.visit('http://localhost:8080/404');
+
+    cy.get('head > title')
+      .should('have.text', 'DJ With Friends - Page Not Found');
   });
 });

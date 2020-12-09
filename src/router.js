@@ -26,6 +26,9 @@ export default new Router({
           next('login');
         }
       },
+      meta: {
+        title: 'Home',
+      },
     },
     {
       path: '/room/:id',
@@ -99,11 +102,17 @@ export default new Router({
           next('login');
         }
       },
+      meta: {
+        title: 'Room',
+      },
     },
     {
       path: '/about',
       name: 'about',
       component: About,
+      meta: {
+        title: 'About',
+      },
     },
     {
       path: '/login',
@@ -117,16 +126,25 @@ export default new Router({
           next();
         }
       },
+      meta: {
+        title: '',
+      },
     },
     {
       path: '/callback',
       name: 'callback',
       component: Callback,
+      meta: {
+        title: 'Loading',
+      },
     },
     {
       path: '*',
       name: 'notFound',
       component: NotFound,
+      meta: {
+        title: 'Page Not Found',
+      },
     },
   ],
 });
