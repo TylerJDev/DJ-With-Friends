@@ -735,6 +735,7 @@ export default {
       a {
         font-weight: bold;
         border-bottom: $border--logo;
+        outline: none !important;
       }
     }
   }
@@ -1175,6 +1176,16 @@ export default {
       margin-right: 10px;
       box-shadow: -4px 4px 0px black;
       font-size: 1.5rem;
+      &:focus, &:hover, &:active {
+        background-color: black !important;
+        color: white !important;
+        border: 1px dashed white;
+      }
     }
+  }
+
+  a:focus, a:active, a:hover {
+    border: 2px dashed white;
+    border-bottom: 2px dashed white !important;
   }
 </style>

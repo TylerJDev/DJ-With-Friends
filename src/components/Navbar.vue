@@ -543,4 +543,11 @@ export default {
       }
     }
   }
+
+button#loginNav {
+  &:focus, &:hover, &:active {
+    background-color: black;
+    border: 1px dashed white;
+  }
+}
 </style>

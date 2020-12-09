@@ -6,7 +6,7 @@
     :auto-hide-off="autoHideOff"
     @modal-hidden="closeModal"
     id="login_modal"
-    v-if="modalActive"
+    v-if="modalVisible"
   >
     <template v-if="use_title" slot="title">DJ <br/><span class="logo-color">With</span> <br/>Friends</template>
     <template v-if="use_label" slot="label">Let's DJ!</template>
@@ -182,12 +182,16 @@ export default {
         this.errorRegister = null;
       }
     },
-    modalActive: function(v) {
-      this.modalVisible = v;
+    modalActive: function(evt) {
+      this.modalVisible = evt;
 
       // If active, assume modalEventType is present && modal is active
-      if (this.modalVisible)
+      if (this.modalVisible) {
         this.userState = this.modalEventType;
+        setTimeout(() => {
+          this.$el.querySelector('#login_modal .bx--modal-close').focus();
+        }, 50);
+      }
     },
     displayName: function() {
       const alphaNum = RegExp('^[a-zA-Z0-9_]*$', 'g');
@@ -343,6 +347,14 @@ export default {
     > svg {
       fill: black !important;
     }
+    &:focus, &:active, &:hover {
+      background-color: #7d7d7d;;
+      // border: 2px dashed white;
+      outline: -webkit-focus-ring-color auto 1px;
+      > svg {
+        fill: white !important;
+      }
+    }
   }
 }
 
@@ -399,6 +411,10 @@ export default {
     font-family: "IBM Plex Sans", sans-serif; 
     width: 100%;
     font-weight: 700;
+    &:hover, &:focus {
+      background-color: black;
+      border: 1px dashed white;
+    }
   }
 
   h4 {
@@ -436,6 +452,10 @@ export default {
       margin: 5px;
       background-color: black;
       box-shadow: -2px 3px 0px 0px black;
+      &:hover, &:focus {
+        background-color: blue;
+        border: 1px dashed white;
+      }
     }
 
     input {
@@ -495,6 +515,14 @@ export default {
 
 .bx--modal-container--sm {
     max-height: 100% !important;
+}
+
+.continue-guest-link {
+  border: 2px solid transparent;
+  &:hover, &:focus {
+    border: 2px dashed black;
+    text-decoration: underline;
+  }
 }
 
 @media (min-width: 66rem) {
