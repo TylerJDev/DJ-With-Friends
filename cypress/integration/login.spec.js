@@ -153,5 +153,18 @@ describe('Test - All login/sign up triggers', () => {
 
     cy.get('input#password-2')
       .should('have.attr', 'required');
+
+    cy.get('head > title')
+      .should('have.text', 'DJ With Friends');
+
+    cy.visit('http://localhost:8080/about');
+
+    cy.get('head > title')
+      .should('have.text', 'DJ With Friends - About');
+
+    cy.visit('http://localhost:8080/404');
+
+    cy.get('head > title')
+      .should('have.text', 'DJ With Friends - Page Not Found');
   });
 });
