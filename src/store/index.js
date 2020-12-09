@@ -4,7 +4,9 @@ import userListStore from '@/store/modules/rooms.js';
 import LobbyStore from '@/store/modules/lobby.js';
 import * as getters from './getters';
 import * as mutations from './mutations';
-import Firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 import router from '@/router.js';
 import db from '../../db.js';
 
@@ -60,6 +62,7 @@ export default new Vuex.Store({
     activeNotify: false,
     activeNotifyCount: 0,
     isRequesting: false,
+    errorToStore: null,
   },
   mutations,
   getters,
@@ -193,7 +196,7 @@ export default new Vuex.Store({
 
       const userFire = {};
       // Check current state of user via firebase
-      Firebase.auth().onAuthStateChanged((user) => {
+      firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           // If user is already logged in - ?
           if (user.displayName !== null && user.displayName !== undefined) {
@@ -319,7 +322,7 @@ export default new Vuex.Store({
       // Check firebaseActive value
       console.log(`Firebase State: ${state.spotifyAPIData.firebaseActive}`);
       if (state.spotifyAPIData.firebaseActive === 'guest' || state.spotifyAPIData.firebaseActive === true) {
-        Firebase.auth().signOut().then(() => {
+        firebase.auth().signOut().then(() => {
           // Clear our localstorage
           // NOTE: Should we clear all, or by item? Incase of 3rd parties utilizing localstorage, or some other edge case?
           localStorage.clear();
@@ -353,27 +356,31 @@ export default new Vuex.Store({
           password: String(payload.password),
           displayName: String(payload.displayName),
         }),
-      });
-
-      const res = await response.json();;
-
-      state.loading = false;
-      if (res.error !== undefined) {
-        console.error(res.error);
-      } else {
-        Firebase.auth().signInWithCustomToken(res.token).catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
-          if (errorCode === 'auth/invalid-custom-token') {
-            console.error('The token you provided is not valid!');
+      })
+        .then(res => res.json())
+        .then((res) => {
+          state.loading = false;
+          if (res.error !== undefined) {
+            console.error(res.error);
+            state.errorToStore = error;
           } else {
-            console.error(error);
-            console.error(errorMessage);
-          }
+            firebase.auth().signInWithCustomToken(res.token).catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
 
-        }); 
-      }
+              if (errorCode === 'auth/invalid-custom-token') {
+                console.error('The token you provided is not valid!');
+              } else {
+                console.error(error);
+                console.error(errorMessage);
+              }
+            });
+          }
+        }).catch((error) => {
+          console.error(`Could not register user! ${error}`);
+          state.errorToStore = error;
+          state.loading = false;
+        });
     },
   },
 });

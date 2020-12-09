@@ -1,5 +1,7 @@
 import Vue from 'vue';
-import Firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 
 export const checkLoggedIn = (state, payload) => {
   state.isLoggedIn = payload.status;
@@ -72,7 +74,7 @@ export const addFirebaseData = (state, payload) => {
   // Check current state of user via firebase
   // const user = Firebase.auth().currentUser;
 
-  Firebase.auth().onAuthStateChanged((user) => {
+  firebase.auth().onAuthStateChanged((user) => {
     let payloadData;
     if (user) {
       if (user.displayName !== null && user.displayName !== undefined) {

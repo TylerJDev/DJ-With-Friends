@@ -275,7 +275,9 @@ import Modal from '@/pages/LoginPage/HelpModal.vue';
 import LoginModal from '@/pages/LoginPage/LoginModal.vue';
 import FeaturedTrack from '@/pages/LoginPage/FeaturedTrack';
 import FeaturedSkeleton from '@/pages/LoginPage/FeaturedSkeleton';
-import Firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 
 export default {
   name: 'login',
@@ -326,7 +328,7 @@ export default {
       }
     },
     handleGuest() {
-      Firebase.auth().signInAnonymously().catch(function(error) {
+      firebase.auth().signInAnonymously().catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
         
@@ -344,7 +346,7 @@ export default {
   mounted() {
     this.$store.state.loading = false;
     const handleEmit = () => this.handleAuthenticate();
-    Firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         handleEmit();
       }

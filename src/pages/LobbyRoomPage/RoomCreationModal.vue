@@ -89,7 +89,9 @@
 
 <script>
 import { focusEle } from '@/utils/focus.js';
-import Firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 import db from '../../../db.js';
 
 export default {
