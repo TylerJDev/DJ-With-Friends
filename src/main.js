@@ -43,6 +43,18 @@ Vue.use(CarbonIconsVue, {
 
 Vue.config.productionTip = false;
 
+router.beforeEach((to, from, next) => {
+  const prefix = 'DJ With Friends';
+  let pageTitle = to.meta.title;
+
+  if (pageTitle && pageTitle.toLowerCase() === 'room') {
+    pageTitle += ` #${to.params.id}`;
+  }
+
+  document.title = pageTitle ? `${prefix} - ${pageTitle}` : prefix;
+  next();
+});
+
 new Vue({
   router,
   store,
