@@ -3,7 +3,7 @@
     <NotificationAlert />      
     <cv-header aria-label="Main">
       <cv-header-menu-button aria-label="Header menu" aria-controls="side-nav" />
-      <cv-skip-to-content :href="this.$route.name === 'login' ? '#cta' : '#main-content'">
+      <cv-skip-to-content href="#main-content">
         Skip to Main Content
       </cv-skip-to-content>
       <a href="/" class="cv-header-name bx--header__name menu_item">
@@ -543,4 +543,11 @@ export default {
       }
     }
   }
+
+button#loginNav {
+  &:focus, &:hover, &:active {
+    background-color: black;
+    border: 1px dashed white;
+  }
+}
 </style>

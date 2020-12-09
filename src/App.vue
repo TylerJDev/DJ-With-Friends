@@ -10,7 +10,7 @@
       :low-contrast="grabNotifications.lowContrast"
       aria-live="polite">
     </cv-toast-notification>
-    <cv-loading :active="this.$store.state.loading" overlay></cv-loading>
+    <cv-loading :active="this.$store.state.loading" overlay aria-live="assertive"></cv-loading>
   </div>
 </template>
 
