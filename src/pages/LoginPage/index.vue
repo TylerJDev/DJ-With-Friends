@@ -1,7 +1,8 @@
 <template>
   <div id="login">
     <Navbar v-if="navbarVisible" @handle-modal="authModal"/>
-    <main id="cta" class="container-row">
+    <main id="main-content">
+    <section id="cta" class="container-row">
       <div class="c-4">
         <h1 id="loginHeader">DJ <br><span class="logo-color">With</span> <br>Friends</h1>
         <p>Join the fun, DJ with your friends!
@@ -28,7 +29,7 @@
         <div class="vinyl-container" :style="{backgroundImage: 'url(./album3.png)'}">
         </div>
       </div>
-    </main>
+    </section>
 
     <section id="quick-sum" class="container-row">
       <div id="summary">
@@ -152,7 +153,7 @@
       </div>
     </section>
 
-    <div id="featured" class="container-row">
+    <section id="featured" class="container-row">
       <h2>Featured</h2>
 
       <div id="rooms">
@@ -223,33 +224,8 @@
       <div id="moreRooms">
         <a href="#" class="join-link join-us auth-type" v-on:click="authModal({'event': 'register'})">View Featured Rooms</a>
       </div>
-    </div>
-
-    <div id="quick-bio" class="container-row" style="display: none;">
-      <div class="c-4">
-      <h2>A fun way
-        to collab!
-      </h2>
-      <p>DJ With Friends was created so that you could share your love of music.
-        <br/>
-        <br/>
-        Collaboration is a key feature.
-        Being able to collaborate with another
-        is how we come together. 
-        DJ With Friends focuses on collaboration.
-      </p>
-      </div>
-
-      <div class="c-8">
-        <div class="site_container" :style="[this.$store.state.darkMode ? {backgroundImage: 'url(./DJWF_3.png)'} : {backgroundImage: 'url(./DJWF_1.png)'}]">
-        </div>
-        <div class="site_container" :style="[this.$store.state.darkMode ? {backgroundImage: 'url(./DJWF_4.png)'} : {backgroundImage: 'url(./DJWF_2.png)'}]">
-        </div>
-      </div>
-    </div>
-
-
-    <div id="join-us" class="container-row">
+    </section>
+    <section id="join-us" class="container-row">
       <div class="section">
         <div class="c-4">
           <h3 role="presentation" aria-hidden="true">DJ With Friends</h3>
@@ -260,10 +236,12 @@
         </div>
       </div>
       <button class="btn btn-primary btn-lg btn-auth auth-type" v-on:click="authModal({'event': 'register'})">Join Now</button>
-    </div>
-     <Footer />
-     <Modal />
+    </section>
+     <!-- <Modal /> -->
      <LoginModal @handle-auth="handleAuthenticate" @handle-modal="authModal" @handle-guest="handleGuest" v-bind:modal-active="modalActive" v-bind:modal-event-type="modalEventType"/>
+  
+  </main>
+  <Footer />
   </div>
 </template>
 

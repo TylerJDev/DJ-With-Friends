@@ -6,6 +6,7 @@
     :auto-hide-off="autoHideOff"
     @modal-hidden="closeModal"
     id="login_modal"
+    v-if="modalActive"
   >
     <template v-if="use_title" slot="title">DJ <br/><span class="logo-color">With</span> <br/>Friends</template>
     <template v-if="use_label" slot="label">Let's DJ!</template>
@@ -489,5 +490,16 @@ export default {
 #login_modal .bx--modal-content {
   max-height: unset !important;
   margin-bottom: 0px !important;
+}
+
+
+.bx--modal-container--sm {
+    max-height: 100% !important;
+}
+
+@media (min-width: 66rem) {
+  .bx--modal-container {
+      max-height: 88% !important;
+  }
 }
 </style>
