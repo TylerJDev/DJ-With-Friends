@@ -175,6 +175,11 @@ export default {
         let result1 = Math.floor(seconds / 60); 
         let result2 = Math.round(seconds - (result1 * 60));
 
+        if (result2 === 60) {
+          result1++;
+          result2 = 0;
+        }
+
         return `${result1}m ${result2}s`;
       }
 
