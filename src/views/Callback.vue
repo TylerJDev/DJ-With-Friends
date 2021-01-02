@@ -12,7 +12,7 @@ export default {
   name: 'login',
   beforeCreate() {
     // Current query string => ?code= ...
-    var currentURL = window.location.search; 
+    let currentURL = window.location.search; 
 
     this.$store.dispatch('auth', {urlCurrent: currentURL, callbackURL: '/', callToAPI: 'callback'}).then(res => {
       this.$store.dispatch('specialTrackData', {urlCurrent: currentURL, callToAPI: 'usertracks'})

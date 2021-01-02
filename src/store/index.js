@@ -63,6 +63,11 @@ export default new Vuex.Store({
     activeNotifyCount: 0,
     isRequesting: false,
     errorToStore: null,
+    passwordRoom: {
+      visible: false,
+      password: null,
+      to: null,
+    },
   },
   mutations,
   getters,
@@ -206,7 +211,6 @@ export default new Vuex.Store({
 
           // REFACTOR: This might be getting called every (?)
           // Could we change it to reduce wrties to db?
-          console.log('userFire');
 
           db.collection('users').doc(user.uid).set({
             displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : USER,
@@ -223,8 +227,6 @@ export default new Vuex.Store({
           }).catch((error) => {
             console.error('Error has occurred! ', error); // eslint-disable-line
           });
-
-          console.log('hit2');
 
           userFire.uniqueID = user.uid;
 
