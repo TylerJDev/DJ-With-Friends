@@ -113,3 +113,10 @@ export const modifyNotifyActiveState = (state, payload) => {
     state.activeNotifyCount = 0;
   }
 };
+
+export const addPasswordRoomState = (state, payload) => {
+  state.passwordRoom.visible = payload.visible || false;
+  state.passwordRoom.password = payload.password || null;
+  state.passwordRoom.to = payload.to || null;
+  state.passwordRoom.error = payload.error || false;
+}

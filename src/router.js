@@ -48,7 +48,13 @@ export default new Router({
             if (resData.result === true) {
               connectState = true;
               Store.state.roomKey = resData.queryHash;
+              Store.commit('addPasswordRoomState', {});
               next();
+            } else {
+              const currentPswState = Store.getters.grabPasswordRoomState;
+              currentPswState.error = true;
+              currentPswState.visible = true;
+              Store.commit('addPasswordRoomState', currentPswState);
             }
           });
           return;
@@ -81,8 +87,11 @@ export default new Router({
           if (roomIndex >= 0) {
             connectState = true;
             if (Object.prototype.hasOwnProperty.call(Store.state.lobby.rooms[roomIndex], 'psw_index')) {
-              Store.state.passwordRoom.visible = true;
-              Store.state.passwordRoom.to = to.params.id;
+              const currentPswState = Store.getters.grabPasswordRoomState;
+              currentPswState.visible = true;
+              currentPswState.to = to.params.id;
+
+              Store.commit('addPasswordRoomState', currentPswState);
             } else {
               next();
             }

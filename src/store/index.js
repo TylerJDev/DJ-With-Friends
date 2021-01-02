@@ -67,6 +67,7 @@ export default new Vuex.Store({
       visible: false,
       password: null,
       to: null,
+      error: false,
     },
   },
   mutations,
