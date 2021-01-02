@@ -44,21 +44,46 @@ export default new Router({
 
         // Clear out previous key
         Store.state.roomKey = '';
+
+        const checkRoomHelper = (userUID) => {
+          socketConnect.emit('checkLock', {
+            roomID: to.params.id,
+            checkRoom: true,
+            uid: userUID,
+          });
+
+          socketConnect.on('lockedStatus', (res) => {
+            const paramsNow = res.paramsTo === '/' ? '/' : `/room/${res.paramsTo}`;
+            connectState = true;
+            if (res.locked === true) {
+              next(paramsNow);
+              Store.dispatch('handleNotification', {
+                timeout: 10000, type: 'error', initialised: true, title: 'Room is full!', subtitle: 'The current room is full!',
+              });
+            } else {
+              next(paramsNow);
+            }
+          });
+        };
+
         if (roomIndex === -1) {
           // Assume user went to link without hitting lobby
           // As lobby contains the store
           next('/');
 
-          socketConnect.emit('checkLock', { roomID: to.params.id, checkRoom: true });
-          socketConnect.on('lockedStatus', (res) => {
-            if (res.locked === true) {
-              const paramsNow = res.paramsTo === '/' ? '/' : `/room/${res.paramsTo}`;
-              next(paramsNow);
-              connectState = true;
-            }
-          });
+          let checkRoomLimit = 0;
 
-          roomIndex = Store.state.lobby.rooms.findIndex((current) => String(current.name) === to.params.id);
+          const checkRoom = setInterval(() => {
+            checkRoomLimit += 1;
+            if (checkRoomLimit >= 10 || Store.state.spotifyAPIData.uid.length) {
+              checkRoomHelper(Store.state.spotifyAPIData.uid);
+              clearInterval(checkRoom);
+            }
+          }, 1000);
+          roomIndex = Store.state.lobby.rooms.findIndex(
+            (current) => String(current.name) === to.params.id);
+        } else {
+          checkRoomHelper(Store.state.spotifyAPIData.uid);
         }
 
         if (loggedState !== null) {
