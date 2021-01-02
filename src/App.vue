@@ -194,7 +194,6 @@ body {
 
     .room_name {
       background-color: $bg--dark !important;
-      border: 1px solid white !important;
       h3 {
         background-color: blue;
       }
