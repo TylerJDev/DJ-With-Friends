@@ -45,7 +45,6 @@ export default {
           if (currentRoom.length) {
               this.$store.commit('setCurrentDisplayed', currentRoom[0]);
           }
-        
           setTimeout(function() {
             focusEle('#card_close', '#card_bio');
           }, 1000);
