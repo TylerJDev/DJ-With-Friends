@@ -26,7 +26,7 @@
               Add to Queue
               <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--btn__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 7L9 3 7 3 7 7 3 7 3 9 7 9 7 13 9 13 9 9 13 9 13 7z"></path></svg>
             </button> 
-
+            <span v-if="(this.$store.getters.grabVotes.votes && this.$store.getters.grabVotes.votes >= 1)" role="alert" class="user-votes">{{this.$store.getters.grabVotes.votes}} Users Voted to Skip</span>
             <button
             class="bx--btn bx--btn--secondary"
             type="button" id="skip_btn" :disabled="this.$store.getters.grabIfVoted" @click="skipTrack">
@@ -499,5 +499,15 @@ export default {
    /* .slide-fade-leave-active below version 2.1.8 */ {
      transform: translateX(10px);
      opacity: 0;
+  }
+
+  .user-votes {
+    background-color: black;
+    border: 1px solid white;
+    color: white;
+    padding: 3px;
+    bottom: 75px;
+    position: absolute;
+    font-size: 0.7rem;
   }
 </style>
