@@ -26,6 +26,7 @@
 
     <RoomCreationModal @createRoom="createRoom" :modalActive="activeModal" @closeModal="closeModal"/>
     <LobbyFooter />
+    <LobbyPasswordModal />
   </div>
 </template>
 
@@ -38,6 +39,7 @@ import Navbar from '@/components/Navbar.vue';
 import RoomBio from '@/pages/LobbyRoomPage/RoomBio.vue';
 import RoomVinyl from '@/pages/LobbyRoomPage/RoomVinyl.vue';
 import LobbyFooter from '@/pages/LobbyRoomPage/LobbyFooter.vue';
+import LobbyPasswordModal from '@/pages/LobbyRoomPage/LobbyPasswordModal';
 
 export default {
   name: 'home',
@@ -117,7 +119,8 @@ export default {
     RoomSelect,
     RoomBio,
     RoomVinyl,
-    LobbyFooter
+    LobbyFooter,
+    LobbyPasswordModal
   }
 }
 </script>

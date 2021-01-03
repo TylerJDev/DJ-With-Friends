@@ -124,6 +124,7 @@ const userListStore = {
       }
       return state.hosting;
     },
+    grabVotes: (state) => state.toSkip,
   },
   actions: {
     handleProgression({ state, commit }, payload) {

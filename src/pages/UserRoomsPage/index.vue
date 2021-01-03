@@ -125,9 +125,7 @@ export default {
     });
 
     this.socketConnect.on('votedSkip', (data) => {
-      if (data.currentVotes.length) {
-        this.$store.commit('addSkipVotes', data);
-      }
+      this.$store.commit('addSkipVotes', data);
     });
 
     this.socketConnect.on('user', (data) => {
