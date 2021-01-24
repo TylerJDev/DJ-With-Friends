@@ -1,7 +1,15 @@
 <template>
   <div class="room_card container">
     <a :href="'/room/' + rooms.name" class="room_card_link">
-        <h2 class="room_name">{{rooms.settings['room-name']}} <span><i v-bind:class="[this.rooms.settings['room-private_'] ? 'fas fa-lock' : 'fas fa-lock-open']"></i> <span class="lock">Room is {{this.rooms.settings['room-private_'] ? 'Private' : 'Public'}}</span></span></h2> 
+        <h2 class="room_name">
+            {{rooms.settings['room-name']}} 
+            <span><i v-bind:class="[this.rooms.settings['room-private_'] ? 'fas fa-lock' : 'fas fa-lock-open']"> </i> 
+                <span class="lock">Room is {{this.rooms.settings['room-private_'] ? 'Private' : 'Public'}}</span>
+            </span>
+
+            <span class="room_full" v-if="isFull">Full</span>
+        </h2> 
+
         <p class="room_display_name">Host: {{rooms['display_name']}}</p>
     </a>
 
@@ -37,16 +45,23 @@ export default {
           if (currentRoom.length) {
               this.$store.commit('setCurrentDisplayed', currentRoom[0]);
           }
-        
           setTimeout(function() {
             focusEle('#card_close', '#card_bio');
           }, 1000);
       }
   },
   computed: {
-      roomPublic: function() {
-          return this.rooms.settings['room-private_'] === true ? 'Private' : 'Public';
-      }
+    roomPublic: function() {
+        return this.rooms.settings['room-private_'] === true ? 'Private' : 'Public';
+    },
+    isFull: function() {
+        const currentRoom = this.$store.getters.grabPages({}).filter((current) => {
+            if (current.server_id === this.rooms.server_id) {
+                return current;
+            }
+        });
+        return (currentRoom[0].users.length >= this.rooms.settings['user-limit_'] && this.rooms.settings['user-limit_'] !== false);
+    }
   }
 }
 
@@ -138,6 +153,17 @@ export default {
 
         .lock {
             @include sr_only;
+        }
+
+        .room_full {
+            font-size: 0.8rem;
+            border-radius: 5%;
+            border: 1px solid white;
+            margin-left: 5px;
+            width: 20px;
+            background-color: black;
+            padding-left: 5px;
+            padding-right: 5px;
         }
     }
 </style>

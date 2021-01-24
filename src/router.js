@@ -39,8 +39,30 @@ export default new Router({
         const socketConnect = io.connect(`${Store.state.location}rooms`);
         let connectState = false;
 
+        if (Store.state.passwordRoom.visible && Store.state.passwordRoom.password) {
+          const roomPassword = Store.state.passwordRoom.password;
+          socketConnect.emit('checkLock', { roomID: to.params.id, token: Store.state.spotifyAPIData.refreshToken, password: roomPassword });
+          socketConnect.on('passwordCheck', (res) => {
+            const resData = JSON.parse(res);
+
+            if (resData.result === true) {
+              connectState = true;
+              Store.state.roomKey = resData.queryHash;
+              Store.commit('addPasswordRoomState', {});
+              next();
+            } else {
+              const currentPswState = Store.getters.grabPasswordRoomState;
+              currentPswState.error = true;
+              currentPswState.visible = true;
+              Store.commit('addPasswordRoomState', currentPswState);
+            }
+          });
+          return;
+        }
+
         // Check if room has a password
-        let roomIndex = Store.state.lobby.rooms.findIndex((current) => String(current.name) === to.params.id);
+        let roomIndex = Store.state.lobby.rooms.findIndex(
+          (current) => String(current.name) === to.params.id);
 
         // Clear out previous key
         Store.state.roomKey = '';
@@ -63,20 +85,14 @@ export default new Router({
 
         if (loggedState !== null) {
           if (roomIndex >= 0) {
+            connectState = true;
             if (Object.prototype.hasOwnProperty.call(Store.state.lobby.rooms[roomIndex], 'psw_index')) {
-              const pwPrompt = prompt('What is the secret password?');
-              socketConnect.emit('checkLock', { roomID: to.params.id, token: Store.state.spotifyAPIData.refreshToken, password: pwPrompt });
-              socketConnect.on('passwordCheck', (res) => {
-                const resData = JSON.parse(res);
+              const currentPswState = Store.getters.grabPasswordRoomState;
+              currentPswState.visible = true;
+              currentPswState.to = to.params.id;
 
-                if (resData.result === true) {
-                  connectState = true;
-                  Store.state.roomKey = resData.queryHash;
-                  next();
-                }
-              });
+              Store.commit('addPasswordRoomState', currentPswState);
             } else {
-              connectState = true;
               next();
             }
           }

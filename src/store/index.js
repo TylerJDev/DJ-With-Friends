@@ -63,6 +63,12 @@ export default new Vuex.Store({
     activeNotifyCount: 0,
     isRequesting: false,
     errorToStore: null,
+    passwordRoom: {
+      visible: false,
+      password: null,
+      to: null,
+      error: false,
+    },
   },
   mutations,
   getters,
@@ -206,7 +212,6 @@ export default new Vuex.Store({
 
           // REFACTOR: This might be getting called every (?)
           // Could we change it to reduce wrties to db?
-          console.log('userFire');
 
           db.collection('users').doc(user.uid).set({
             displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : USER,
@@ -223,8 +228,6 @@ export default new Vuex.Store({
           }).catch((error) => {
             console.error('Error has occurred! ', error); // eslint-disable-line
           });
-
-          console.log('hit2');
 
           userFire.uniqueID = user.uid;
 
@@ -312,19 +315,14 @@ export default new Vuex.Store({
 
       const res = await response.json();
       if (Object.prototype.hasOwnProperty.call(res, 'items') && res.items.length >= 1) {
-        const trackItems = res.items;
-
         localStorage.setItem('topTrackData', JSON.stringify(res));
         commit('addTopTrackData', JSON.stringify(res));
       }
     },
     handleLogout({state, commit}) {
-      // Check firebaseActive value
-      console.log(`Firebase State: ${state.spotifyAPIData.firebaseActive}`);
       if (state.spotifyAPIData.firebaseActive === 'guest' || state.spotifyAPIData.firebaseActive === true) {
         firebase.auth().signOut().then(() => {
           // Clear our localstorage
-          // NOTE: Should we clear all, or by item? Incase of 3rd parties utilizing localstorage, or some other edge case?
           localStorage.clear();
           commit('addSpotifyAPIData', {
             accessToken: '',
@@ -338,9 +336,9 @@ export default new Vuex.Store({
           console.error('Error has occurred! Please make note of the error stated below.');
           console.error(error);
         });
-
       } else {
-        console.error(`Unexpected Firebase state: ${state.spotifyAPIData.firebaseActive}`);
+        // We should clear the local storage either way
+        localStorage.clear();
       }
     },
     async registerNewUser({
@@ -362,7 +360,7 @@ export default new Vuex.Store({
           state.loading = false;
           if (res.error !== undefined) {
             console.error(res.error);
-            state.errorToStore = error;
+            state.errorToStore = res.error;
           } else {
             firebase.auth().signInWithCustomToken(res.token).catch((error) => {
               const errorCode = error.code;

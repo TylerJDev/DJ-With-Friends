@@ -30,3 +30,5 @@ export const timeAgo = (state) => {
 };
 
 export const errorAtStore = (state) => state.errorToStore;
+
+export const grabPasswordRoomState = (state) => state.passwordRoom;
