@@ -45,7 +45,7 @@
     "firebase": "^7.24.0",
     "jest-fetch-mock": "^2.1.2",
     "jquery": "^3.5.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "pa11y-ci": "^2.4.0",
     "popper.js": "^1.16.1",
     "sass": "^1.29.0",
